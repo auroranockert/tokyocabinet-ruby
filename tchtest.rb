@@ -431,11 +431,17 @@ def procmisc(path, rnum, opts, omode)
     eprint(hdb, "optimize")
     err = true
   end
+  npath = path + "-tmp"
+  if(!hdb.copy(npath))
+    eprint(hdb, "copy")
+    err = true
+  end
+  File::unlink(npath)
   if(!hdb.vanish)
     eprint(hdb, "vanish")
     err = true
   end
-  printf("checking hash-like updating:\n");
+  printf("checking hash-like updating:\n")
   i = 1
   while(i <= rnum)
     buf = sprintf("[%d]", rand(rnum))
@@ -458,7 +464,7 @@ def procmisc(path, rnum, opts, omode)
     i += 1
   end
   printf("checking iterator:\n")
-  inum = 0;
+  inum = 0
   hdb.each do |key, value|
     inum += 1
     if(rnum > 250 && inum % (rnum / 250) == 0)

@@ -47,6 +47,7 @@ static VALUE hdb_iternext(VALUE vself);
 static VALUE hdb_sync(VALUE vself);
 static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_vanish(VALUE vself);
+static VALUE hdb_copy(VALUE vself, VALUE vpath);
 static VALUE hdb_path(VALUE vself);
 static VALUE hdb_rnum(VALUE vself);
 static VALUE hdb_fsiz(VALUE vself);
@@ -80,6 +81,7 @@ static VALUE bdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE bdb_sync(VALUE vself);
 static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_vanish(VALUE vself);
+static VALUE bdb_copy(VALUE vself, VALUE vpath);
 static VALUE bdb_tranbegin(VALUE vself);
 static VALUE bdb_trancommit(VALUE vself);
 static VALUE bdb_tranabort(VALUE vself);
@@ -194,6 +196,7 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "sync", hdb_sync, 0);
   rb_define_method(cls_hdb, "optimize", hdb_optimize, -1);
   rb_define_method(cls_hdb, "vanish", hdb_vanish, 0);
+  rb_define_method(cls_hdb, "copy", hdb_copy, 1);
   rb_define_method(cls_hdb, "path", hdb_path, 0);
   rb_define_method(cls_hdb, "rnum", hdb_rnum, 0);
   rb_define_method(cls_hdb, "fsiz", hdb_fsiz, 0);
@@ -464,6 +467,18 @@ static VALUE hdb_vanish(VALUE vself){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbvanish(hdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE hdb_copy(VALUE vself, VALUE vpath){
+  VALUE vhdb;
+  TCHDB *hdb;
+  const char *path;
+  Check_Type(vpath, T_STRING);
+  path = RSTRING(vpath)->ptr;
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbcopy(hdb, path) ? Qtrue : Qfalse;
 }
 
 
@@ -755,6 +770,7 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "sync", bdb_sync, 0);
   rb_define_method(cls_bdb, "optimize", bdb_optimize, -1);
   rb_define_method(cls_bdb, "vanish", bdb_vanish, 0);
+  rb_define_method(cls_bdb, "copy", bdb_copy, 1);
   rb_define_method(cls_bdb, "tranbegin", bdb_tranbegin, 0);
   rb_define_method(cls_bdb, "trancommit", bdb_trancommit, 0);
   rb_define_method(cls_bdb, "tranabort", bdb_tranabort, 0);
@@ -1058,6 +1074,18 @@ static VALUE bdb_vanish(VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbvanish(bdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE bdb_copy(VALUE vself, VALUE vpath){
+  VALUE vbdb;
+  TCBDB *bdb;
+  const char *path;
+  Check_Type(vpath, T_STRING);
+  path = RSTRING(vpath)->ptr;
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  return tcbdbcopy(bdb, path) ? Qtrue : Qfalse;
 }
 
 

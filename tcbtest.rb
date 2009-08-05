@@ -418,7 +418,7 @@ def procmisc(path, rnum, opts, omode)
     eprint(bdb, "cur::first")
     err = true
   end
-  inum = 0;
+  inum = 0
   while(key = cur.key)
     value = cur.val
     if(!value)
@@ -447,6 +447,12 @@ def procmisc(path, rnum, opts, omode)
     eprint(bdb, "optimize")
     err = true
   end
+  npath = path + "-tmp"
+  if(!bdb.copy(npath))
+    eprint(bdb, "copy")
+    err = true
+  end
+  File::unlink(npath)
   if(!bdb.vanish)
     eprint(bdb, "vanish")
     err = true
@@ -527,7 +533,7 @@ def procmisc(path, rnum, opts, omode)
     eprint(bdb, "put")
     err = true
   end
-  printf("checking hash-like updating:\n");
+  printf("checking hash-like updating:\n")
   i = 1
   while(i <= rnum)
     buf = sprintf("[%d]", rand(rnum))
@@ -550,7 +556,7 @@ def procmisc(path, rnum, opts, omode)
     i += 1
   end
   printf("checking iterator:\n")
-  inum = 0;
+  inum = 0
   bdb.each do |key, value|
     inum += 1
     if(rnum > 250 && inum % (rnum / 250) == 0)

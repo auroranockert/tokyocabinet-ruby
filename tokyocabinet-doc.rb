@@ -94,6 +94,7 @@ module TokyoCabinet
     end
     # Get the message string corresponding to an error code.
     # `<i>ecode</i>' specifies the error code.
+    # The return value is the message string of the error code.
     def errmsg(ecode)
       # (native code)
     end
@@ -207,6 +208,13 @@ module TokyoCabinet
     def vanish()
       # (native code)
     end
+    # Copy the database file.
+    # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.
+    # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this function is useful to create a backup file of the database file.
+    def copy(path)
+      # (native code)
+    end
     # Get the path of the database file.
     # The return value is the path of the database file or `nil' if the object does not connect to any database file.
     def path()
@@ -299,6 +307,7 @@ module TokyoCabinet
     end
     # Get the message string corresponding to an error code.
     # `<i>ecode</i>' specifies the error code.
+    # The return value is the message string of the error code.
     def errmsg(ecode)
       # (native code)
     end
@@ -422,6 +431,13 @@ module TokyoCabinet
     # Remove all records.
     # If successful, the return value is true, else, it is false.
     def vanish()
+      # (native code)
+    end
+    # Copy the database file.
+    # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.
+    # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this function is useful to create a backup file of the database file.
+    def copy(path)
       # (native code)
     end
     # Begin the transaction.

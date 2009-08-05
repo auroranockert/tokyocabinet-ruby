@@ -102,26 +102,27 @@ methods compatible with the `Hash&#8217; class are also provided;
 
       <div class="name-list">
       <a href="#M000007">close</a>&nbsp;&nbsp;
+      <a href="#M000020">copy</a>&nbsp;&nbsp;
       <a href="#M000003">ecode</a>&nbsp;&nbsp;
       <a href="#M000002">errmsg</a>&nbsp;&nbsp;
-      <a href="#M000025">fsiz</a>&nbsp;&nbsp;
+      <a href="#M000026">fsiz</a>&nbsp;&nbsp;
       <a href="#M000013">get</a>&nbsp;&nbsp;
       <a href="#M000014">getlist</a>&nbsp;&nbsp;
       <a href="#M000001">new</a>&nbsp;&nbsp;
       <a href="#M000006">open</a>&nbsp;&nbsp;
       <a href="#M000018">optimize</a>&nbsp;&nbsp;
       <a href="#M000012">out</a>&nbsp;&nbsp;
-      <a href="#M000023">path</a>&nbsp;&nbsp;
+      <a href="#M000024">path</a>&nbsp;&nbsp;
       <a href="#M000008">put</a>&nbsp;&nbsp;
       <a href="#M000010">putcat</a>&nbsp;&nbsp;
       <a href="#M000011">putdup</a>&nbsp;&nbsp;
       <a href="#M000009">putkeep</a>&nbsp;&nbsp;
-      <a href="#M000024">rnum</a>&nbsp;&nbsp;
+      <a href="#M000025">rnum</a>&nbsp;&nbsp;
       <a href="#M000005">setcache</a>&nbsp;&nbsp;
       <a href="#M000017">sync</a>&nbsp;&nbsp;
-      <a href="#M000022">tranabort</a>&nbsp;&nbsp;
-      <a href="#M000020">tranbegin</a>&nbsp;&nbsp;
-      <a href="#M000021">trancommit</a>&nbsp;&nbsp;
+      <a href="#M000023">tranabort</a>&nbsp;&nbsp;
+      <a href="#M000021">tranbegin</a>&nbsp;&nbsp;
+      <a href="#M000022">trancommit</a>&nbsp;&nbsp;
       <a href="#M000004">tune</a>&nbsp;&nbsp;
       <a href="#M000019">vanish</a>&nbsp;&nbsp;
       <a href="#M000015">vnum</a>&nbsp;&nbsp;
@@ -525,6 +526,29 @@ appropriately, the database will be broken.
         </div>
       </div>
 
+      <div id="method-M000020" class="method-detail">
+        <a name="M000020"></a>
+
+        <div class="method-heading">
+          <a href="BDB.src/M000020.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000020.html');return false;">
+          <span class="method-name">copy</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Copy the database file. `<em>path</em>&#8217; specifies the path of the
+destination file. If it begins with `@&#8217;, the trailing substring is
+executed as a command line. If successful, the return value is true, else,
+it is false. False is returned if the executed command returns non-zero
+code. The database file is assured to be kept synchronized and not modified
+while the copying or executing operation is in progress. So, this function
+is useful to create a backup file of the database file.
+</p>
+        </div>
+      </div>
+
       <div id="method-M000003" class="method-detail">
         <a name="M000003"></a>
 
@@ -556,17 +580,18 @@ error code.
         <div class="method-description">
           <p>
 Get the message string corresponding to an error code.
-`<em>ecode</em>&#8217; specifies the error code.
+`<em>ecode</em>&#8217; specifies the error code. The return value is the
+message string of the error code.
 </p>
         </div>
       </div>
 
-      <div id="method-M000025" class="method-detail">
-        <a name="M000025"></a>
+      <div id="method-M000026" class="method-detail">
+        <a name="M000026"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000025.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000025.html');return false;">
+          <a href="BDB.src/M000026.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000026.html');return false;">
           <span class="method-name">fsiz</span><span class="method-args">()</span>
           </a>
         </div>
@@ -703,12 +728,12 @@ return value is true, else, it is false.
         </div>
       </div>
 
-      <div id="method-M000023" class="method-detail">
-        <a name="M000023"></a>
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000023.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000023.html');return false;">
+          <a href="BDB.src/M000024.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000024.html');return false;">
           <span class="method-name">path</span><span class="method-args">()</span>
           </a>
         </div>
@@ -803,12 +828,12 @@ database, this function has no effect.
         </div>
       </div>
 
-      <div id="method-M000024" class="method-detail">
-        <a name="M000024"></a>
+      <div id="method-M000025" class="method-detail">
+        <a name="M000025"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000024.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000024.html');return false;">
+          <a href="BDB.src/M000025.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000025.html');return false;">
           <span class="method-name">rnum</span><span class="method-args">()</span>
           </a>
         </div>
@@ -863,12 +888,12 @@ another process connects the same database file.
         </div>
       </div>
 
-      <div id="method-M000022" class="method-detail">
-        <a name="M000022"></a>
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000022.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000022.html');return false;">
+          <a href="BDB.src/M000023.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000023.html');return false;">
           <span class="method-name">tranabort</span><span class="method-args">()</span>
           </a>
         </div>
@@ -883,12 +908,12 @@ before transaction.
         </div>
       </div>
 
-      <div id="method-M000020" class="method-detail">
-        <a name="M000020"></a>
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000020.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000020.html');return false;">
+          <a href="BDB.src/M000021.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000021.html');return false;">
           <span class="method-name">tranbegin</span><span class="method-args">()</span>
           </a>
         </div>
@@ -904,12 +929,12 @@ operation is performed in the transaction.
         </div>
       </div>
 
-      <div id="method-M000021" class="method-detail">
-        <a name="M000021"></a>
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
 
         <div class="method-heading">
-          <a href="BDB.src/M000021.html" target="Code" class="method-signature"
-            onclick="popupCode('BDB.src/M000021.html');return false;">
+          <a href="BDB.src/M000022.html" target="Code" class="method-signature"
+            onclick="popupCode('BDB.src/M000022.html');return false;">
           <span class="method-name">trancommit</span><span class="method-args">()</span>
           </a>
         </div>
