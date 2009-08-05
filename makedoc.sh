@@ -11,7 +11,8 @@ rdoc --title "Tokyo Cabinet" -o doc tokyocabinet-doc.rb
 find doc -type f -name '*.html' |
 while read file
 do
-  fgrep -v '<a href="http://validator.w3.org/check/referer">[Validate]</a>' "$file" > tmp.html
+  fgrep -v '<a href="http://validator.w3.org/check/referer">[Validate]</a>' "$file" |
+    sed -e "s/&#8217;/'/g" > tmp.html
   mv -f tmp.html "$file"
 done
 rm -f tmp.html

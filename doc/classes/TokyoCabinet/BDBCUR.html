@@ -174,10 +174,10 @@ cursor put mode: after
       
         <div class="method-description">
           <p>
-Create a cursor object. `<em>bdb</em>&#8217; specifies the B+ tree database
+Create a cursor object. `<em>bdb</em>' specifies the B+ tree database
 object. The return value is the new cursor object. Note that the cursor is
-available only after initialization with the `first&#8217; or the
-`jump&#8217; methods and so on. Moreover, the position of the cursor will
+available only after initialization with the `first' or the
+`jump' methods and so on. Moreover, the position of the cursor will
 be indefinite when the database is updated after the initialization of the
 cursor.
 </p>
@@ -218,7 +218,7 @@ database.
         <div class="method-description">
           <p>
 Move the cursor to the front of records corresponding a key.
-`<em>key</em>&#8217; specifies the key. If successful, the return value is
+`<em>key</em>' specifies the key. If successful, the return value is
 true, else, it is false. False is returned if there is no record
 corresponding the condition. The cursor is set to the first record
 corresponding the key or the next substitute if completely matching record
@@ -240,7 +240,7 @@ does not exist.
         <div class="method-description">
           <p>
 Get the key of the record where the cursor is. If successful, the return
-value is the key, else, it is `nil&#8217;. &#8216;nil&#8217; is returned
+value is the key, else, it is `nil'. &#8216;nil' is returned
 when the cursor is at invalid position.
 </p>
         </div>
@@ -333,12 +333,12 @@ true, else, it is false. False is returned if there is no previous record.
       
         <div class="method-description">
           <p>
-Insert a record around the cursor. `<em>value</em>&#8217; specifies the
-value. `<em>cpmode</em>&#8217; specifies detail adjustment:
-`TokyoCabinet::BDBCUR::CPCURRENT&#8217;, which means that the value of the
-current record is overwritten, `TokyoCabinet::BDBCUR::CPBEFORE&#8217;,
+Insert a record around the cursor. `<em>value</em>' specifies the
+value. `<em>cpmode</em>' specifies detail adjustment:
+`TokyoCabinet::BDBCUR::CPCURRENT', which means that the value of the
+current record is overwritten, `TokyoCabinet::BDBCUR::CPBEFORE',
 which means that the new record is inserted before the current record,
-`TokyoCabinet::BDBCUR::CPAFTER&#8217;, which means that the new record is
+`TokyoCabinet::BDBCUR::CPAFTER', which means that the new record is
 inserted after the current record. If successful, the return value is true,
 else, it is false. False is returned when the cursor is at invalid
 position. After insertion, the cursor is moved to the inserted record.
@@ -359,7 +359,7 @@ position. After insertion, the cursor is moved to the inserted record.
         <div class="method-description">
           <p>
 Get the value of the record where the cursor is. If successful, the return
-value is the value, else, it is `nil&#8217;. &#8216;nil&#8217; is returned
+value is the value, else, it is `nil'. &#8216;nil' is returned
 when the cursor is at invalid position.
 </p>
         </div>

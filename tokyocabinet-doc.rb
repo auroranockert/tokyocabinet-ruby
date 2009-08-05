@@ -328,8 +328,8 @@ module TokyoCabinet
       # (native code)
     end
     # Set the caching parameters.
-    # `<i>lcnum</i>' specifies the maximum number of leaf nodes to be cached.  If it is not defined or not more than 0, the default value is specified.
-    # `<i>ncnum</i>' specifies the maximum number of non-leaf nodes to be cached.  If it is not defined or not more than 0, the default value is specified.
+    # `<i>lcnum</i>' specifies the maximum number of leaf nodes to be cached.  If it is not defined or not more than 0, the default value is specified.  The default value is 1024.
+    # `<i>ncnum</i>' specifies the maximum number of non-leaf nodes to be cached.  If it is not defined or not more than 0, the default value is specified.  The default value is 512.
     # If successful, the return value is true, else, it is false.
     # Note that the tuning parameters of the database should be set before the database is opened.
     def setcache(lcnum, ncnum)
