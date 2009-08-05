@@ -82,9 +82,9 @@
       <p>
 Hash database is a file containing a hash table and is handled with the
 hash database API. Before operations to store or retrieve records, it is
-necessary to <a href="HDB.html#M000069">open</a> a database file and
+necessary to <a href="HDB.html#M000071">open</a> a database file and
 connect the hash database object to it. To avoid data missing or
-corruption, it is important to <a href="HDB.html#M000070">close</a> every
+corruption, it is important to <a href="HDB.html#M000072">close</a> every
 database file when it is no longer in use. Except for the interface below,
 methods compatible with the `Hash' class are also provided;
 `[]', `[]=', `store', `delete', `fetch',
@@ -102,30 +102,31 @@ methods compatible with the `Hash' class are also provided;
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000070">close</a>&nbsp;&nbsp;
-      <a href="#M000084">copy</a>&nbsp;&nbsp;
-      <a href="#M000066">ecode</a>&nbsp;&nbsp;
-      <a href="#M000065">errmsg</a>&nbsp;&nbsp;
-      <a href="#M000087">fsiz</a>&nbsp;&nbsp;
-      <a href="#M000080">fwmkeys</a>&nbsp;&nbsp;
-      <a href="#M000076">get</a>&nbsp;&nbsp;
-      <a href="#M000078">iterinit</a>&nbsp;&nbsp;
-      <a href="#M000079">iternext</a>&nbsp;&nbsp;
-      <a href="#M000064">new</a>&nbsp;&nbsp;
-      <a href="#M000069">open</a>&nbsp;&nbsp;
-      <a href="#M000082">optimize</a>&nbsp;&nbsp;
-      <a href="#M000075">out</a>&nbsp;&nbsp;
-      <a href="#M000085">path</a>&nbsp;&nbsp;
-      <a href="#M000071">put</a>&nbsp;&nbsp;
-      <a href="#M000074">putasync</a>&nbsp;&nbsp;
-      <a href="#M000073">putcat</a>&nbsp;&nbsp;
-      <a href="#M000072">putkeep</a>&nbsp;&nbsp;
-      <a href="#M000086">rnum</a>&nbsp;&nbsp;
-      <a href="#M000068">setcache</a>&nbsp;&nbsp;
-      <a href="#M000081">sync</a>&nbsp;&nbsp;
-      <a href="#M000067">tune</a>&nbsp;&nbsp;
-      <a href="#M000083">vanish</a>&nbsp;&nbsp;
-      <a href="#M000077">vsiz</a>&nbsp;&nbsp;
+      <a href="#M000072">close</a>&nbsp;&nbsp;
+      <a href="#M000086">copy</a>&nbsp;&nbsp;
+      <a href="#M000067">ecode</a>&nbsp;&nbsp;
+      <a href="#M000066">errmsg</a>&nbsp;&nbsp;
+      <a href="#M000089">fsiz</a>&nbsp;&nbsp;
+      <a href="#M000082">fwmkeys</a>&nbsp;&nbsp;
+      <a href="#M000078">get</a>&nbsp;&nbsp;
+      <a href="#M000080">iterinit</a>&nbsp;&nbsp;
+      <a href="#M000081">iternext</a>&nbsp;&nbsp;
+      <a href="#M000065">new</a>&nbsp;&nbsp;
+      <a href="#M000071">open</a>&nbsp;&nbsp;
+      <a href="#M000084">optimize</a>&nbsp;&nbsp;
+      <a href="#M000077">out</a>&nbsp;&nbsp;
+      <a href="#M000087">path</a>&nbsp;&nbsp;
+      <a href="#M000073">put</a>&nbsp;&nbsp;
+      <a href="#M000076">putasync</a>&nbsp;&nbsp;
+      <a href="#M000075">putcat</a>&nbsp;&nbsp;
+      <a href="#M000074">putkeep</a>&nbsp;&nbsp;
+      <a href="#M000088">rnum</a>&nbsp;&nbsp;
+      <a href="#M000069">setcache</a>&nbsp;&nbsp;
+      <a href="#M000070">setxmsiz</a>&nbsp;&nbsp;
+      <a href="#M000083">sync</a>&nbsp;&nbsp;
+      <a href="#M000068">tune</a>&nbsp;&nbsp;
+      <a href="#M000085">vanish</a>&nbsp;&nbsp;
+      <a href="#M000079">vsiz</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -218,7 +219,7 @@ error code: invalid record header
           <td class="context-item-value">7</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="HDB.html#M000069">open</a> error
+error code: <a href="HDB.html#M000071">open</a> error
 
 </td>
         </tr>
@@ -228,7 +229,7 @@ error code: <a href="HDB.html#M000069">open</a> error
           <td class="context-item-value">8</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="HDB.html#M000070">close</a> error
+error code: <a href="HDB.html#M000072">close</a> error
 
 </td>
         </tr>
@@ -248,7 +249,7 @@ error code: trunc error
           <td class="context-item-value">10</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="HDB.html#M000081">sync</a> error
+error code: <a href="HDB.html#M000083">sync</a> error
 
 </td>
         </tr>
@@ -428,8 +429,8 @@ tuning option: compress each record with TCBS
           <td class="context-item-value">1 &lt;&lt; 0</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: <a
-href="HDB.html#M000069">open</a> as a reader
+<a href="HDB.html#M000071">open</a> mode: <a
+href="HDB.html#M000071">open</a> as a reader
 
 </td>
         </tr>
@@ -439,8 +440,8 @@ href="HDB.html#M000069">open</a> as a reader
           <td class="context-item-value">1 &lt;&lt; 1</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: <a
-href="HDB.html#M000069">open</a> as a writer
+<a href="HDB.html#M000071">open</a> mode: <a
+href="HDB.html#M000071">open</a> as a writer
 
 </td>
         </tr>
@@ -450,7 +451,7 @@ href="HDB.html#M000069">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 2</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: writer creating
+<a href="HDB.html#M000071">open</a> mode: writer creating
 
 </td>
         </tr>
@@ -460,7 +461,7 @@ href="HDB.html#M000069">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 3</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: writer truncating
+<a href="HDB.html#M000071">open</a> mode: writer truncating
 
 </td>
         </tr>
@@ -470,8 +471,8 @@ href="HDB.html#M000069">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 4</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: <a
-href="HDB.html#M000069">open</a> without locking
+<a href="HDB.html#M000071">open</a> mode: <a
+href="HDB.html#M000071">open</a> without locking
 
 </td>
         </tr>
@@ -481,7 +482,7 @@ href="HDB.html#M000069">open</a> without locking
           <td class="context-item-value">1 &lt;&lt; 5</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="HDB.html#M000069">open</a> mode: lock without blocking
+<a href="HDB.html#M000071">open</a> mode: lock without blocking
 
 </td>
         </tr>
@@ -498,12 +499,12 @@ href="HDB.html#M000069">open</a> without locking
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000064" class="method-detail">
-        <a name="M000064"></a>
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000064.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000064.html');return false;">
+          <a href="HDB.src/M000065.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000065.html');return false;">
           <span class="method-name">new</span><span class="method-args">()</span>
           </a>
         </div>
@@ -511,19 +512,19 @@ href="HDB.html#M000069">open</a> without locking
         <div class="method-description">
           <p>
 Create a hash database object. The return value is the <a
-href="HDB.html#M000064">new</a> hash database object.
+href="HDB.html#M000065">new</a> hash database object.
 </p>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000070" class="method-detail">
-        <a name="M000070"></a>
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000070.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000070.html');return false;">
+          <a href="HDB.src/M000072.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000072.html');return false;">
           <span class="method-name">close</span><span class="method-args">()</span>
           </a>
         </div>
@@ -533,18 +534,18 @@ href="HDB.html#M000064">new</a> hash database object.
 Close the database file. If successful, the return value is true, else, it
 is false. Update of a database is assured to be written when the database
 is closed. If a writer opens a database but does not <a
-href="HDB.html#M000070">close</a> it appropriately, the database will be
+href="HDB.html#M000072">close</a> it appropriately, the database will be
 broken.
 </p>
         </div>
       </div>
 
-      <div id="method-M000084" class="method-detail">
-        <a name="M000084"></a>
+      <div id="method-M000086" class="method-detail">
+        <a name="M000086"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000084.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000084.html');return false;">
+          <a href="HDB.src/M000086.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000086.html');return false;">
           <span class="method-name">copy</span><span class="method-args">(path)</span>
           </a>
         </div>
@@ -552,8 +553,8 @@ broken.
         <div class="method-description">
           <p>
 Copy the database file. `<em><a
-href="HDB.html#M000085">path</a></em>' specifies the <a
-href="HDB.html#M000085">path</a> of the destination file. If it begins with
+href="HDB.html#M000087">path</a></em>' specifies the <a
+href="HDB.html#M000087">path</a> of the destination file. If it begins with
 `@', the trailing substring is executed as a command line. If
 successful, the return value is true, else, it is false. False is returned
 if the executed command returns non-zero code. The database file is assured
@@ -564,12 +565,12 @@ of the database file.
         </div>
       </div>
 
-      <div id="method-M000066" class="method-detail">
-        <a name="M000066"></a>
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000066.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000066.html');return false;">
+          <a href="HDB.src/M000067.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000067.html');return false;">
           <span class="method-name">ecode</span><span class="method-args">()</span>
           </a>
         </div>
@@ -582,12 +583,12 @@ error code.
         </div>
       </div>
 
-      <div id="method-M000065" class="method-detail">
-        <a name="M000065"></a>
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000065.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000065.html');return false;">
+          <a href="HDB.src/M000066.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000066.html');return false;">
           <span class="method-name">errmsg</span><span class="method-args">(ecode)</span>
           </a>
         </div>
@@ -595,18 +596,18 @@ error code.
         <div class="method-description">
           <p>
 Get the message string corresponding to an error code. `<em><a
-href="HDB.html#M000066">ecode</a></em>' specifies the error code. The
+href="HDB.html#M000067">ecode</a></em>' specifies the error code. The
 return value is the message string of the error code.
 </p>
         </div>
       </div>
 
-      <div id="method-M000087" class="method-detail">
-        <a name="M000087"></a>
+      <div id="method-M000089" class="method-detail">
+        <a name="M000089"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000087.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000087.html');return false;">
+          <a href="HDB.src/M000089.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000089.html');return false;">
           <span class="method-name">fsiz</span><span class="method-args">()</span>
           </a>
         </div>
@@ -619,12 +620,12 @@ database file or 0 if the object does not connect to any database file.
         </div>
       </div>
 
-      <div id="method-M000080" class="method-detail">
-        <a name="M000080"></a>
+      <div id="method-M000082" class="method-detail">
+        <a name="M000082"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000080.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000080.html');return false;">
+          <a href="HDB.src/M000082.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000082.html');return false;">
           <span class="method-name">fwmkeys</span><span class="method-args">(prefix, max)</span>
           </a>
         </div>
@@ -642,12 +643,12 @@ because every key in the database is scanned.
         </div>
       </div>
 
-      <div id="method-M000076" class="method-detail">
-        <a name="M000076"></a>
+      <div id="method-M000078" class="method-detail">
+        <a name="M000078"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000076.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000076.html');return false;">
+          <a href="HDB.src/M000078.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000078.html');return false;">
           <span class="method-name">get</span><span class="method-args">(key)</span>
           </a>
         </div>
@@ -661,12 +662,12 @@ returned if no record corresponds.
         </div>
       </div>
 
-      <div id="method-M000078" class="method-detail">
-        <a name="M000078"></a>
+      <div id="method-M000080" class="method-detail">
+        <a name="M000080"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000078.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000078.html');return false;">
+          <a href="HDB.src/M000080.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000080.html');return false;">
           <span class="method-name">iterinit</span><span class="method-args">()</span>
           </a>
         </div>
@@ -680,12 +681,12 @@ stored in a database.
         </div>
       </div>
 
-      <div id="method-M000079" class="method-detail">
-        <a name="M000079"></a>
+      <div id="method-M000081" class="method-detail">
+        <a name="M000081"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000079.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000079.html');return false;">
+          <a href="HDB.src/M000081.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000081.html');return false;">
           <span class="method-name">iternext</span><span class="method-args">()</span>
           </a>
         </div>
@@ -694,8 +695,8 @@ stored in a database.
           <p>
 Get the next key of the iterator. If successful, the return value is the
 next key, else, it is `nil'. `nil' is returned when no record
-is to be <a href="HDB.html#M000076">get</a> <a
-href="HDB.html#M000075">out</a> of the iterator. It is possible to access
+is to be <a href="HDB.html#M000078">get</a> <a
+href="HDB.html#M000077">out</a> of the iterator. It is possible to access
 every record by iteration of calling this method. It is allowed to update
 or remove records whose keys are fetched while the iteration. However, it
 is not assured if updating the database is occurred while the iteration.
@@ -706,28 +707,28 @@ access.
         </div>
       </div>
 
-      <div id="method-M000069" class="method-detail">
-        <a name="M000069"></a>
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000069.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000069.html');return false;">
+          <a href="HDB.src/M000071.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000071.html');return false;">
           <span class="method-name">open</span><span class="method-args">(path, omode)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Open a database file. `<em><a href="HDB.html#M000085">path</a></em>'
-specifies the <a href="HDB.html#M000085">path</a> of the database file.
+Open a database file. `<em><a href="HDB.html#M000087">path</a></em>'
+specifies the <a href="HDB.html#M000087">path</a> of the database file.
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::HDB::OWRITER' as a writer,
 `TokyoCabinet::HDB::OREADER' as a reader. If the mode is
 `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise
 or: `TokyoCabinet::HDB::OCREAT', which means it creates a <a
-href="HDB.html#M000064">new</a> database if not exist,
+href="HDB.html#M000065">new</a> database if not exist,
 `TokyoCabinet::HDB::OTRUNC', which means it creates a <a
-href="HDB.html#M000064">new</a> database regardless if one exists. Both of
+href="HDB.html#M000065">new</a> database regardless if one exists. Both of
 `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER'
 can be added to by bitwise or: `TokyoCabinet::HDB::ONOLCK', which
 means it opens the database file without file locking, or
@@ -738,12 +739,12 @@ specified. If successful, the return value is true, else, it is false.
         </div>
       </div>
 
-      <div id="method-M000082" class="method-detail">
-        <a name="M000082"></a>
+      <div id="method-M000084" class="method-detail">
+        <a name="M000084"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000082.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000082.html');return false;">
+          <a href="HDB.src/M000084.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000084.html');return false;">
           <span class="method-name">optimize</span><span class="method-args">(bnum, apow, fpow, opts)</span>
           </a>
         </div>
@@ -772,12 +773,12 @@ fragmentation by successive updating.
         </div>
       </div>
 
-      <div id="method-M000075" class="method-detail">
-        <a name="M000075"></a>
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000075.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000075.html');return false;">
+          <a href="HDB.src/M000077.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000077.html');return false;">
           <span class="method-name">out</span><span class="method-args">(key)</span>
           </a>
         </div>
@@ -790,31 +791,31 @@ return value is true, else, it is false.
         </div>
       </div>
 
-      <div id="method-M000085" class="method-detail">
-        <a name="M000085"></a>
+      <div id="method-M000087" class="method-detail">
+        <a name="M000087"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000085.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000085.html');return false;">
+          <a href="HDB.src/M000087.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000087.html');return false;">
           <span class="method-name">path</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Get the <a href="HDB.html#M000085">path</a> of the database file. The
-return value is the <a href="HDB.html#M000085">path</a> of the database
+Get the <a href="HDB.html#M000087">path</a> of the database file. The
+return value is the <a href="HDB.html#M000087">path</a> of the database
 file or `nil' if the object does not connect to any database file.
 </p>
         </div>
       </div>
 
-      <div id="method-M000071" class="method-detail">
-        <a name="M000071"></a>
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000071.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000071.html');return false;">
+          <a href="HDB.src/M000073.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000073.html');return false;">
           <span class="method-name">put</span><span class="method-args">(key, value)</span>
           </a>
         </div>
@@ -829,12 +830,12 @@ database, it is overwritten.
         </div>
       </div>
 
-      <div id="method-M000074" class="method-detail">
-        <a name="M000074"></a>
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000074.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000074.html');return false;">
+          <a href="HDB.src/M000076.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000076.html');return false;">
           <span class="method-name">putasync</span><span class="method-args">(key, value)</span>
           </a>
         </div>
@@ -850,12 +851,12 @@ accumulated into the inner buffer and wrote into the file at a blast.
         </div>
       </div>
 
-      <div id="method-M000073" class="method-detail">
-        <a name="M000073"></a>
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000073.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000073.html');return false;">
+          <a href="HDB.src/M000075.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000075.html');return false;">
           <span class="method-name">putcat</span><span class="method-args">(key, value)</span>
           </a>
         </div>
@@ -865,25 +866,25 @@ accumulated into the inner buffer and wrote into the file at a blast.
 Concatenate a value at the end of the existing record. `<em>key</em>'
 specifies the key. `<em>value</em>' specifies the value. If
 successful, the return value is true, else, it is false. If there is no
-corresponding record, a <a href="HDB.html#M000064">new</a> record is
+corresponding record, a <a href="HDB.html#M000065">new</a> record is
 created.
 </p>
         </div>
       </div>
 
-      <div id="method-M000072" class="method-detail">
-        <a name="M000072"></a>
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000072.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000072.html');return false;">
+          <a href="HDB.src/M000074.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000074.html');return false;">
           <span class="method-name">putkeep</span><span class="method-args">(key, value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Store a <a href="HDB.html#M000064">new</a> record. `<em>key</em>'
+Store a <a href="HDB.html#M000065">new</a> record. `<em>key</em>'
 specifies the key. `<em>value</em>' specifies the value. If
 successful, the return value is true, else, it is false. If a record with
 the same key exists in the database, this method has no effect.
@@ -891,12 +892,12 @@ the same key exists in the database, this method has no effect.
         </div>
       </div>
 
-      <div id="method-M000086" class="method-detail">
-        <a name="M000086"></a>
+      <div id="method-M000088" class="method-detail">
+        <a name="M000088"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000086.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000086.html');return false;">
+          <a href="HDB.src/M000088.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000088.html');return false;">
           <span class="method-name">rnum</span><span class="method-args">()</span>
           </a>
         </div>
@@ -909,12 +910,12 @@ if the object does not connect to any database file.
         </div>
       </div>
 
-      <div id="method-M000068" class="method-detail">
-        <a name="M000068"></a>
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000068.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000068.html');return false;">
+          <a href="HDB.src/M000069.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000069.html');return false;">
           <span class="method-name">setcache</span><span class="method-args">(rcnum)</span>
           </a>
         </div>
@@ -922,20 +923,41 @@ if the object does not connect to any database file.
         <div class="method-description">
           <p>
 Set the caching parameters. `<em>rcnum</em>' specifies the maximum
-number of records to be cached. If it is not more than 0, the record cache
-is disabled. It is disabled by default. If successful, the return value is
-true, else, it is false. Note that the caching parameters of the database
-should be set before the database is opened.
+number of records to be cached. If it is not defined or not more than 0,
+the record cache is disabled. It is disabled by default. If successful, the
+return value is true, else, it is false. Note that the caching parameters
+of the database should be set before the database is opened.
 </p>
         </div>
       </div>
 
-      <div id="method-M000081" class="method-detail">
-        <a name="M000081"></a>
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000081.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000081.html');return false;">
+          <a href="HDB.src/M000070.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000070.html');return false;">
+          <span class="method-name">setxmsiz</span><span class="method-args">(xmsiz)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Set the size of the extra mapped memory. `<em>xmsiz</em>' specifies
+the size of the extra mapped memory. If it is not defined or not more than
+0, the extra mapped memory is disabled. The default size is 67108864. If
+successful, the return value is true, else, it is false. Note that the
+mapping parameters should be set before the database is opened.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000083" class="method-detail">
+        <a name="M000083"></a>
+
+        <div class="method-heading">
+          <a href="HDB.src/M000083.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000083.html');return false;">
           <span class="method-name">sync</span><span class="method-args">()</span>
           </a>
         </div>
@@ -949,12 +971,12 @@ another process connects the same database file.
         </div>
       </div>
 
-      <div id="method-M000067" class="method-detail">
-        <a name="M000067"></a>
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000067.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000067.html');return false;">
+          <a href="HDB.src/M000068.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000068.html');return false;">
           <span class="method-name">tune</span><span class="method-args">(bnum, apow, fpow, opts)</span>
           </a>
         </div>
@@ -986,12 +1008,12 @@ opened.
         </div>
       </div>
 
-      <div id="method-M000083" class="method-detail">
-        <a name="M000083"></a>
+      <div id="method-M000085" class="method-detail">
+        <a name="M000085"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000083.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000083.html');return false;">
+          <a href="HDB.src/M000085.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000085.html');return false;">
           <span class="method-name">vanish</span><span class="method-args">()</span>
           </a>
         </div>
@@ -1004,12 +1026,12 @@ false.
         </div>
       </div>
 
-      <div id="method-M000077" class="method-detail">
-        <a name="M000077"></a>
+      <div id="method-M000079" class="method-detail">
+        <a name="M000079"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000077.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000077.html');return false;">
+          <a href="HDB.src/M000079.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000079.html');return false;">
           <span class="method-name">vsiz</span><span class="method-args">(key)</span>
           </a>
         </div>

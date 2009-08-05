@@ -48,6 +48,7 @@ static VALUE hdb_errmsg(VALUE vself, VALUE vecode);
 static VALUE hdb_ecode(VALUE vself);
 static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself);
+static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_open(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_close(VALUE vself);
 static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval);
@@ -85,6 +86,7 @@ static VALUE bdb_ecode(VALUE vself);
 static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp);
 static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself);
+static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_open(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_close(VALUE vself);
 static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval);
@@ -258,6 +260,7 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "ecode", hdb_ecode, 0);
   rb_define_method(cls_hdb, "tune", hdb_tune, -1);
   rb_define_method(cls_hdb, "setcache", hdb_setcache, -1);
+  rb_define_method(cls_hdb, "setxmsiz", hdb_setxmsiz, -1);
   rb_define_method(cls_hdb, "open", hdb_open, -1);
   rb_define_method(cls_hdb, "close", hdb_close, 0);
   rb_define_method(cls_hdb, "put", hdb_put, 2);
@@ -361,6 +364,18 @@ static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbsetcache(hdb, rcnum) ? Qtrue : Qfalse;
+}
+
+
+static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
+  VALUE vhdb, vxmsiz;
+  TCHDB *hdb;
+  int64_t xmsiz;
+  rb_scan_args(argc, argv, "01", &vxmsiz);
+  xmsiz = (vxmsiz == Qnil) ? -1 : NUM2LL(vxmsiz);
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbsetxmsiz(hdb, xmsiz) ? Qtrue : Qfalse;
 }
 
 
@@ -876,6 +891,7 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "setcmpfunc", bdb_setcmpfunc, 1);
   rb_define_method(cls_bdb, "tune", bdb_tune, -1);
   rb_define_method(cls_bdb, "setcache", bdb_setcache, -1);
+  rb_define_method(cls_bdb, "setxmsiz", bdb_setxmsiz, -1);
   rb_define_method(cls_bdb, "open", bdb_open, -1);
   rb_define_method(cls_bdb, "close", bdb_close, 0);
   rb_define_method(cls_bdb, "put", bdb_put, 2);
@@ -1022,6 +1038,18 @@ static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbsetcache(bdb, lcnum, ncnum);
+}
+
+
+static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
+  VALUE vbdb, vxmsiz;
+  TCBDB *bdb;
+  int64_t xmsiz;
+  rb_scan_args(argc, argv, "01", &vxmsiz);
+  xmsiz = (vxmsiz == Qnil) ? -1 : NUM2LL(vxmsiz);
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  return tcbdbsetxmsiz(bdb, xmsiz) ? Qtrue : Qfalse;
 }
 
 

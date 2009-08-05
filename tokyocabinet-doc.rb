@@ -115,10 +115,17 @@ module TokyoCabinet
       # (native code)
     end
     # Set the caching parameters.
-    # `<i>rcnum</i>' specifies the maximum number of records to be cached.  If it is not more than 0, the record cache is disabled. It is disabled by default.
+    # `<i>rcnum</i>' specifies the maximum number of records to be cached.  If it is not defined or not more than 0, the record cache is disabled. It is disabled by default.
     # If successful, the return value is true, else, it is false.
     # Note that the caching parameters of the database should be set before the database is opened.
     def setcache(rcnum)
+      # (native code)
+    end
+    # Set the size of the extra mapped memory.
+    # `<i>xmsiz</i>' specifies the size of the extra mapped memory.  If it is not defined or not more than 0, the extra mapped memory is disabled.  The default size is 67108864.
+    # If successful, the return value is true, else, it is false.
+    # Note that the mapping parameters should be set before the database is opened.
+    def setxmsiz(xmsiz)
       # (native code)
     end
     # Open a database file.
@@ -367,6 +374,13 @@ module TokyoCabinet
     # If successful, the return value is true, else, it is false.
     # Note that the tuning parameters of the database should be set before the database is opened.
     def setcache(lcnum, ncnum)
+      # (native code)
+    end
+    # Set the size of the extra mapped memory.
+    # `<i>xmsiz</i>' specifies the size of the extra mapped memory.  If it is not defined or not more than 0, the extra mapped memory is disabled.  It is disabled by default.
+    # If successful, the return value is true, else, it is false.
+    # Note that the mapping parameters should be set before the database is opened.
+    def setxmsiz(xmsiz)
       # (native code)
     end
     # Open a database file.
