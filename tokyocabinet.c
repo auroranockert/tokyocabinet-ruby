@@ -2548,6 +2548,8 @@ static void tdb_init(void){
   rb_define_const(cls_tdb, "OTSYNC", INT2NUM(TDBOTSYNC));
   rb_define_const(cls_tdb, "ITLEXICAL", INT2NUM(TDBITLEXICAL));
   rb_define_const(cls_tdb, "ITDECIMAL", INT2NUM(TDBITDECIMAL));
+  rb_define_const(cls_tdb, "ITTOKEN", INT2NUM(TDBITTOKEN));
+  rb_define_const(cls_tdb, "ITQGRAM", INT2NUM(TDBITQGRAM));
   rb_define_const(cls_tdb, "ITVOID", INT2NUM(TDBITVOID));
   rb_define_const(cls_tdb, "ITKEEP", INT2NUM(TDBITKEEP));
   rb_define_private_method(cls_tdb, "initialize", tdb_initialize, 0);
@@ -3132,6 +3134,10 @@ static void tdbqry_init(void){
   rb_define_const(cls_tdbqry, "QCNUMLE", INT2NUM(TDBQCNUMLE));
   rb_define_const(cls_tdbqry, "QCNUMBT", INT2NUM(TDBQCNUMBT));
   rb_define_const(cls_tdbqry, "QCNUMOREQ", INT2NUM(TDBQCNUMOREQ));
+  rb_define_const(cls_tdbqry, "QCFTSPH", INT2NUM(TDBQCFTSPH));
+  rb_define_const(cls_tdbqry, "QCFTSAND", INT2NUM(TDBQCFTSAND));
+  rb_define_const(cls_tdbqry, "QCFTSOR", INT2NUM(TDBQCFTSOR));
+  rb_define_const(cls_tdbqry, "QCFTSEX", INT2NUM(TDBQCFTSEX));
   rb_define_const(cls_tdbqry, "QCNEGATE", INT2NUM(TDBQCNEGATE));
   rb_define_const(cls_tdbqry, "QCNOIDX", INT2NUM(TDBQCNOIDX));
   rb_define_const(cls_tdbqry, "QOSTRASC", INT2NUM(TDBQOSTRASC));

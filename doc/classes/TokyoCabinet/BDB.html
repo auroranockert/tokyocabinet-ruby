@@ -85,9 +85,11 @@ tree database API. Before operations to store or retrieve records, it is
 necessary to <a href="BDB.html#M000009">open</a> a database file and
 connect the B+ tree database object to it. To avoid data missing or
 corruption, it is important to <a href="BDB.html#M000010">close</a> every
-database file when it is no longer in use.<br/> Except for the interface
-below, methods compatible with the `Hash' class are also provided;
-`[]', `[]=', `store', `delete', `fetch',
+database file when it is no longer in use. It is forbidden for multible
+database objects in a process to <a href="BDB.html#M000009">open</a> the
+same database at the same time.<br/> Except for the interface below, methods
+compatible with the `Hash' class are also provided; `[]',
+`[]=', `store', `delete', `fetch',
 `has_key?', `has_value?', `key', `clear',
 `size', `empty?', `each', `each_key',
 `each_value', and `keys'.<br/>
@@ -769,8 +771,8 @@ Get forward matching keys.<br/> `<em>prefix</em>' specifies the prefix
 of the corresponding keys.<br/> `<em>max</em>' specifies the maximum
 number of keys to be fetched. If it is not defined or negative, no limit is
 specified.<br/> The return value is a list object of the keys of the
-corresponding records. This method does never fail and return an empty list
-even if no record corresponds.<br/>
+corresponding records. This method does never fail. It returns an empty
+list even if no record corresponds.<br/>
 </p>
         </div>
       </div>
@@ -1072,7 +1074,7 @@ whether the ending border is inclusive or not. If it is not defined, false
 is specified.<br/> `<em>max</em>' specifies the maximum number of keys
 to be fetched. If it is not defined or negative, no limit is specified.<br/>
 The return value is a list object of the keys of the corresponding records.
-This method does never fail and return an empty list even if no record
+This method does never fail. It returns an empty list even if no record
 corresponds.<br/>
 </p>
         </div>

@@ -86,12 +86,13 @@ retrieve records, it is necessary to <a href="FDB.html#M000040">open</a> a
 database file and connect the fixed-length database object to it. To avoid
 data missing or corruption, it is important to <a
 href="FDB.html#M000041">close</a> every database file when it is no longer
-in use.<br/> Except for the interface below, methods compatible with the
-`Hash' class are also provided; `[]', `[]=',
-`store', `delete', `fetch', `has_key?',
-`has_value?', `key', `clear', `size',
-`empty?', `each', `each_key', `each_value', and
-`keys'.<br/>
+in use. It is forbidden for multible database objects in a process to <a
+href="FDB.html#M000040">open</a> the same database at the same time.<br/>
+Except for the interface below, methods compatible with the `Hash'
+class are also provided; `[]', `[]=', `store',
+`delete', `fetch', `has_key?', `has_value?',
+`key', `clear', `size', `empty?', `each',
+`each_key', `each_value', and `keys'.<br/>
 </p>
 
     </div>
@@ -920,8 +921,8 @@ Get keys with an interval notation.<br/> `<em>interval</em>' specifies
 the interval notation.<br/> `<em>max</em>' specifies the maximum number
 of keys to be fetched. If it is not defined or negative, no limit is
 specified.<br/> The return value is a list object of the keys of the
-corresponding records. This method does never fail and return an empty list
-even if no record corresponds.<br/>
+corresponding records. This method does never fail. It returns an empty
+list even if no record corresponds.<br/>
 </p>
         </div>
       </div>

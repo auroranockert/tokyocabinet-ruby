@@ -44,7 +44,7 @@ def usage
   STDERR.printf("%s: test cases of the table database API\n", $progname)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-ip|-is|-in|-it|-if] [-nl|-nb] path rnum" +
+  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-ip|-is|-in|-it|-if|-ix] [-nl|-nb] path rnum" +
                 " [bnum [apow [fpow]]]\n", $progname)
   STDERR.printf("  %s read [-nl|-nb] path\n", $progname)
   STDERR.printf("  %s remove [-nl|-nb] path\n", $progname)
@@ -92,6 +92,8 @@ def runwrite
         iflags |= 1 << 3
       elsif ARGV[i] == "-if"
         iflags |= 1 << 4
+      elsif ARGV[i] == "-ix"
+        iflags |= 1 << 5
       elsif ARGV[i] == "-nl"
         omode |= TDB::ONOLCK
       elsif ARGV[i] == "-nb"
@@ -247,7 +249,11 @@ def procwrite(path, rnum, bnum, apow, fpow, opts, iflags, omode)
     eprint(tdb, "setindex")
     err = true
   end
-  if (iflags & (1 << 4)) != 0 && !tdb.setindex("flag", TDB::ITLEXICAL)
+  if (iflags & (1 << 4)) != 0 && !tdb.setindex("flag", TDB::ITTOKEN)
+    eprint(tdb, "setindex")
+    err = true
+  end
+  if (iflags & (1 << 5)) != 0 && !tdb.setindex("text", TDB::ITQGRAM)
     eprint(tdb, "setindex")
     err = true
   end
@@ -266,7 +272,10 @@ def procwrite(path, rnum, bnum, apow, fpow, opts, iflags, omode)
       vbuf += "," if vbuf.length > 0
       vbuf += pt.to_s
     end
-    cols["flag"] = vbuf if vbuf.length > 0
+    if vbuf.length > 0
+      cols["flag"] = vbuf
+      cols["text"] = vbuf
+    end
     if !tdb.put(id, cols)
       eprint(tdb, "put")
       err = true
@@ -402,6 +411,19 @@ def procmisc(path, rnum, opts, omode)
     eprint(tdb, "setindex")
     err = true
   end
+
+  if !tdb.setindex("type", TDB::ITDECIMAL)
+    eprint(tdb, "setindex")
+    err = true
+  end
+  if !tdb.setindex("flag", TDB::ITTOKEN)
+    eprint(tdb, "setindex")
+    err = true
+  end
+  if !tdb.setindex("text", TDB::ITQGRAM)
+    eprint(tdb, "setindex")
+    err = true
+  end
   printf("writing:\n")
   for i in 1..rnum
     id = tdb.genuid
@@ -418,7 +440,10 @@ def procmisc(path, rnum, opts, omode)
       vbuf += "," if vbuf.length > 0
       vbuf += pt.to_s
     end
-    cols["flag"] = vbuf if vbuf.length > 0
+    if vbuf.length > 0
+      cols["flag"] = vbuf
+      cols["text"] = vbuf
+    end
     if !tdb.put(id, cols)
       eprint(tdb, "put")
       err = true
@@ -526,10 +551,11 @@ def procmisc(path, rnum, opts, omode)
   File.unlink(npath)
   printf("searching:\n")
   qry = TDBQRY::new(tdb)
-  names = [ "", "str", "num", "type", "flag", "c1" ]
+  names = [ "", "str", "num", "type", "flag", "text", "c1" ]
   ops = [ TDBQRY::QCSTREQ, TDBQRY::QCSTRINC, TDBQRY::QCSTRBW, TDBQRY::QCSTREW, TDBQRY::QCSTRAND,
           TDBQRY::QCSTROR, TDBQRY::QCSTROREQ, TDBQRY::QCSTRRX, TDBQRY::QCNUMEQ, TDBQRY::QCNUMGT,
           TDBQRY::QCNUMGE, TDBQRY::QCNUMLT, TDBQRY::QCNUMLE, TDBQRY::QCNUMBT, TDBQRY::QCNUMOREQ ]
+  ftsops = [ TDBQRY::QCFTSPH, TDBQRY::QCFTSAND, TDBQRY::QCFTSOR, TDBQRY::QCFTSEX ]
   types = [ TDBQRY::QOSTRASC, TDBQRY::QOSTRDESC, TDBQRY::QONUMASC, TDBQRY::QONUMDESC ]
   for i in 1..rnum
     qry = TDBQRY::new(tdb) if rand(10) > 0
@@ -537,6 +563,7 @@ def procmisc(path, rnum, opts, omode)
     for j in 1..cnum
       name = names[rand(names.length)]
       op = ops[rand(ops.length)]
+      op = ftsops[rand(ftsops.length)] if rand(10) == 0
       op |= TDBQRY::QCNEGATE if rand(20) == 0
       op |= TDBQRY::QCNOIDX if rand(20) == 0
       expr = rand(i).to_s
