@@ -385,7 +385,7 @@ def procmisc(name, rnum)
     eprint(adb, "optimize")
     err = true
   end
-  npath = name + "-tmp"
+  npath = adb.path + "-tmp"
   if !adb.copy(npath)
     eprint(adb, "copy")
     err = true

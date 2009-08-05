@@ -411,7 +411,6 @@ def procmisc(path, rnum, opts, omode)
     eprint(tdb, "setindex")
     err = true
   end
-
   if !tdb.setindex("type", TDB::ITDECIMAL)
     eprint(tdb, "setindex")
     err = true
@@ -508,7 +507,7 @@ def procmisc(path, rnum, opts, omode)
     eprint(tdb, "(validation)")
     err = true
   end
-  keys = tdb.fwmkeys("1", 10)
+  pkeys = tdb.fwmkeys("1", 10)
   printf("checking counting:\n")
   for i in 1..rnum
     buf = sprintf("i:%d", rand(rnum))

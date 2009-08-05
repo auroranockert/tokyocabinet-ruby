@@ -1145,7 +1145,7 @@ module TokyoCabinet
     # `<i>pkey</i>' specifies the primary key.%%
     # `<i>num</i>' specifies the additional value.%%
     # If successful, the return value is the summation value, else, it is `nil'.%%
-    # If the corresponding record exists, the value is treated as an integer and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `i' operator after retrieval.%%
+    # The additional value is stored as a decimal string value of a column whose name is "_num".  If no record corresponds, a new record with the additional value is stored.%%
     def addint(pkey, num)
       # (native code)
     end
@@ -1153,7 +1153,7 @@ module TokyoCabinet
     # `<i>key</i>' specifies the primary key.%%
     # `<i>num</i>' specifies the additional value.%%
     # If successful, the return value is the summation value, else, it is `nil'.%%
-    # If the corresponding record exists, the value is treated as a real number and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `d' operator after retrieval.%%
+    # The additional value is stored as a decimal string value of a column whose name is "_num".  If no record corresponds, a new record with the additional value is stored.%%
     def adddouble(pkey, num)
       # (native code)
     end
@@ -1344,7 +1344,7 @@ module TokyoCabinet
       # (native code)
     end
     # Process each corresponding record.%%
-    # this method needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise-or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
+    # This method needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise-or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
     # If successful, the return value is true, else, it is false.%%
     def proc()
       # (native code)
@@ -1362,11 +1362,11 @@ module TokyoCabinet
     def metasearch(others, type)
       # (native code)
     end
-    # Generate a keyword-in-context string.%%
+    # Generate keyword-in-context strings.%%
     # `<i>cols</i>' specifies a hash containing columns.%%
     # `<i>name</i>' specifies the name of a column.  If it is not defined, the first column of the query is specified.%%
     # `<i>width</i>' specifies the width of strings picked up around each keyword.  If it is not defined or negative, the whole text is picked up.%%
-    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL' specifies that each keyword is marked up by the STX (0x02) code and the ETX (0x03) code, `TokyoCabinet::TDBQRY::KWMUBRCT' specifies that each keyword is marked up by the two square brackets, `TokyoCabinet::TDBQRY::KWNOOVER' specifies that each context does not overlap, `TokyoCabinet::TDBQRY::KWPULEAD' specifies that the lead string is picked up forcibly.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL' specifies that each keyword is marked up by the STX (0x02) code and the ETX (0x03) code, `TokyoCabinet::TDBQRY::KWMUBRCT' specifies that each keyword is marked up by the two square brackets, `TokyoCabinet::TDBQRY::KWNOOVER' specifies that each context does not overlap, `TokyoCabinet::TDBQRY::KWPULEAD' specifies that the lead string is picked up forcibly.  If it is not defined, no option is specified.%%
     # The return value is an array of strings around keywords.%%
     def kwic(cols, name, width, opts)
       # (native code)
