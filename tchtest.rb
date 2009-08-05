@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------------------------------
 # The test cases of the hash database API
-#                                                       Copyright (C) 2006-2008 Mikio Hirabayashi
+#                                                       Copyright (C) 2006-2009 Mikio Hirabayashi
 # This file is part of Tokyo Cabinet.
 # Tokyo Cabinet is free software; you can redistribute it and/or modify it under the terms of
 # the GNU Lesser General Public License as published by the Free Software Foundation; either
@@ -425,13 +425,13 @@ def procmisc(path, rnum, opts, omode)
   for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
     if rand(2) == 0
-      if !hdb.addint(buf, 1) && hdb.ecode() != HDB::EKEEP
+      if !hdb.addint(buf, 1) && hdb.ecode != HDB::EKEEP
         eprint(hdb, "addint")
         err = true
         break
       end
     else
-      if !hdb.adddouble(buf, 1) && hdb.ecode() != HDB::EKEEP
+      if !hdb.adddouble(buf, 1) && hdb.ecode != HDB::EKEEP
         eprint(hdb, "adddouble")
         err = true
         break

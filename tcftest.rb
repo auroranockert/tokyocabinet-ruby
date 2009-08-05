@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------------------------------
 # The test cases of the fixed-length database API
-#                                                       Copyright (C) 2006-2008 Mikio Hirabayashi
+#                                                       Copyright (C) 2006-2009 Mikio Hirabayashi
 # This file is part of Tokyo Cabinet.
 # Tokyo Cabinet is free software; you can redistribute it and/or modify it under the terms of
 # the GNU Lesser General Public License as published by the Free Software Foundation; either
@@ -390,13 +390,13 @@ def procmisc(path, rnum, omode)
   for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum) + 1)
     if rand(2) == 0
-      if !fdb.addint(buf, 1) && fdb.ecode() != FDB::EKEEP
+      if !fdb.addint(buf, 1) && fdb.ecode != FDB::EKEEP
         eprint(fdb, "addint")
         err = true
         break
       end
     else
-      if !fdb.adddouble(buf, 1) && fdb.ecode() != FDB::EKEEP
+      if !fdb.adddouble(buf, 1) && fdb.ecode != FDB::EKEEP
         eprint(fdb, "adddouble")
         err = true
         break

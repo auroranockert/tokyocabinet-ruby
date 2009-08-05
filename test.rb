@@ -21,6 +21,10 @@ commands = [
             "tcftest.rb read casket",
             "tcftest.rb remove casket",
             "tcftest.rb misc casket 1000",
+            "tcttest.rb write casket 10000",
+            "tcttest.rb read casket",
+            "tcttest.rb remove casket",
+            "tcttest.rb misc casket 1000",
            ]
 num = 1
 commands.each do |command|

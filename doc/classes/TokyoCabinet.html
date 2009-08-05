@@ -308,9 +308,65 @@ The following code is an example to use a fixed-length database.
    STDERR.printf(&quot;close error: %s\n&quot;, fdb.errmsg(ecode))
  end
 </pre>
+<p>
+The following code is an example to use a table database.
+</p>
+<pre>
+ require 'tokyocabinet'
+ include TokyoCabinet
+
+ # create the object
+ tdb = TDB::new
+
+ # open the database
+ if !tdb.open(&quot;casket.tdb&quot;, TDB::OWRITER | TDB::OCREAT)
+   ecode = tdb.ecode
+   STDERR.printf(&quot;open error: %s\n&quot;, tdb.errmsg(ecode))
+ end
+
+ # store a record
+ pkey = tdb.genuid
+ cols = { &quot;name&quot; =&gt; &quot;mikio&quot;, &quot;age&quot; =&gt; &quot;30&quot;, &quot;lang&quot; =&gt; &quot;ja,en,c&quot; }
+ if !tdb.put(pkey, cols)
+   ecode = tdb.ecode
+   STDERR.printf(&quot;get error: %s\n&quot;, tdb.errmsg(ecode))
+ end
+
+ # store another record
+ cols = { &quot;name&quot; =&gt; &quot;falcon&quot;, &quot;age&quot; =&gt; &quot;31&quot;, &quot;lang&quot; =&gt; &quot;ja&quot;, &quot;skill&quot; =&gt; &quot;cook,blog&quot; }
+ if !tdb.put(&quot;x12345&quot;, cols)
+   ecode = tdb.ecode
+   STDERR.printf(&quot;get error: %s\n&quot;, tdb.errmsg(ecode))
+ end
+
+ # search for records
+ qry = TDBQRY::new(tdb)
+ qry.addcond(&quot;age&quot;, TDBQRY::QCNUMGE, &quot;20&quot;)
+ qry.addcond(&quot;lang&quot;, TDBQRY::QCSTROR, &quot;ja,en&quot;)
+ qry.setorder(&quot;name&quot;, TDBQRY::QOSTRASC)
+ qry.setmax(10)
+ res = qry.search
+ res.each do |rkey|
+   rcols = tdb.get(rkey)
+   printf(&quot;name:%s\n&quot;, rcols[&quot;name&quot;])
+ end
+
+ # hash-like usage
+ tdb[&quot;joker&quot;] = { &quot;name&quot; =&gt; &quot;ozma&quot;, &quot;lang&quot; =&gt; &quot;en&quot;, &quot;skill&quot; =&gt; &quot;song,dance&quot; }
+ printf(&quot;%s\n&quot;, tdb[&quot;joker&quot;][&quot;name&quot;])
+ tdb.each do |key, value|
+   printf(&quot;%s:%s\n&quot;, key, value[&quot;name&quot;])
+ end
+
+ # close the database
+ if !tdb.close
+   ecode = tdb.ecode
+   STDERR.printf(&quot;close error: %s\n&quot;, tdb.errmsg(ecode))
+ end
+</pre>
 <h2>LICENSE</h2>
 <pre>
- Copyright (C) 2006-2008 Mikio Hirabayashi
+ Copyright (C) 2006-2009 Mikio Hirabayashi
  All rights reserved.
 </pre>
 <p>
@@ -346,6 +402,8 @@ Boston, MA 02111-1307 USA.
 Class <a href="TokyoCabinet/BDBCUR.html" class="link">TokyoCabinet::BDBCUR</a><br />
 Class <a href="TokyoCabinet/FDB.html" class="link">TokyoCabinet::FDB</a><br />
 Class <a href="TokyoCabinet/HDB.html" class="link">TokyoCabinet::HDB</a><br />
+Class <a href="TokyoCabinet/TDB.html" class="link">TokyoCabinet::TDB</a><br />
+Class <a href="TokyoCabinet/TDBQRY.html" class="link">TokyoCabinet::TDBQRY</a><br />
 
     </div>
 
