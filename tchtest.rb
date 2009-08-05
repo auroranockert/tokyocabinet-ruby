@@ -342,6 +342,18 @@ def procmisc(path, rnum, opts, omode)
     eprint(hdb, "tune")
     err = true
   end
+  if !hdb.setcache(rnum / 10)
+    eprint(hdb, "setcache")
+    err = true
+  end
+  if !hdb.setxmsiz(rnum * 4)
+    eprint(hdb, "setxmsiz")
+    err = true
+  end
+  if !hdb.setdfunit(8)
+    eprint(hdb, "setdfunit")
+    err = true
+  end
   if !hdb.open(path, HDB::OWRITER | HDB::OCREAT | HDB::OTRUNC | omode)
     eprint(hdb, "open")
     err = true

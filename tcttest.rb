@@ -374,6 +374,18 @@ def procmisc(path, rnum, opts, omode)
     eprint(tdb, "tune")
     err = true
   end
+  if !tdb.setcache(rnum / 10, 128, 256)
+    eprint(tdb, "setcache")
+    err = true
+  end
+  if !tdb.setxmsiz(rnum * 4)
+    eprint(tdb, "setxmsiz")
+    err = true
+  end
+  if !tdb.setdfunit(8)
+    eprint(tdb, "setdfunit")
+    err = true
+  end
   if !tdb.open(path, TDB::OWRITER | TDB::OCREAT | TDB::OTRUNC | omode)
     eprint(tdb, "open")
     err = true

@@ -60,6 +60,7 @@ static VALUE hdb_ecode(VALUE vself);
 static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
+static VALUE hdb_setdfunit(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_open(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_close(VALUE vself);
 static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval);
@@ -103,6 +104,7 @@ static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp);
 static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
+static VALUE bdb_setdfunit(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_open(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_close(VALUE vself);
 static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval);
@@ -196,6 +198,7 @@ static VALUE tdb_ecode(VALUE vself);
 static VALUE tdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE tdb_setcache(int argc, VALUE *argv, VALUE vself);
 static VALUE tdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
+static VALUE tdb_setdfunit(int argc, VALUE *argv, VALUE vself);
 static VALUE tdb_open(int argc, VALUE *argv, VALUE vself);
 static VALUE tdb_close(VALUE vself);
 static VALUE tdb_put(VALUE vself, VALUE vkey, VALUE vcols);
@@ -449,6 +452,7 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "tune", hdb_tune, -1);
   rb_define_method(cls_hdb, "setcache", hdb_setcache, -1);
   rb_define_method(cls_hdb, "setxmsiz", hdb_setxmsiz, -1);
+  rb_define_method(cls_hdb, "setdfunit", hdb_setdfunit, -1);
   rb_define_method(cls_hdb, "open", hdb_open, -1);
   rb_define_method(cls_hdb, "close", hdb_close, 0);
   rb_define_method(cls_hdb, "put", hdb_put, 2);
@@ -569,6 +573,18 @@ static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbsetxmsiz(hdb, xmsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE hdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+  VALUE vhdb, vdfunit;
+  TCHDB *hdb;
+  int32_t dfunit;
+  rb_scan_args(argc, argv, "01", &vdfunit);
+  dfunit = (vdfunit == Qnil) ? -1 : NUM2INT(vdfunit);
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbsetdfunit(hdb, dfunit) ? Qtrue : Qfalse;
 }
 
 
@@ -1077,6 +1093,7 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "tune", bdb_tune, -1);
   rb_define_method(cls_bdb, "setcache", bdb_setcache, -1);
   rb_define_method(cls_bdb, "setxmsiz", bdb_setxmsiz, -1);
+  rb_define_method(cls_bdb, "setdfunit", bdb_setdfunit, -1);
   rb_define_method(cls_bdb, "open", bdb_open, -1);
   rb_define_method(cls_bdb, "close", bdb_close, 0);
   rb_define_method(cls_bdb, "put", bdb_put, 2);
@@ -1236,6 +1253,18 @@ static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbsetxmsiz(bdb, xmsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE bdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+  VALUE vbdb, vdfunit;
+  TCBDB *bdb;
+  int32_t dfunit;
+  rb_scan_args(argc, argv, "01", &vdfunit);
+  dfunit = (vdfunit == Qnil) ? -1 : NUM2INT(vdfunit);
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  return tcbdbsetdfunit(bdb, dfunit) ? Qtrue : Qfalse;
 }
 
 
@@ -2526,6 +2555,7 @@ static void tdb_init(void){
   rb_define_method(cls_tdb, "tune", tdb_tune, -1);
   rb_define_method(cls_tdb, "setcache", tdb_setcache, -1);
   rb_define_method(cls_tdb, "setxmsiz", tdb_setxmsiz, -1);
+  rb_define_method(cls_tdb, "setdfunit", tdb_setdfunit, -1);
   rb_define_method(cls_tdb, "open", tdb_open, -1);
   rb_define_method(cls_tdb, "close", tdb_close, 0);
   rb_define_method(cls_tdb, "put", tdb_put, 2);
@@ -2646,6 +2676,18 @@ static VALUE tdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
   vtdb = rb_iv_get(vself, TDBVNDATA);
   Data_Get_Struct(vtdb, TCTDB, tdb);
   return tctdbsetxmsiz(tdb, xmsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE tdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+  VALUE vtdb, vdfunit;
+  TCTDB *tdb;
+  int32_t dfunit;
+  rb_scan_args(argc, argv, "01", &vdfunit);
+  dfunit = (vdfunit == Qnil) ? -1 : NUM2INT(vdfunit);
+  vtdb = rb_iv_get(vself, TDBVNDATA);
+  Data_Get_Struct(vtdb, TCTDB, tdb);
+  return tctdbsetdfunit(tdb, dfunit) ? Qtrue : Qfalse;
 }
 
 

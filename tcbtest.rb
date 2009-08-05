@@ -344,6 +344,14 @@ def procmisc(path, rnum, opts, omode)
     eprint(bdb, "setcache")
     err = true
   end
+  if !bdb.setxmsiz(rnum * 4)
+    eprint(bdb, "setxmsiz")
+    err = true
+  end
+  if !bdb.setdfunit(8)
+    eprint(bdb, "setdfunit")
+    err = true
+  end
   if !bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode)
     eprint(bdb, "open")
     err = true

@@ -131,6 +131,13 @@ module TokyoCabinet
     def setxmsiz(xmsiz)
       # (native code)
     end
+    # Set the unit step number of auto defragmentation.%%
+    # `<i>dfunit</i>' specifie the unit step number.  If it is not more than 0, the auto defragmentation is disabled.  It is disabled by default.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Note that the defragmentation parameters should be set before the database is opened.%%
+    def setdfunit(dfunit)
+      # (native code)
+    end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
     # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::HDB::OWRITER' as a writer, `TokyoCabinet::HDB::OREADER' as a reader.  If the mode is `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise-or: `TokyoCabinet::HDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::HDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::HDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER' can be added to by bitwise-or: `TokyoCabinet::HDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::HDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::HDB::OREADER' is specified.%%
@@ -421,6 +428,13 @@ module TokyoCabinet
     # If successful, the return value is true, else, it is false.%%
     # Note that the mapping parameters should be set before the database is opened.%%
     def setxmsiz(xmsiz)
+      # (native code)
+    end
+    # Set the unit step number of auto defragmentation.%%
+    # `<i>dfunit</i>' specifie the unit step number.  If it is not more than 0, the auto defragmentation is disabled.  It is disabled by default.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Note that the defragmentation parameters should be set before the database is opened.%%
+    def setdfunit(dfunit)
       # (native code)
     end
     # Open a database file.%%
@@ -1039,6 +1053,13 @@ module TokyoCabinet
     # If successful, the return value is true, else, it is false.%%
     # Note that the mapping parameters should be set before the database is opened.%%
     def setxmsiz(xmsiz)
+      # (native code)
+    end
+    # Set the unit step number of auto defragmentation.%%
+    # `<i>dfunit</i>' specifie the unit step number.  If it is not more than 0, the auto defragmentation is disabled.  It is disabled by default.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Note that the defragmentation parameters should be set before the database is opened.%%
+    def setdfunit(dfunit)
       # (native code)
     end
     # Open a database file.%%
