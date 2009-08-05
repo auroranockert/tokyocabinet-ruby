@@ -22,14 +22,14 @@ include TokyoCabinet
 
 # main routine
 def main
-  (ARGV.length >= 1) || usage
-  if(ARGV[0] == "write")
+  ARGV.length >= 1 || usage
+  if ARGV[0] == "write"
     rv = runwrite
-  elsif(ARGV[0] == "read")
+  elsif ARGV[0] == "read"
     rv = runread
-  elsif(ARGV[0] == "remove")
+  elsif ARGV[0] == "remove"
     rv = runremove
-  elsif(ARGV[0] == "misc")
+  elsif ARGV[0] == "misc"
     rv = runmisc
   else
     usage
@@ -41,14 +41,14 @@ end
 
 # print the usage and exit
 def usage
-  STDERR.printf("%s: test cases of the B+ tree database API\n", $0)
+  STDERR.printf("%s: test cases of the B+ tree database API\n", $progname)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
   STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum" +
-                " [lmemb [nmemb [bnum [apow [fpow]]]]]\n", $0)
-  STDERR.printf("  %s read [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $0)
+                " [lmemb [nmemb [bnum [apow [fpow]]]]]\n", $progname)
+  STDERR.printf("  %s read [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s remove [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $progname)
   STDERR.printf("\n")
   exit(1)
 end
@@ -57,7 +57,7 @@ end
 # print error message of B+ tree database
 def eprint(bdb, func)
   path = bdb.path
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, bdb.errmsg)
+  STDERR.printf("%s: %s: %s: %s\n", $progname, path ? path : "-", func, bdb.errmsg)
 end
 
 
@@ -73,43 +73,43 @@ def runwrite
   opts = 0
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-tl"
         opts |= BDB::TLARGE
-      elsif(ARGV[i] == "-td")
+      elsif ARGV[i] == "-td"
         opts |= BDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
+      elsif ARGV[i] == "-tb"
         opts |= BDB::TBZIP
-      elsif(ARGV[i] == "-tt")
+      elsif ARGV[i] == "-tt"
         opts |= BDB::TTCBS
-      elsif(ARGV[i] == "-nl")
+      elsif ARGV[i] == "-nl"
         omode |= BDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= BDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
-    elsif(!lmemb)
+    elsif !lmemb
       lmemb = ARGV[i].to_i
-    elsif(!nmemb)
+    elsif !nmemb
       nmemb = ARGV[i].to_i
-    elsif(!bnum)
+    elsif !bnum
       bnum = ARGV[i].to_i
-    elsif(!apow)
+    elsif !apow
       apow = ARGV[i].to_i
-    elsif(!fpow)
+    elsif !fpow
       fpow = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   lmemb = lmemb ? lmemb : -1
   nmemb = nmemb ? nmemb : -1
   bnum = bnum ? bnum : -1
@@ -125,23 +125,23 @@ def runread
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= BDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= BDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procread(path, omode)
   return rv
 end
@@ -152,23 +152,23 @@ def runremove
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= BDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= BDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procremove(path, omode)
   return rv
 end
@@ -181,33 +181,33 @@ def runmisc
   opts = 0
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-tl"
         opts |= BDB::TLARGE
-      elsif(ARGV[i] == "-td")
+      elsif ARGV[i] == "-td"
         opts |= BDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
+      elsif ARGV[i] == "-tb"
         opts |= BDB::TBZIP
-      elsif(ARGV[i] == "-tt")
+      elsif ARGV[i] == "-tt"
         opts |= BDB::TTCBS
-      elsif(ARGV[i] == "-nl")
+      elsif ARGV[i] == "-nl"
         omode |= BDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= BDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   rv = procmisc(path, rnum, opts, omode)
   return rv
 end
@@ -221,33 +221,31 @@ def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.tune(lmemb, nmemb, bnum, apow, fpow, opts))
+  if !bdb.tune(lmemb, nmemb, bnum, apow, fpow, opts)
     eprint(bdb, "tune")
     err = true
   end
-  if(!bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode))
+  if !bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode)
     eprint(bdb, "open")
     err = true
   end
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!bdb.put(buf, buf))
+    if !bdb.put(buf, buf)
       eprint(bdb, "put")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", bdb.rnum)
   printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
+  if !bdb.close
     eprint(bdb, "close")
     err = true
   end
@@ -263,30 +261,28 @@ def procread(path, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.open(path, BDB::OREADER | omode))
+  if !bdb.open(path, BDB::OREADER | omode)
     eprint(bdb, "open")
     err = true
   end
   rnum = bdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!bdb.get(buf))
+    if !bdb.get(buf)
       eprint(bdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", bdb.rnum)
   printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
+  if !bdb.close
     eprint(bdb, "close")
     err = true
   end
@@ -302,30 +298,28 @@ def procremove(path, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.open(path, BDB::OWRITER | omode))
+  if !bdb.open(path, BDB::OWRITER | omode)
     eprint(bdb, "open")
     err = true
   end
   rnum = bdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!bdb.out(buf))
+    if !bdb.out(buf)
       eprint(bdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", bdb.rnum)
   printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
+  if !bdb.close
     eprint(bdb, "close")
     err = true
   end
@@ -342,172 +336,160 @@ def procmisc(path, rnum, opts, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.tune(10, 10, rnum / 50, 2, -1, opts))
+  if !bdb.tune(10, 10, rnum / 50, 2, -1, opts)
     eprint(bdb, "tune")
     err = true
   end
-  if(!bdb.setcache(128, 256))
+  if !bdb.setcache(128, 256)
     eprint(bdb, "setcache")
     err = true
   end
-  if(!bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode))
+  if !bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode)
     eprint(bdb, "open")
     err = true
   end
   printf("writing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!bdb.put(buf, buf))
+    if !bdb.put(buf, buf)
       eprint(bdb, "put")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("reading:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!bdb.get(buf))
+    if !bdb.get(buf)
       eprint(bdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("removing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(rand(2) == 0 && !bdb.out(buf))
+    if rand(2) == 0 && !bdb.out(buf)
       eprint(bdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("checking cursor:\n")
   cur = BDBCUR::new(bdb)
-  if(!cur.first && bdb.ecode != BDB::ENOREC)
+  if !cur.first && bdb.ecode != BDB::ENOREC
     eprint(bdb, "cur::first")
     err = true
   end
   inum = 0
-  while(key = cur.key)
+  while key = cur.key
     value = cur.val
-    if(!value)
+    if !value
       eprint(bdb, "cur::val")
       err = true
     end
     cur.next
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
-  if(bdb.ecode != BDB::ENOREC || inum != bdb.rnum)
+  printf(" (%08d)\n", inum) if rnum > 250
+  if bdb.ecode != BDB::ENOREC || inum != bdb.rnum
     eprint(bdb, "(validation)")
     err = true
   end
   keys = bdb.fwmkeys("0", 10)
-  if(bdb.rnum >= 10 && keys.size != 10)
+  if bdb.rnum >= 10 && keys.size != 10
     eprint(bdb, "fwmkeys")
     err = true
   end
   printf("checking counting:\n")
-  i = 0
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
-    if(rand(2) == 0)
-      if(!bdb.addint(buf, 1) && bdb.ecode() != BDB::EKEEP)
+    if rand(2) == 0
+      if !bdb.addint(buf, 1) && bdb.ecode() != BDB::EKEEP
         eprint(bdb, "addint")
         err = true
         break
       end
     else
-      if(!bdb.adddouble(buf, 1) && bdb.ecode() != BDB::EKEEP)
+      if !bdb.adddouble(buf, 1) && bdb.ecode() != BDB::EKEEP
         eprint(bdb, "adddouble")
         err = true
         break
       end
     end
-    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+    if i > 0 && rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  if(!bdb.sync)
+  if !bdb.sync
     eprint(bdb, "sync")
     err = true
   end
-  if(!bdb.optimize)
+  if !bdb.optimize
     eprint(bdb, "optimize")
     err = true
   end
   npath = path + "-tmp"
-  if(!bdb.copy(npath))
+  if !bdb.copy(npath)
     eprint(bdb, "copy")
     err = true
   end
   File::unlink(npath)
-  if(!bdb.vanish)
+  if !bdb.vanish
     eprint(bdb, "vanish")
     err = true
   end
   printf("random writing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", rand(i))
-    if(!bdb.putdup(buf, buf))
+    if !bdb.putdup(buf, buf)
       eprint(bdb, "putdup")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("cursor updating:\n")
-  i = 1
-  while(i <= rnum)
-    if(rand(10) == 0)
+  for i in 1..rnum
+    if rand(10) == 0
       buf = sprintf("%08d", rand(rnum))
       cur.jump(buf)
-      j = 1
-      while(j <= 10)
+      for j in 1..10
         key = cur.key
-        break if(!key)
-        if(rand(3) == 0)
+        break if !key
+        if rand(3) == 0
           cur.out
         else
           cpmode = BDBCUR::CPCURRENT + rand(3)
@@ -517,15 +499,14 @@ def procmisc(path, rnum, opts, omode)
         j += 1
       end
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  if(!bdb.tranbegin)
+  if !bdb.tranbegin
     eprint(bdb, "tranbegin")
     err = true
   end
@@ -544,65 +525,63 @@ def procmisc(path, rnum, opts, omode)
   cur.prev
   cur.out
   vals = bdb.getlist("::2")
-  if(!vals || vals.size != 4)
+  if !vals || vals.size != 4
     eprint(bdb, "getlist")
     err = true
   end
   pvals = [ "hop", "step", "jump" ]
-  if(!bdb.putlist("::1", pvals))
+  if !bdb.putlist("::1", pvals)
     eprint(bdb, "putlist")
     err = true
   end
-  if(!bdb.outlist("::1"))
+  if !bdb.outlist("::1")
     eprint(bdb, "outlist")
     err = true
   end
-  if(!bdb.trancommit)
+  if !bdb.trancommit
     eprint(bdb, "trancommit")
     err = true
   end
-  if(!bdb.tranbegin || !bdb.tranabort)
+  if !bdb.tranbegin || !bdb.tranabort
     eprint(bdb, "tranbegin")
     err = true
   end
   printf("checking hash-like updating:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
     rnd = rand(4)
-    if(rnd == 0)
+    if rnd == 0
       bdb[buf] = buf + "hoge"
-    elsif(rnd == 1)
+    elsif rnd == 1
       value = bdb[buf]
-    elsif(rnd == 2)
+    elsif rnd == 2
       res = bdb.key?(buf)
-    elsif(rnd == 3)
+    elsif rnd == 3
       bdb.delete(buf)
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  printf("checking iterator:\n")
+  printf("checking hash-like iterator:\n")
   inum = 0
   bdb.each do |tkey, tvalue|
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
+  printf(" (%08d)\n", inum) if rnum > 250
   bdb.clear
   printf("record number: %d\n", bdb.rnum)
   printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
+  if !bdb.close
     eprint(bdb, "close")
     err = true
   end
@@ -614,7 +593,9 @@ end
 
 # execute main
 STDOUT.sync = true
-$0.gsub!(/.*\//, "")
+$progname = $0.dup
+$progname.gsub!(/.*\//, "")
+srand
 exit(main)
 
 

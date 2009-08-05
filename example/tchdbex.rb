@@ -5,22 +5,22 @@ include TokyoCabinet
 hdb = HDB::new
 
 # open the database
-if(!hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT))
+if !hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT)
   ecode = hdb.ecode
   STDERR.printf("open error: %s\n", hdb.errmsg(ecode))
 end
 
 # store records
-if(!hdb.put("foo", "hop") ||
-   !hdb.put("bar", "step") ||
-   !hdb.put("baz", "jump"))
+if !hdb.put("foo", "hop") ||
+    !hdb.put("bar", "step") ||
+    !hdb.put("baz", "jump")
   ecode = hdb.ecode
   STDERR.printf("put error: %s\n", hdb.errmsg(ecode))
 end
 
 # retrieve records
 value = hdb.get("foo")
-if(value)
+if value
   printf("%s\n", value)
 else
   ecode = hdb.ecode
@@ -29,9 +29,9 @@ end
 
 # traverse records
 hdb.iterinit
-while(key = hdb.iternext)
+while key = hdb.iternext
   value = hdb.get(key)
-  if(value)
+  if value
     printf("%s:%s\n", key, value)
   end
 end
@@ -44,7 +44,7 @@ hdb.each do |key, value|
 end
 
 # close the database
-if(!hdb.close)
+if !hdb.close
   ecode = hdb.ecode
   STDERR.printf("close error: %s\n", hdb.errmsg(ecode))
 end

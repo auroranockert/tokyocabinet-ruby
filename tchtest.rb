@@ -22,14 +22,14 @@ include TokyoCabinet
 
 # main routine
 def main
-  (ARGV.length >= 1) || usage
-  if(ARGV[0] == "write")
+  ARGV.length >= 1 || usage
+  if ARGV[0] == "write"
     rv = runwrite
-  elsif(ARGV[0] == "read")
+  elsif ARGV[0] == "read"
     rv = runread
-  elsif(ARGV[0] == "remove")
+  elsif ARGV[0] == "remove"
     rv = runremove
-  elsif(ARGV[0] == "misc")
+  elsif ARGV[0] == "misc"
     rv = runmisc
   else
     usage
@@ -41,14 +41,14 @@ end
 
 # print the usage and exit
 def usage
-  STDERR.printf("%s: test cases of the hash database API\n", $0)
+  STDERR.printf("%s: test cases of the hash database API\n", $progname)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
   STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] [-as] path rnum" +
-                " [bnum [apow [fpow]]]\n", $0)
-  STDERR.printf("  %s read [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $0)
+                " [bnum [apow [fpow]]]\n", $progname)
+  STDERR.printf("  %s read [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s remove [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $progname)
   STDERR.printf("\n")
   exit(1)
 end
@@ -57,7 +57,7 @@ end
 # print error message of hash database
 def eprint(hdb, func)
   path = hdb.path
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, hdb.errmsg)
+  STDERR.printf("%s: %s: %s: %s\n", $progname, path ? path : "-", func, hdb.errmsg)
 end
 
 
@@ -72,41 +72,41 @@ def runwrite
   omode = 0
   as = false
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-tl"
         opts |= HDB::TLARGE
-      elsif(ARGV[i] == "-td")
+      elsif ARGV[i] == "-td"
         opts |= HDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
+      elsif ARGV[i] == "-tb"
         opts |= HDB::TBZIP
-      elsif(ARGV[i] == "-tt")
+      elsif ARGV[i] == "-tt"
         opts |= HDB::TTCBS
-      elsif(ARGV[i] == "-nl")
+      elsif ARGV[i] == "-nl"
         omode |= HDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= HDB::OLCKNB
-      elsif(ARGV[i] == "-as")
+      elsif ARGV[i] == "-as"
         as = true
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
-    elsif(!bnum)
+    elsif !bnum
       bnum = ARGV[i].to_i
-    elsif(!apow)
+    elsif !apow
       apow = ARGV[i].to_i
-    elsif(!fpow)
+    elsif !fpow
       fpow = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   bnum = bnum ? bnum : -1
   apow = apow ? apow : -1
   fpow = fpow ? fpow : -1
@@ -120,23 +120,23 @@ def runread
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= HDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= HDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procread(path, omode)
   return rv
 end
@@ -147,23 +147,23 @@ def runremove
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= HDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= HDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procremove(path, omode)
   return rv
 end
@@ -176,33 +176,33 @@ def runmisc
   opts = 0
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-tl"
         opts |= HDB::TLARGE
-      elsif(ARGV[i] == "-td")
+      elsif ARGV[i] == "-td"
         opts |= HDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
+      elsif ARGV[i] == "-tb"
         opts |= HDB::TBZIP
-      elsif(ARGV[i] == "-tt")
+      elsif ARGV[i] == "-tt"
         opts |= HDB::TTCBS
-      elsif(ARGV[i] == "-nl")
+      elsif ARGV[i] == "-nl"
         omode |= HDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= HDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   rv = procmisc(path, rnum, opts, omode)
   return rv
 end
@@ -215,41 +215,39 @@ def procwrite(path, rnum, bnum, apow, fpow, opts, omode, as)
   err = false
   stime = Time.now
   hdb = HDB::new
-  if(!hdb.tune(bnum, apow, fpow, opts))
+  if !hdb.tune(bnum, apow, fpow, opts)
     eprint(hdb, "tune")
     err = true
   end
-  if(!hdb.open(path, HDB::OWRITER | HDB::OCREAT | HDB::OTRUNC | omode))
+  if !hdb.open(path, HDB::OWRITER | HDB::OCREAT | HDB::OTRUNC | omode)
     eprint(hdb, "open")
     err = true
   end
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(as)
-      if(!hdb.putasync(buf, buf))
+    if as
+      if !hdb.putasync(buf, buf)
         eprint(hdb, "putasync")
         err = true
         break
       end
     else
-      if(!hdb.put(buf, buf))
+      if !hdb.put(buf, buf)
         eprint(hdb, "put")
         err = true
         break
       end
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", hdb.rnum)
   printf("size: %d\n", hdb.fsiz)
-  if(!hdb.close)
+  if !hdb.close
     eprint(hdb, "close")
     err = true
   end
@@ -265,30 +263,28 @@ def procread(path, omode)
   err = false
   stime = Time.now
   hdb = HDB::new
-  if(!hdb.open(path, HDB::OREADER | omode))
+  if !hdb.open(path, HDB::OREADER | omode)
     eprint(hdb, "open")
     err = true
   end
   rnum = hdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!hdb.get(buf))
+    if !hdb.get(buf)
       eprint(hdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", hdb.rnum)
   printf("size: %d\n", hdb.fsiz)
-  if(!hdb.close)
+  if !hdb.close
     eprint(hdb, "close")
     err = true
   end
@@ -304,30 +300,28 @@ def procremove(path, omode)
   err = false
   stime = Time.now
   hdb = HDB::new
-  if(!hdb.open(path, HDB::OWRITER | omode))
+  if !hdb.open(path, HDB::OWRITER | omode)
     eprint(hdb, "open")
     err = true
   end
   rnum = hdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!hdb.out(buf))
+    if !hdb.out(buf)
       eprint(hdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", hdb.rnum)
   printf("size: %d\n", hdb.fsiz)
-  if(!hdb.close)
+  if !hdb.close
     eprint(hdb, "close")
     err = true
   end
@@ -344,176 +338,166 @@ def procmisc(path, rnum, opts, omode)
   err = false
   stime = Time.now
   hdb = HDB::new
-  if(!hdb.tune(rnum / 50, 2, -1, opts))
+  if !hdb.tune(rnum / 50, 2, -1, opts)
     eprint(hdb, "tune")
     err = true
   end
-  if(!hdb.open(path, HDB::OWRITER | HDB::OCREAT | HDB::OTRUNC | omode))
+  if !hdb.open(path, HDB::OWRITER | HDB::OCREAT | HDB::OTRUNC | omode)
     eprint(hdb, "open")
     err = true
   end
   printf("writing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!hdb.put(buf, buf))
+    if !hdb.put(buf, buf)
       eprint(hdb, "put")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("reading:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!hdb.get(buf))
+    if !hdb.get(buf)
       eprint(hdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("removing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(rand(2) == 0 && !hdb.out(buf))
+    if rand(2) == 0 && !hdb.out(buf)
       eprint(hdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("checking iterator:\n")
-  if(!hdb.iterinit)
+  if !hdb.iterinit
     eprint(hdb, "iterinit")
     err = true
   end
   inum = 0
-  while(key = hdb.iternext)
+  while key = hdb.iternext
     value = hdb.get(key)
-    if(!value)
+    if !value
       eprint(hdb, "get")
       err = true
     end
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
-  if(hdb.ecode != HDB::ENOREC || inum != hdb.rnum)
+  printf(" (%08d)\n", inum) if rnum > 250
+  if hdb.ecode != HDB::ENOREC || inum != hdb.rnum
     eprint(hdb, "(validation)")
     err = true
   end
   keys = hdb.fwmkeys("0", 10)
-  if(hdb.rnum >= 10 && keys.size != 10)
+  if hdb.rnum >= 10 && keys.size != 10
     eprint(hdb, "fwmkeys")
     err = true
   end
   printf("checking counting:\n")
-  i = 0
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
-    if(rand(2) == 0)
-      if(!hdb.addint(buf, 1) && hdb.ecode() != HDB::EKEEP)
+    if rand(2) == 0
+      if !hdb.addint(buf, 1) && hdb.ecode() != HDB::EKEEP
         eprint(hdb, "addint")
         err = true
         break
       end
     else
-      if(!hdb.adddouble(buf, 1) && hdb.ecode() != HDB::EKEEP)
+      if !hdb.adddouble(buf, 1) && hdb.ecode() != HDB::EKEEP
         eprint(hdb, "adddouble")
         err = true
         break
       end
     end
-    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+    if i > 0 && rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  if(!hdb.sync)
+  if !hdb.sync
     eprint(hdb, "sync")
     err = true
   end
-  if(!hdb.optimize)
+  if !hdb.optimize
     eprint(hdb, "optimize")
     err = true
   end
   npath = path + "-tmp"
-  if(!hdb.copy(npath))
+  if !hdb.copy(npath)
     eprint(hdb, "copy")
     err = true
   end
   File::unlink(npath)
-  if(!hdb.vanish)
+  if !hdb.vanish
     eprint(hdb, "vanish")
     err = true
   end
   printf("checking hash-like updating:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
     rnd = rand(4)
-    if(rnd == 0)
+    if rnd == 0
       hdb[buf] = buf
-    elsif(rnd == 1)
+    elsif rnd == 1
       value = hdb[buf]
-    elsif(rnd == 2)
+    elsif rnd == 2
       res = hdb.key?(buf)
-    elsif(rnd == 3)
+    elsif rnd == 3
       hdb.delete(buf)
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  printf("checking iterator:\n")
+  printf("checking hash-like iterator:\n")
   inum = 0
   hdb.each do |tkey, tvalue|
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
+  printf(" (%08d)\n", inum) if rnum > 250
   hdb.clear
   printf("record number: %d\n", hdb.rnum)
   printf("size: %d\n", hdb.fsiz)
-  if(!hdb.close)
+  if !hdb.close
     eprint(hdb, "close")
     err = true
   end
@@ -525,7 +509,8 @@ end
 
 # execute main
 STDOUT.sync = true
-$0.gsub!(/.*\//, "")
+$progname = $0.dup
+$progname.gsub!(/.*\//, "")
 srand
 exit(main)
 

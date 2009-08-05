@@ -85,12 +85,12 @@ tree database API. Before operations to store or retrieve records, it is
 necessary to <a href="BDB.html#M000008">open</a> a database file and
 connect the B+ tree database object to it. To avoid data missing or
 corruption, it is important to <a href="BDB.html#M000009">close</a> every
-database file when it is no longer in use. Except for the interface below,
-methods compatible with the `Hash' class are also provided;
+database file when it is no longer in use.<br/> Except for the interface
+below, methods compatible with the `Hash' class are also provided;
 `[]', `[]=', `store', `delete', `fetch',
 `has_key?', `has_value?', `key', `clear',
 `size', `empty?', `each', `each_key',
-`each_value', `keys', and `value'.
+`each_value', and `keys'.<br/>
 </p>
 
     </div>
@@ -560,8 +560,8 @@ href="BDB.html#M000008">open</a> without locking
       
         <div class="method-description">
           <p>
-Create a B+ tree database object. The return value is the <a
-href="BDB.html#M000001">new</a> B+ tree database object.
+Create a B+ tree database object.<br/> The return value is the <a
+href="BDB.html#M000001">new</a> B+ tree database object.<br/>
 </p>
         </div>
       </div>
@@ -580,14 +580,14 @@ href="BDB.html#M000001">new</a> B+ tree database object.
       
         <div class="method-description">
           <p>
-Add a real number to a record. `<em>key</em>' specifies the key.
-`<em>num</em>' specifies the additional value. If successful, the
-return value is the summation value, else, it is `nil'. If the
+Add a real number to a record.<br/> `<em>key</em>' specifies the key.<br/>
+`<em>num</em>' specifies the additional value.<br/> If successful, the
+return value is the summation value, else, it is `nil'.<br/> If the
 corresponding record exists, the value is treated as a real number and is
 added to. If no record corresponds, a <a href="BDB.html#M000001">new</a>
 record of the additional value is stored. Because records are stored in
 binary format, they should be processed with the `unpack' method with
-the `d' operator after retrieval.
+the `d' operator after retrieval.<br/>
 </p>
         </div>
       </div>
@@ -604,14 +604,14 @@ the `d' operator after retrieval.
       
         <div class="method-description">
           <p>
-Add an integer to a record. `<em>key</em>' specifies the key.
-`<em>num</em>' specifies the additional value. If successful, the
-return value is the summation value, else, it is `nil'. If the
+Add an integer to a record.<br/> `<em>key</em>' specifies the key.<br/>
+`<em>num</em>' specifies the additional value.<br/> If successful, the
+return value is the summation value, else, it is `nil'.<br/> If the
 corresponding record exists, the value is treated as an integer and is
 added to. If no record corresponds, a <a href="BDB.html#M000001">new</a>
 record of the additional value is stored. Because records are stored in
 binary format, they should be processed with the `unpack' method with
-the `i' operator after retrieval.
+the `i' operator after retrieval.<br/>
 </p>
         </div>
       </div>
@@ -628,11 +628,11 @@ the `i' operator after retrieval.
       
         <div class="method-description">
           <p>
-Close the database file. If successful, the return value is true, else, it
-is false. Update of a database is assured to be written when the database
-is closed. If a writer opens a database but does not <a
+Close the database file.<br/> If successful, the return value is true, else,
+it is false.<br/> Update of a database is assured to be written when the
+database is closed. If a writer opens a database but does not <a
 href="BDB.html#M000009">close</a> it appropriately, the database will be
-broken.
+broken.<br/>
 </p>
         </div>
       </div>
@@ -649,15 +649,15 @@ broken.
       
         <div class="method-description">
           <p>
-Copy the database file. `<em><a
+Copy the database file.<br/> `<em><a
 href="BDB.html#M000032">path</a></em>' specifies the <a
 href="BDB.html#M000032">path</a> of the destination file. If it begins with
-`@', the trailing substring is executed as a command line. If
+`@', the trailing substring is executed as a command line.<br/> If
 successful, the return value is true, else, it is false. False is returned
-if the executed command returns non-zero code. The database file is assured
-to be kept synchronized and not modified while the copying or executing
-operation is in progress. So, this method is useful to create a backup file
-of the database file.
+if the executed command returns non-zero code.<br/> The database file is
+assured to be kept synchronized and not modified while the copying or
+executing operation is in progress. So, this method is useful to create a
+backup file of the database file.<br/>
 </p>
         </div>
       </div>
@@ -674,8 +674,32 @@ of the database file.
       
         <div class="method-description">
           <p>
-Get the last happened error code. The return value is the last happened
-error code.
+Get the last happened error code.<br/> The return value is the last happened
+error code.<br/> The following error codes are defined:
+`TokyoCabinet::BDB::ESUCCESS' for success,
+`TokyoCabinet::BDB::ETHREAD' for threading error,
+`TokyoCabinet::BDB::EINVALID' for invalid operation,
+`TokyoCabinet::BDB::ENOFILE' for file not found,
+`TokyoCabinet::BDB::ENOPERM' for no permission,
+`TokyoCabinet::BDB::EMETA' for invalid meta data,
+`TokyoCabinet::BDB::ERHEAD' for invalid record header,
+`TokyoCabinet::BDB::EOPEN' for <a href="BDB.html#M000008">open</a>
+error, `TokyoCabinet::BDB::ECLOSE' for <a
+href="BDB.html#M000009">close</a> error, `TokyoCabinet::BDB::ETRUNC'
+for trunc error, `TokyoCabinet::BDB::ESYNC' for <a
+href="BDB.html#M000025">sync</a> error, `TokyoCabinet::BDB::ESTAT'
+for stat error, `TokyoCabinet::BDB::ESEEK' for seek error,
+`TokyoCabinet::BDB::EREAD' for read error,
+`TokyoCabinet::BDB::EWRITE' for write error,
+`TokyoCabinet::BDB::EMMAP' for mmap error,
+`TokyoCabinet::BDB::ELOCK' for lock error,
+`TokyoCabinet::BDB::EUNLINK' for unlink error,
+`TokyoCabinet::BDB::ERENAME' for rename error,
+`TokyoCabinet::BDB::EMKDIR' for mkdir error,
+`TokyoCabinet::BDB::ERMDIR' for rmdir error,
+`TokyoCabinet::BDB::EKEEP' for existing record,
+`TokyoCabinet::BDB::ENOREC' for no record found, and
+`TokyoCabinet::BDB::EMISC' for miscellaneous error.<br/>
 </p>
         </div>
       </div>
@@ -692,10 +716,10 @@ error code.
       
         <div class="method-description">
           <p>
-Get the message string corresponding to an error code. `<em><a
+Get the message string corresponding to an error code.<br/> `<em><a
 href="BDB.html#M000003">ecode</a></em>' specifies the error code. If
-it is not defined or negative, the last happened error code is specified.
-The return value is the message string of the error code.
+it is not defined or negative, the last happened error code is specified.<br/>
+The return value is the message string of the error code.<br/>
 </p>
         </div>
       </div>
@@ -712,8 +736,8 @@ The return value is the message string of the error code.
       
         <div class="method-description">
           <p>
-Get the size of the database file. The return value is the size of the
-database file or 0 if the object does not connect to any database file.
+Get the size of the database file.<br/> The return value is the size of the
+database file or 0 if the object does not connect to any database file.<br/>
 </p>
         </div>
       </div>
@@ -730,12 +754,12 @@ database file or 0 if the object does not connect to any database file.
       
         <div class="method-description">
           <p>
-Get forward matching keys. `<em>prefix</em>' specifies the prefix of
-the corresponding keys. `<em>max</em>' specifies the maximum number
-of keys to be fetched. If it is not defined or negative, no limit is
-specified. The return value is a list object of the keys of the
+Get forward matching keys.<br/> `<em>prefix</em>' specifies the prefix
+of the corresponding keys.<br/> `<em>max</em>' specifies the maximum
+number of keys to be fetched. If it is not defined or negative, no limit is
+specified.<br/> The return value is a list object of the keys of the
 corresponding records. This method does never fail and return an empty list
-even if no record corresponds.
+even if no record corresponds.<br/>
 </p>
         </div>
       </div>
@@ -752,10 +776,10 @@ even if no record corresponds.
       
         <div class="method-description">
           <p>
-Retrieve a record. `<em>key</em>' specifies the key. If successful,
-the return value is the value of the corresponding record. `nil' is
-returned if no record corresponds. If the key of duplicated records is
-specified, the value of the first one is selected.
+Retrieve a record.<br/> `<em>key</em>' specifies the key.<br/> If
+successful, the return value is the value of the corresponding record.
+`nil' is returned if no record corresponds.<br/> If the key of
+duplicated records is specified, the value of the first one is selected.<br/>
 </p>
         </div>
       </div>
@@ -772,9 +796,9 @@ specified, the value of the first one is selected.
       
         <div class="method-description">
           <p>
-Retrieve records. `<em>key</em>' specifies the key. If successful,
-the return value is a list object of the values of the corresponding
-records. `nil' is returned if no record corresponds.
+Retrieve records.<br/> `<em>key</em>' specifies the key.<br/> If
+successful, the return value is a list object of the values of the
+corresponding records. `nil' is returned if no record corresponds.<br/>
 </p>
         </div>
       </div>
@@ -791,8 +815,9 @@ records. `nil' is returned if no record corresponds.
       
         <div class="method-description">
           <p>
-Open a database file. `<em><a href="BDB.html#M000032">path</a></em>'
-specifies the <a href="BDB.html#M000032">path</a> of the database file.
+Open a database file.<br/> `<em><a
+href="BDB.html#M000032">path</a></em>' specifies the <a
+href="BDB.html#M000032">path</a> of the database file.<br/>
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::BDB::OWRITER' as a writer,
 `TokyoCabinet::BDB::OREADER' as a reader. If the mode is
@@ -806,7 +831,7 @@ can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which
 means it opens the database file without file locking, or
 `TokyoCabinet::BDB::OLCKNB', which means locking is performed without
 blocking. If it is not defined, `TokyoCabinet::BDB::OREADER' is
-specified. If successful, the return value is true, else, it is false.
+specified.<br/> If successful, the return value is true, else, it is false.<br/>
 </p>
         </div>
       </div>
@@ -823,29 +848,30 @@ specified. If successful, the return value is true, else, it is false.
       
         <div class="method-description">
           <p>
-Optimize the database file. `<em>lmemb</em>' specifies the number of
-members in each leaf page. If it is not defined or not more than 0, the
-default value is specified. The default value is 128.
+Optimize the database file.<br/> `<em>lmemb</em>' specifies the number
+of members in each leaf page. If it is not defined or not more than 0, the
+default value is specified. The default value is 128.<br/>
 `<em>nmemb</em>' specifies the number of members in each non-leaf
 page. If it is not defined or not more than 0, the default value is
-specified. The default value is 256. `<em>bnum</em>' specifies the
+specified. The default value is 256.<br/> `<em>bnum</em>' specifies the
 number of elements of the bucket array. If it is not defined or not more
 than 0, the default value is specified. The default value is two times of
-the number of pages. `<em>apow</em>' specifies the size of record
+the number of pages.<br/> `<em>apow</em>' specifies the size of record
 alignment by power of 2. If it is not defined or negative, the current
-setting is not changed. `<em>fpow</em>' specifies the maximum number
-of elements of the free block pool by power of 2. If it is not defined or
-negative, the current setting is not changed. `<em>opts</em>'
-specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE'
-specifies that the size of the database can be larger than 2GB by using
-64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that
-each record is compressed with Deflate encoding,
-`TokyoCabinet::BDB::TBZIP' specifies that each record is compressed
-with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each
-record is compressed with TCBS encoding. If it is not defined or 0xff, the
-current setting is not changed. If successful, the return value is true,
-else, it is false. This method is useful to reduce the size of the database
-file with data fragmentation by successive updating.
+setting is not changed.<br/> `<em>fpow</em>' specifies the maximum
+number of elements of the free block pool by power of 2. If it is not
+defined or negative, the current setting is not changed.<br/>
+`<em>opts</em>' specifies options by bitwise or:
+`TokyoCabinet::BDB::TLARGE' specifies that the size of the database
+can be larger than 2GB by using 64-bit bucket array,
+`TokyoCabinet::BDB::TDEFLATE' specifies that each record is
+compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP'
+specifies that each record is compressed with BZIP2 encoding,
+`TokyoCabinet::BDB::TTCBS' specifies that each record is compressed
+with TCBS encoding. If it is not defined or 0xff, the current setting is
+not changed.<br/> If successful, the return value is true, else, it is
+false.<br/> This method is useful to reduce the size of the database file with
+data fragmentation by successive updating.<br/>
 </p>
         </div>
       </div>
@@ -862,9 +888,9 @@ file with data fragmentation by successive updating.
       
         <div class="method-description">
           <p>
-Remove a record. `<em>key</em>' specifies the key. If successful, the
-return value is true, else, it is false. If the key of duplicated records
-is specified, the value of the first one is selected.
+Remove a record.<br/> `<em>key</em>' specifies the key.<br/> If successful,
+the return value is true, else, it is false.<br/> If the key of duplicated
+records is specified, the value of the first one is selected.<br/>
 </p>
         </div>
       </div>
@@ -881,9 +907,9 @@ is specified, the value of the first one is selected.
       
         <div class="method-description">
           <p>
-Remove records. `<em>key</em>' specifies the key. If successful, the
-return value is true, else, it is false. If the key of duplicated records
-is specified, all of them are removed.
+Remove records.<br/> `<em>key</em>' specifies the key.<br/> If successful,
+the return value is true, else, it is false.<br/> If the key of duplicated
+records is specified, all of them are removed.<br/>
 </p>
         </div>
       </div>
@@ -900,9 +926,9 @@ is specified, all of them are removed.
       
         <div class="method-description">
           <p>
-Get the <a href="BDB.html#M000032">path</a> of the database file. The
+Get the <a href="BDB.html#M000032">path</a> of the database file.<br/> The
 return value is the <a href="BDB.html#M000032">path</a> of the database
-file or `nil' if the object does not connect to any database file.
+file or `nil' if the object does not connect to any database file.<br/>
 </p>
         </div>
       </div>
@@ -919,10 +945,10 @@ file or `nil' if the object does not connect to any database file.
       
         <div class="method-description">
           <p>
-Store a record. `<em>key</em>' specifies the key.
-`<em>value</em>' specifies the value. If successful, the return value
-is true, else, it is false. If a record with the same key exists in the
-database, it is overwritten.
+Store a record.<br/> `<em>key</em>' specifies the key.<br/>
+`<em>value</em>' specifies the value.<br/> If successful, the return
+value is true, else, it is false.<br/> If a record with the same key exists in
+the database, it is overwritten.<br/>
 </p>
         </div>
       </div>
@@ -939,11 +965,11 @@ database, it is overwritten.
       
         <div class="method-description">
           <p>
-Concatenate a value at the end of the existing record. `<em>key</em>'
-specifies the key. `<em>value</em>' specifies the value. If
-successful, the return value is true, else, it is false. If there is no
-corresponding record, a <a href="BDB.html#M000001">new</a> record is
-created.
+Concatenate a value at the end of the existing record.<br/>
+`<em>key</em>' specifies the key.<br/> `<em>value</em>' specifies
+the value.<br/> If successful, the return value is true, else, it is false.<br/>
+If there is no corresponding record, a <a href="BDB.html#M000001">new</a>
+record is created.<br/>
 </p>
         </div>
       </div>
@@ -960,11 +986,11 @@ created.
       
         <div class="method-description">
           <p>
-Store a record with allowing duplication of keys. `<em>key</em>'
-specifies the key. `<em>value</em>' specifies the value. If
-successful, the return value is true, else, it is false. If a record with
+Store a record with allowing duplication of keys.<br/> `<em>key</em>'
+specifies the key.<br/> `<em>value</em>' specifies the value.<br/> If
+successful, the return value is true, else, it is false.<br/> If a record with
 the same key exists in the database, the <a href="BDB.html#M000001">new</a>
-record is placed after the existing one.
+record is placed after the existing one.<br/>
 </p>
         </div>
       </div>
@@ -981,10 +1007,10 @@ record is placed after the existing one.
       
         <div class="method-description">
           <p>
-Store a <a href="BDB.html#M000001">new</a> record. `<em>key</em>'
-specifies the key. `<em>value</em>' specifies the value. If
-successful, the return value is true, else, it is false. If a record with
-the same key exists in the database, this method has no effect.
+Store a <a href="BDB.html#M000001">new</a> record.<br/> `<em>key</em>'
+specifies the key.<br/> `<em>value</em>' specifies the value.<br/> If
+successful, the return value is true, else, it is false.<br/> If a record with
+the same key exists in the database, this method has no effect.<br/>
 </p>
         </div>
       </div>
@@ -1001,11 +1027,12 @@ the same key exists in the database, this method has no effect.
       
         <div class="method-description">
           <p>
-Store records with allowing duplication of keys. `<em>key</em>'
-specifies the key. `<em>values</em>' specifies an array of the
-values. If successful, the return value is true, else, it is false. If a
-record with the same key exists in the database, the <a
-href="BDB.html#M000001">new</a> records are placed after the existing one.
+Store records with allowing duplication of keys.<br/> `<em>key</em>'
+specifies the key.<br/> `<em>values</em>' specifies an array of the
+values.<br/> If successful, the return value is true, else, it is false.<br/> If
+a record with the same key exists in the database, the <a
+href="BDB.html#M000001">new</a> records are placed after the existing
+one.<br/>
 </p>
         </div>
       </div>
@@ -1022,17 +1049,18 @@ href="BDB.html#M000001">new</a> records are placed after the existing one.
       
         <div class="method-description">
           <p>
-Get keys of ranged records. `<em>bkey</em>' specifies the key of the
-beginning border. If it is not defined, the first record is specified.
-`<em>binc</em>' specifies whether the beginning border is inclusive
-or not. If it is not defined, false is specified. `<em>ekey</em>'
-specifies the key of the ending border. If it is not defined, the last
-record is specified. `<em>einc</em>' specifies whether the ending
-border is inclusive or not. If it is not defined, false is specified.
-`<em>max</em>' specifies the maximum number of keys to be fetched. If
-it is not defined or negative, no limit is specified. The return value is a
-list object of the keys of the corresponding records. This method does
-never fail and return an empty list even if no record corresponds.
+Get keys of ranged records.<br/> `<em>bkey</em>' specifies the key of
+the beginning border. If it is not defined, the first record is
+specified.<br/> `<em>binc</em>' specifies whether the beginning border
+is inclusive or not. If it is not defined, false is specified.<br/>
+`<em>ekey</em>' specifies the key of the ending border. If it is not
+defined, the last record is specified.<br/> `<em>einc</em>' specifies
+whether the ending border is inclusive or not. If it is not defined, false
+is specified.<br/> `<em>max</em>' specifies the maximum number of keys
+to be fetched. If it is not defined or negative, no limit is specified.<br/>
+The return value is a list object of the keys of the corresponding records.
+This method does never fail and return an empty list even if no record
+corresponds.<br/>
 </p>
         </div>
       </div>
@@ -1049,8 +1077,8 @@ never fail and return an empty list even if no record corresponds.
       
         <div class="method-description">
           <p>
-Get the number of records. The return value is the number of records or 0
-if the object does not connect to any database file.
+Get the number of records.<br/> The return value is the number of records or 0
+if the object does not connect to any database file.<br/>
 </p>
         </div>
       </div>
@@ -1067,14 +1095,14 @@ if the object does not connect to any database file.
       
         <div class="method-description">
           <p>
-Set the caching parameters. `<em>lcnum</em>' specifies the maximum
+Set the caching parameters.<br/> `<em>lcnum</em>' specifies the maximum
 number of leaf nodes to be cached. If it is not defined or not more than 0,
-the default value is specified. The default value is 1024.
+the default value is specified. The default value is 1024.<br/>
 `<em>ncnum</em>' specifies the maximum number of non-leaf nodes to be
 cached. If it is not defined or not more than 0, the default value is
-specified. The default value is 512. If successful, the return value is
-true, else, it is false. Note that the tuning parameters of the database
-should be set before the database is opened.
+specified. The default value is 512.<br/> If successful, the return value is
+true, else, it is false.<br/> Note that the tuning parameters of the database
+should be set before the database is opened.<br/>
 </p>
         </div>
       </div>
@@ -1091,16 +1119,17 @@ should be set before the database is opened.
       
         <div class="method-description">
           <p>
-Set the custom comparison function. `<em>cmp</em>' specifies the
+Set the custom comparison function.<br/> `<em>cmp</em>' specifies the
 custom comparison function. It should be an instance of the class
-`Proc'. If successful, the return value is true, else, it is false.
-The default comparison function compares keys of two records by lexical
-order. The constants `TokyoCabinet::BDB::CMPLEXICAL' (dafault),
-`TokyoCabinet::BDB::CMPDECIMAL', `TokyoCabinet::BDB::CMPINT32',
-and `TokyoCabinet::BDB::CMPINT64' are built-in. Note that the
-comparison function should be set before the database is opened. Moreover,
+`Proc'.<br/> If successful, the return value is true, else, it is
+false.<br/> The default comparison function compares keys of two records by
+lexical order. The constants `TokyoCabinet::BDB::CMPLEXICAL'
+(dafault), `TokyoCabinet::BDB::CMPDECIMAL',
+`TokyoCabinet::BDB::CMPINT32', and
+`TokyoCabinet::BDB::CMPINT64' are built-in. Note that the comparison
+function should be set before the database is opened. Moreover,
 user-defined comparison functions should be set every time the database is
-being opened.
+being opened.<br/>
 </p>
         </div>
       </div>
@@ -1117,11 +1146,11 @@ being opened.
       
         <div class="method-description">
           <p>
-Set the size of the extra mapped memory. `<em>xmsiz</em>' specifies
+Set the size of the extra mapped memory.<br/> `<em>xmsiz</em>' specifies
 the size of the extra mapped memory. If it is not defined or not more than
-0, the extra mapped memory is disabled. It is disabled by default. If
-successful, the return value is true, else, it is false. Note that the
-mapping parameters should be set before the database is opened.
+0, the extra mapped memory is disabled. It is disabled by default.<br/> If
+successful, the return value is true, else, it is false.<br/> Note that the
+mapping parameters should be set before the database is opened.<br/>
 </p>
         </div>
       </div>
@@ -1138,9 +1167,9 @@ mapping parameters should be set before the database is opened.
       
         <div class="method-description">
           <p>
-Synchronize updated contents with the file and the device. If successful,
-the return value is true, else, it is false. This method is useful when
-another process connects the same database file.
+Synchronize updated contents with the file and the device.<br/> If successful,
+the return value is true, else, it is false.<br/> This method is useful when
+another process connects the same database file.<br/>
 </p>
         </div>
       </div>
@@ -1157,9 +1186,9 @@ another process connects the same database file.
       
         <div class="method-description">
           <p>
-Abort the transaction. If successful, the return value is true, else, it is
-false. Update in the transaction is discarded when it is aborted. The state
-of the database is rollbacked to before transaction.
+Abort the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> Update in the transaction is discarded when it is aborted. The
+state of the database is rollbacked to before transaction.<br/>
 </p>
         </div>
       </div>
@@ -1176,14 +1205,14 @@ of the database is rollbacked to before transaction.
       
         <div class="method-description">
           <p>
-Begin the transaction. If successful, the return value is true, else, it is
-false. The database is locked by the thread while the transaction so that
-only one transaction can be activated with a database object at the same
-time. Thus, the serializable isolation level is assumed if every database
-operation is performed in the transaction. Because all pages are cached on
-memory while the transaction, the amount of referred records is limited by
-the memory capacity. If the database is closed during transaction, the
-transaction is aborted implicitly.
+Begin the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> The database is locked by the thread while the transaction so
+that only one transaction can be activated with a database object at the
+same time. Thus, the serializable isolation level is assumed if every
+database operation is performed in the transaction. Because all pages are
+cached on memory while the transaction, the amount of referred records is
+limited by the memory capacity. If the database is closed during
+transaction, the transaction is aborted implicitly.<br/>
 </p>
         </div>
       </div>
@@ -1200,9 +1229,9 @@ transaction is aborted implicitly.
       
         <div class="method-description">
           <p>
-Commit the transaction. If successful, the return value is true, else, it
-is false. Update in the transaction is fixed when it is committed
-successfully.
+Commit the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> Update in the transaction is fixed when it is committed
+successfully.<br/>
 </p>
         </div>
       </div>
@@ -1219,21 +1248,21 @@ successfully.
       
         <div class="method-description">
           <p>
-Set the tuning parameters. `<em>lmemb</em>' specifies the number of
+Set the tuning parameters.<br/> `<em>lmemb</em>' specifies the number of
 members in each leaf page. If it is not defined or not more than 0, the
-default value is specified. The default value is 128.
+default value is specified. The default value is 128.<br/>
 `<em>nmemb</em>' specifies the number of members in each non-leaf
 page. If it is not defined or not more than 0, the default value is
-specified. The default value is 256. `<em>bnum</em>' specifies the
+specified. The default value is 256.<br/> `<em>bnum</em>' specifies the
 number of elements of the bucket array. If it is not defined or not more
 than 0, the default value is specified. The default value is 32749.
 Suggested size of the bucket array is about from 1 to 4 times of the number
-of all pages to be stored. `<em>apow</em>' specifies the size of
+of all pages to be stored.<br/> `<em>apow</em>' specifies the size of
 record alignment by power of 2. If it is not defined or negative, the
-default value is specified. The default value is 4 standing for 2^8=256.
+default value is specified. The default value is 4 standing for 2^8=256.<br/>
 `<em>fpow</em>' specifies the maximum number of elements of the free
 block pool by power of 2. If it is not defined or negative, the default
-value is specified. The default value is 10 standing for 2^10=1024.
+value is specified. The default value is 10 standing for 2^10=1024.<br/>
 `<em>opts</em>' specifies options by bitwise or:
 `TokyoCabinet::BDB::TLARGE' specifies that the size of the database
 can be larger than 2GB by using 64-bit bucket array,
@@ -1241,10 +1270,10 @@ can be larger than 2GB by using 64-bit bucket array,
 compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP'
 specifies that each record is compressed with BZIP2 encoding,
 `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed
-with TCBS encoding. If it is not defined, no option is specified. If
+with TCBS encoding. If it is not defined, no option is specified.<br/> If
 successful, the return value is true, else, it is false. Note that the
 tuning parameters of the database should be set before the database is
-opened.
+opened.<br/>
 </p>
         </div>
       </div>
@@ -1261,8 +1290,8 @@ opened.
       
         <div class="method-description">
           <p>
-Remove all records. If successful, the return value is true, else, it is
-false.
+Remove all records.<br/> If successful, the return value is true, else, it is
+false.<br/>
 </p>
         </div>
       </div>
@@ -1279,9 +1308,9 @@ false.
       
         <div class="method-description">
           <p>
-Get the number of records corresponding a key. `<em>key</em>'
-specifies the key. If successful, the return value is the number of the
-corresponding records, else, it is 0.
+Get the number of records corresponding a key.<br/> `<em>key</em>'
+specifies the key.<br/> If successful, the return value is the number of the
+corresponding records, else, it is 0.<br/>
 </p>
         </div>
       </div>
@@ -1298,10 +1327,10 @@ corresponding records, else, it is 0.
       
         <div class="method-description">
           <p>
-Get the size of the value of a record. `<em>key</em>' specifies the
-key. If successful, the return value is the size of the value of the
-corresponding record, else, it is -1. If the key of duplicated records is
-specified, the value of the first one is selected.
+Get the size of the value of a record.<br/> `<em>key</em>' specifies the
+key.<br/> If successful, the return value is the size of the value of the
+corresponding record, else, it is -1.<br/> If the key of duplicated records is
+specified, the value of the first one is selected.<br/>
 </p>
         </div>
       </div>

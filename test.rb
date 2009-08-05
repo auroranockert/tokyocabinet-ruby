@@ -25,7 +25,7 @@ commands = [
 num = 1
 commands.each do |command|
   rv = system("/usr/bin/ruby #{command} >/dev/null")
-  if(rv)
+  if rv
     printf("%03d/%03d: %s: ok\n", num, commands.size, command)
   else
     printf("%03d/%03d: %s: failed\n", num, commands.size, command)

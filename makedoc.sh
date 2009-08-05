@@ -12,7 +12,7 @@ find doc -type f -name '*.html' |
 while read file
 do
   fgrep -v '<a href="http://validator.w3.org/check/referer">[Validate]</a>' "$file" |
-    sed -e "s/&#8217;/'/g" > tmp.html
+    sed -e "s/&#8217;/'/g" -e 's/%%/<br\/>/g' > tmp.html
   mv -f tmp.html "$file"
 done
 rm -f tmp.html

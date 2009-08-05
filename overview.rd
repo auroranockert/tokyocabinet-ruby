@@ -43,22 +43,22 @@ The following code is an example to use a hash database.
  hdb = HDB::new
  
  # open the database
- if(!hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT))
+ if !hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT)
    ecode = hdb.ecode
    STDERR.printf("open error: %s\n", hdb.errmsg(ecode))
  end
  
  # store records
- if(!hdb.put("foo", "hop") ||
-    !hdb.put("bar", "step") ||
-    !hdb.put("baz", "jump"))
+ if !hdb.put("foo", "hop") ||
+     !hdb.put("bar", "step") ||
+     !hdb.put("baz", "jump")
    ecode = hdb.ecode
    STDERR.printf("put error: %s\n", hdb.errmsg(ecode))
  end
  
  # retrieve records
  value = hdb.get("foo")
- if(value)
+ if value
    printf("%s\n", value)
  else
    ecode = hdb.ecode
@@ -67,9 +67,9 @@ The following code is an example to use a hash database.
  
  # traverse records
  hdb.iterinit
- while(key = hdb.iternext)
+ while key = hdb.iternext
    value = hdb.get(key)
-   if(value)
+   if value
      printf("%s:%s\n", key, value)
    end
  end
@@ -82,7 +82,7 @@ The following code is an example to use a hash database.
  end
  
  # close the database
- if(!hdb.close)
+ if !hdb.close
    ecode = hdb.ecode
    STDERR.printf("close error: %s\n", hdb.errmsg(ecode))
  end
@@ -96,22 +96,22 @@ The following code is an example to use a B+ tree database.
  bdb = BDB::new
  
  # open the database
- if(!bdb.open("casket.bdb", BDB::OWRITER | BDB::OCREAT))
+ if !bdb.open("casket.bdb", BDB::OWRITER | BDB::OCREAT)
    ecode = bdb.ecode
    STDERR.printf("open error: %s\n", bdb.errmsg(ecode))
  end
  
  # store records
- if(!bdb.put("foo", "hop") ||
-    !bdb.put("bar", "step") ||
-    !bdb.put("baz", "jump"))
+ if !bdb.put("foo", "hop") ||
+     !bdb.put("bar", "step") ||
+     !bdb.put("baz", "jump")
    ecode = bdb.ecode
    STDERR.printf("put error: %s\n", bdb.errmsg(ecode))
  end
  
  # retrieve records
  value = bdb.get("foo")
- if(value)
+ if value
    printf("%s\n", value)
  else
    ecode = bdb.ecode
@@ -121,9 +121,9 @@ The following code is an example to use a B+ tree database.
  # traverse records
  cur = BDBCUR::new(bdb)
  cur.first
- while(key = cur.key)
+ while key = cur.key
    value = cur.val
-   if(value)
+   if value
      printf("%s:%s\n", key, value)
    end
    cur.next
@@ -137,7 +137,7 @@ The following code is an example to use a B+ tree database.
  end
  
  # close the database
- if(!bdb.close)
+ if !bdb.close
    ecode = bdb.ecode
    STDERR.printf("close error: %s\n", bdb.errmsg(ecode))
  end
@@ -151,22 +151,22 @@ The following code is an example to use a fixed-length database.
  fdb = FDB::new
  
  # open the database
- if(!fdb.open("casket.fdb", FDB::OWRITER | FDB::OCREAT))
+ if !fdb.open("casket.fdb", FDB::OWRITER | FDB::OCREAT)
    ecode = fdb.ecode
    STDERR.printf("open error: %s\n", fdb.errmsg(ecode))
  end
  
  # store records
- if(!fdb.put(1, "one") ||
-    !fdb.put(12, "twelve") ||
-    !fdb.put(144, "one forty four"))
+ if !fdb.put(1, "one") ||
+     !fdb.put(12, "twelve") ||
+     !fdb.put(144, "one forty four")
    ecode = fdb.ecode
    STDERR.printf("put error: %s\n", fdb.errmsg(ecode))
  end
  
  # retrieve records
  value = fdb.get(1)
- if(value)
+ if value
    printf("%s\n", value)
  else
    ecode = fdb.ecode
@@ -175,9 +175,9 @@ The following code is an example to use a fixed-length database.
  
  # traverse records
  fdb.iterinit
- while(key = fdb.iternext)
+ while key = fdb.iternext
    value = fdb.get(key)
-   if(value)
+   if value
      printf("%s:%s\n", key, value)
    end
  end
@@ -190,10 +190,11 @@ The following code is an example to use a fixed-length database.
  end
  
  # close the database
- if(!fdb.close)
+ if !fdb.close
    ecode = fdb.ecode
    STDERR.printf("close error: %s\n", fdb.errmsg(ecode))
  end
+
 
 == LICENSE
 

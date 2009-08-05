@@ -22,14 +22,14 @@ include TokyoCabinet
 
 # main routine
 def main
-  (ARGV.length >= 1) || usage
-  if(ARGV[0] == "write")
+  ARGV.length >= 1 || usage
+  if ARGV[0] == "write"
     rv = runwrite
-  elsif(ARGV[0] == "read")
+  elsif ARGV[0] == "read"
     rv = runread
-  elsif(ARGV[0] == "remove")
+  elsif ARGV[0] == "remove"
     rv = runremove
-  elsif(ARGV[0] == "misc")
+  elsif ARGV[0] == "misc"
     rv = runmisc
   else
     usage
@@ -41,13 +41,13 @@ end
 
 # print the usage and exit
 def usage
-  STDERR.printf("%s: test cases of the fixed-length database API\n", $0)
+  STDERR.printf("%s: test cases of the fixed-length database API\n", $progname)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-nl|-nb] path rnum [width [limsiz]]\n", $0)
-  STDERR.printf("  %s read [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-nl|-nb] path rnum\n", $0)
+  STDERR.printf("  %s write [-nl|-nb] path rnum [width [limsiz]]\n", $progname)
+  STDERR.printf("  %s read [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s remove [-nl|-nb] path\n", $progname)
+  STDERR.printf("  %s misc [-nl|-nb] path rnum\n", $progname)
   STDERR.printf("\n")
   exit(1)
 end
@@ -56,7 +56,7 @@ end
 # print error message of fixed-length database
 def eprint(fdb, func)
   path = fdb.path
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, fdb.errmsg)
+  STDERR.printf("%s: %s: %s: %s\n", $progname, path ? path : "-", func, fdb.errmsg)
 end
 
 
@@ -68,29 +68,29 @@ def runwrite
   limsiz = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= FDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= FDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
-    elsif(!width)
+    elsif !width
       width = ARGV[i].to_i
-    elsif(!limsiz)
+    elsif !limsiz
       limsiz = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   width = width ? width : -1
   limsiz = limsiz ? limsiz : -1
   rv = procwrite(path, rnum, width, limsiz, omode)
@@ -103,23 +103,23 @@ def runread
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= FDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= FDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procread(path, omode)
   return rv
 end
@@ -130,23 +130,23 @@ def runremove
   path = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= FDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= FDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
     else
       usage
     end
     i += 1
   end
-  usage if(!path)
+  usage if !path
   rv = procremove(path, omode)
   return rv
 end
@@ -158,25 +158,25 @@ def runmisc
   rnum = nil
   omode = 0
   i = 1
-  while(i < ARGV.length)
-    if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-nl")
+  while i < ARGV.length
+    if !path && ARGV[i] =~ /^-/
+      if ARGV[i] == "-nl"
         omode |= FDB::ONOLCK
-      elsif(ARGV[i] == "-nb")
+      elsif ARGV[i] == "-nb"
         omode |= FDB::OLCKNB
       else
         usage
       end
-    elsif(!path)
+    elsif !path
       path = ARGV[i]
-    elsif(!rnum)
+    elsif !rnum
       rnum = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
-  usage if(!path || !rnum || rnum < 1)
+  usage if !path || !rnum || rnum < 1
   rv = procmisc(path, rnum, omode)
   return rv
 end
@@ -189,33 +189,31 @@ def procwrite(path, rnum, width, limsiz, omode)
   err = false
   stime = Time.now
   fdb = FDB::new
-  if(!fdb.tune(width, limsiz))
+  if !fdb.tune(width, limsiz)
     eprint(fdb, "tune")
     err = true
   end
-  if(!fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode))
+  if !fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode)
     eprint(fdb, "open")
     err = true
   end
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!fdb.put(buf, buf))
+    if !fdb.put(buf, buf)
       eprint(fdb, "put")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", fdb.rnum)
   printf("size: %d\n", fdb.fsiz)
-  if(!fdb.close)
+  if !fdb.close
     eprint(fdb, "close")
     err = true
   end
@@ -231,30 +229,28 @@ def procread(path, omode)
   err = false
   stime = Time.now
   fdb = FDB::new
-  if(!fdb.open(path, FDB::OREADER | omode))
+  if !fdb.open(path, FDB::OREADER | omode)
     eprint(fdb, "open")
     err = true
   end
   rnum = fdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!fdb.get(buf))
+    if !fdb.get(buf)
       eprint(fdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", fdb.rnum)
   printf("size: %d\n", fdb.fsiz)
-  if(!fdb.close)
+  if !fdb.close
     eprint(fdb, "close")
     err = true
   end
@@ -270,30 +266,28 @@ def procremove(path, omode)
   err = false
   stime = Time.now
   fdb = FDB::new
-  if(!fdb.open(path, FDB::OWRITER | omode))
+  if !fdb.open(path, FDB::OWRITER | omode)
     eprint(fdb, "open")
     err = true
   end
   rnum = fdb.rnum
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!fdb.out(buf))
+    if !fdb.out(buf)
       eprint(fdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("record number: %d\n", fdb.rnum)
   printf("size: %d\n", fdb.fsiz)
-  if(!fdb.close)
+  if !fdb.close
     eprint(fdb, "close")
     err = true
   end
@@ -309,176 +303,166 @@ def procmisc(path, rnum, omode)
   err = false
   stime = Time.now
   fdb = FDB::new
-  if(!fdb.tune(10, 1024 + 32 * rnum))
+  if !fdb.tune(10, 1024 + 32 * rnum)
     eprint(fdb, "tune")
     err = true
   end
-  if(!fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode))
+  if !fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode)
     eprint(fdb, "open")
     err = true
   end
   printf("writing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!fdb.put(buf, buf))
+    if !fdb.put(buf, buf)
       eprint(fdb, "put")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("reading:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(!fdb.get(buf))
+    if !fdb.get(buf)
       eprint(fdb, "get")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("removing:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("%08d", i)
-    if(rand(2) == 0 && !fdb.out(buf))
+    if rand(2) == 0 && !fdb.out(buf)
       eprint(fdb, "out")
       err = true
       break
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
   printf("checking iterator:\n")
-  if(!fdb.iterinit)
+  if !fdb.iterinit
     eprint(fdb, "iterinit")
     err = true
   end
   inum = 0
-  while(key = fdb.iternext)
+  while key = fdb.iternext
     value = fdb.get(key)
-    if(!value)
+    if !value
       eprint(fdb, "get")
       err = true
     end
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
-  if(fdb.ecode != FDB::ENOREC || inum != fdb.rnum)
+  printf(" (%08d)\n", inum) if rnum > 250
+  if fdb.ecode != FDB::ENOREC || inum != fdb.rnum
     eprint(fdb, "(validation)")
     err = true
   end
   keys = fdb.range("[min,max]", 10)
-  if(fdb.rnum >= 10 && keys.size != 10)
+  if fdb.rnum >= 10 && keys.size != 10
     eprint(fdb, "range")
     err = true
   end
   printf("checking counting:\n")
-  i = 0
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum) + 1)
-    if(rand(2) == 0)
-      if(!fdb.addint(buf, 1) && fdb.ecode() != FDB::EKEEP)
+    if rand(2) == 0
+      if !fdb.addint(buf, 1) && fdb.ecode() != FDB::EKEEP
         eprint(fdb, "addint")
         err = true
         break
       end
     else
-      if(!fdb.adddouble(buf, 1) && fdb.ecode() != FDB::EKEEP)
+      if !fdb.adddouble(buf, 1) && fdb.ecode() != FDB::EKEEP
         eprint(fdb, "adddouble")
         err = true
         break
       end
     end
-    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+    if i > 0 && rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  if(!fdb.sync)
+  if !fdb.sync
     eprint(fdb, "sync")
     err = true
   end
-  if(!fdb.optimize)
+  if !fdb.optimize
     eprint(fdb, "optimize")
     err = true
   end
   npath = path + "-tmp"
-  if(!fdb.copy(npath))
+  if !fdb.copy(npath)
     eprint(fdb, "copy")
     err = true
   end
   File::unlink(npath)
-  if(!fdb.vanish)
+  if !fdb.vanish
     eprint(fdb, "vanish")
     err = true
   end
   printf("checking hash-like updating:\n")
-  i = 1
-  while(i <= rnum)
+  for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))
     rnd = rand(4)
-    if(rnd == 0)
+    if rnd == 0
       fdb[buf] = buf
-    elsif(rnd == 1)
+    elsif rnd == 1
       value = fdb[buf]
-    elsif(rnd == 2)
+    elsif rnd == 2
       res = fdb.key?(buf)
-    elsif(rnd == 3)
+    elsif rnd == 3
       fdb.delete(buf)
     end
-    if(rnum > 250 && i % (rnum / 250) == 0)
+    if rnum > 250 && i % (rnum / 250) == 0
       print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
+      if i == rnum || i % (rnum / 10) == 0
         printf(" (%08d)\n", i)
       end
     end
-    i += 1
   end
-  printf("checking iterator:\n")
+  printf("checking hash-like iterator:\n")
   inum = 0
   fdb.each do |tkey, tvalue|
-    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
+    if inum > 0 && rnum > 250 && inum % (rnum / 250) == 0
       print('.')
-      if(inum == rnum || inum % (rnum / 10) == 0)
+      if inum == rnum || inum % (rnum / 10) == 0
         printf(" (%08d)\n", inum)
       end
     end
     inum += 1
   end
-  printf(" (%08d)\n", inum) if(rnum > 250)
+  printf(" (%08d)\n", inum) if rnum > 250
   fdb.clear
   printf("record number: %d\n", fdb.rnum)
   printf("size: %d\n", fdb.fsiz)
-  if(!fdb.close)
+  if !fdb.close
     eprint(fdb, "close")
     err = true
   end
@@ -490,7 +474,8 @@ end
 
 # execute main
 STDOUT.sync = true
-$0.gsub!(/.*\//, "")
+$progname = $0.dup
+$progname.gsub!(/.*\//, "")
 srand
 exit(main)
 

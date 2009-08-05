@@ -153,22 +153,22 @@ The following code is an example to use a hash database.
  hdb = HDB::new
 
  # open the database
- if(!hdb.open(&quot;casket.hdb&quot;, HDB::OWRITER | HDB::OCREAT))
+ if !hdb.open(&quot;casket.hdb&quot;, HDB::OWRITER | HDB::OCREAT)
    ecode = hdb.ecode
    STDERR.printf(&quot;open error: %s\n&quot;, hdb.errmsg(ecode))
  end
 
  # store records
- if(!hdb.put(&quot;foo&quot;, &quot;hop&quot;) ||
-    !hdb.put(&quot;bar&quot;, &quot;step&quot;) ||
-    !hdb.put(&quot;baz&quot;, &quot;jump&quot;))
+ if !hdb.put(&quot;foo&quot;, &quot;hop&quot;) ||
+     !hdb.put(&quot;bar&quot;, &quot;step&quot;) ||
+     !hdb.put(&quot;baz&quot;, &quot;jump&quot;)
    ecode = hdb.ecode
    STDERR.printf(&quot;put error: %s\n&quot;, hdb.errmsg(ecode))
  end
 
  # retrieve records
  value = hdb.get(&quot;foo&quot;)
- if(value)
+ if value
    printf(&quot;%s\n&quot;, value)
  else
    ecode = hdb.ecode
@@ -177,9 +177,9 @@ The following code is an example to use a hash database.
 
  # traverse records
  hdb.iterinit
- while(key = hdb.iternext)
+ while key = hdb.iternext
    value = hdb.get(key)
-   if(value)
+   if value
      printf(&quot;%s:%s\n&quot;, key, value)
    end
  end
@@ -192,7 +192,7 @@ The following code is an example to use a hash database.
  end
 
  # close the database
- if(!hdb.close)
+ if !hdb.close
    ecode = hdb.ecode
    STDERR.printf(&quot;close error: %s\n&quot;, hdb.errmsg(ecode))
  end
@@ -208,22 +208,22 @@ The following code is an example to use a B+ tree database.
  bdb = BDB::new
 
  # open the database
- if(!bdb.open(&quot;casket.bdb&quot;, BDB::OWRITER | BDB::OCREAT))
+ if !bdb.open(&quot;casket.bdb&quot;, BDB::OWRITER | BDB::OCREAT)
    ecode = bdb.ecode
    STDERR.printf(&quot;open error: %s\n&quot;, bdb.errmsg(ecode))
  end
 
  # store records
- if(!bdb.put(&quot;foo&quot;, &quot;hop&quot;) ||
-    !bdb.put(&quot;bar&quot;, &quot;step&quot;) ||
-    !bdb.put(&quot;baz&quot;, &quot;jump&quot;))
+ if !bdb.put(&quot;foo&quot;, &quot;hop&quot;) ||
+     !bdb.put(&quot;bar&quot;, &quot;step&quot;) ||
+     !bdb.put(&quot;baz&quot;, &quot;jump&quot;)
    ecode = bdb.ecode
    STDERR.printf(&quot;put error: %s\n&quot;, bdb.errmsg(ecode))
  end
 
  # retrieve records
  value = bdb.get(&quot;foo&quot;)
- if(value)
+ if value
    printf(&quot;%s\n&quot;, value)
  else
    ecode = bdb.ecode
@@ -233,9 +233,9 @@ The following code is an example to use a B+ tree database.
  # traverse records
  cur = BDBCUR::new(bdb)
  cur.first
- while(key = cur.key)
+ while key = cur.key
    value = cur.val
-   if(value)
+   if value
      printf(&quot;%s:%s\n&quot;, key, value)
    end
    cur.next
@@ -249,7 +249,7 @@ The following code is an example to use a B+ tree database.
  end
 
  # close the database
- if(!bdb.close)
+ if !bdb.close
    ecode = bdb.ecode
    STDERR.printf(&quot;close error: %s\n&quot;, bdb.errmsg(ecode))
  end
@@ -265,22 +265,22 @@ The following code is an example to use a fixed-length database.
  fdb = FDB::new
 
  # open the database
- if(!fdb.open(&quot;casket.fdb&quot;, FDB::OWRITER | FDB::OCREAT))
+ if !fdb.open(&quot;casket.fdb&quot;, FDB::OWRITER | FDB::OCREAT)
    ecode = fdb.ecode
    STDERR.printf(&quot;open error: %s\n&quot;, fdb.errmsg(ecode))
  end
 
  # store records
- if(!fdb.put(1, &quot;one&quot;) ||
-    !fdb.put(12, &quot;twelve&quot;) ||
-    !fdb.put(144, &quot;one forty four&quot;))
+ if !fdb.put(1, &quot;one&quot;) ||
+     !fdb.put(12, &quot;twelve&quot;) ||
+     !fdb.put(144, &quot;one forty four&quot;)
    ecode = fdb.ecode
    STDERR.printf(&quot;put error: %s\n&quot;, fdb.errmsg(ecode))
  end
 
  # retrieve records
  value = fdb.get(1)
- if(value)
+ if value
    printf(&quot;%s\n&quot;, value)
  else
    ecode = fdb.ecode
@@ -289,9 +289,9 @@ The following code is an example to use a fixed-length database.
 
  # traverse records
  fdb.iterinit
- while(key = fdb.iternext)
+ while key = fdb.iternext
    value = fdb.get(key)
-   if(value)
+   if value
      printf(&quot;%s:%s\n&quot;, key, value)
    end
  end
@@ -304,7 +304,7 @@ The following code is an example to use a fixed-length database.
  end
 
  # close the database
- if(!fdb.close)
+ if !fdb.close
    ecode = fdb.ecode
    STDERR.printf(&quot;close error: %s\n&quot;, fdb.errmsg(ecode))
  end

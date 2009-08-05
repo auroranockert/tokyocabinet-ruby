@@ -81,7 +81,7 @@
     <div id="description">
       <p>
 Cursor is a mechanism to access each record of B+ tree database in
-ascending or descending order.
+ascending or descending order.<br/>
 </p>
 
     </div>
@@ -174,13 +174,14 @@ cursor <a href="BDBCUR.html#M000065">put</a> mode: after
       
         <div class="method-description">
           <p>
-Create a cursor object. `<em>bdb</em>' specifies the B+ tree database
-object. The return value is the <a href="BDBCUR.html#M000059">new</a>
-cursor object. Note that the cursor is available only after initialization
-with the `<a href="BDBCUR.html#M000060">first</a>' or the `<a
+Create a cursor object.<br/> `<em>bdb</em>' specifies the B+ tree
+database object.<br/> The return value is the <a
+href="BDBCUR.html#M000059">new</a> cursor object.<br/> Note that the cursor is
+available only after initialization with the `<a
+href="BDBCUR.html#M000060">first</a>' or the `<a
 href="BDBCUR.html#M000062">jump</a>' methods and so on. Moreover, the
 position of the cursor will be indefinite when the database is updated
-after the initialization of the cursor.
+after the initialization of the cursor.<br/>
 </p>
         </div>
       </div>
@@ -199,9 +200,9 @@ after the initialization of the cursor.
       
         <div class="method-description">
           <p>
-Move the cursor to the <a href="BDBCUR.html#M000060">first</a> record. If
+Move the cursor to the <a href="BDBCUR.html#M000060">first</a> record.<br/> If
 successful, the return value is true, else, it is false. False is returned
-if there is no record in the database.
+if there is no record in the database.<br/>
 </p>
         </div>
       </div>
@@ -219,15 +220,15 @@ if there is no record in the database.
         <div class="method-description">
           <p>
 Move the cursor to the front of records corresponding a <a
-href="BDBCUR.html#M000067">key</a>. `<em><a
+href="BDBCUR.html#M000067">key</a>.<br/> `<em><a
 href="BDBCUR.html#M000067">key</a></em>' specifies the <a
-href="BDBCUR.html#M000067">key</a>. If successful, the return value is
+href="BDBCUR.html#M000067">key</a>.<br/> If successful, the return value is
 true, else, it is false. False is returned if there is no record
-corresponding the condition. The cursor is set to the <a
+corresponding the condition.<br/> The cursor is set to the <a
 href="BDBCUR.html#M000060">first</a> record corresponding the <a
 href="BDBCUR.html#M000067">key</a> or the <a
 href="BDBCUR.html#M000064">next</a> substitute if completely matching
-record does not exist.
+record does not exist.<br/>
 </p>
         </div>
       </div>
@@ -245,9 +246,9 @@ record does not exist.
         <div class="method-description">
           <p>
 Get the <a href="BDBCUR.html#M000067">key</a> of the record where the
-cursor is. If successful, the return value is the <a
+cursor is.<br/> If successful, the return value is the <a
 href="BDBCUR.html#M000067">key</a>, else, it is `nil'.
-&#8216;nil' is returned when the cursor is at invalid position.
+&#8216;nil' is returned when the cursor is at invalid position.<br/>
 </p>
         </div>
       </div>
@@ -264,9 +265,9 @@ href="BDBCUR.html#M000067">key</a>, else, it is `nil'.
       
         <div class="method-description">
           <p>
-Move the cursor to the <a href="BDBCUR.html#M000061">last</a> record. If
+Move the cursor to the <a href="BDBCUR.html#M000061">last</a> record.<br/> If
 successful, the return value is true, else, it is false. False is returned
-if there is no record in the database.
+if there is no record in the database.<br/>
 </p>
         </div>
       </div>
@@ -283,9 +284,9 @@ if there is no record in the database.
       
         <div class="method-description">
           <p>
-Move the cursor to the <a href="BDBCUR.html#M000064">next</a> record. If
+Move the cursor to the <a href="BDBCUR.html#M000064">next</a> record.<br/> If
 successful, the return value is true, else, it is false. False is returned
-if there is no <a href="BDBCUR.html#M000064">next</a> record.
+if there is no <a href="BDBCUR.html#M000064">next</a> record.<br/>
 </p>
         </div>
       </div>
@@ -302,10 +303,10 @@ if there is no <a href="BDBCUR.html#M000064">next</a> record.
       
         <div class="method-description">
           <p>
-Delete the record where the cursor is. If successful, the return value is
+Remove the record where the cursor is.<br/> If successful, the return value is
 true, else, it is false. False is returned when the cursor is at invalid
-position. After deletion, the cursor is moved to the <a
-href="BDBCUR.html#M000064">next</a> record if possible.
+position.<br/> After deletion, the cursor is moved to the <a
+href="BDBCUR.html#M000064">next</a> record if possible.<br/>
 </p>
         </div>
       </div>
@@ -322,8 +323,9 @@ href="BDBCUR.html#M000064">next</a> record if possible.
       
         <div class="method-description">
           <p>
-Move the cursor to the previous record. If successful, the return value is
-true, else, it is false. False is returned if there is no previous record.
+Move the cursor to the previous record.<br/> If successful, the return value
+is true, else, it is false. False is returned if there is no previous
+record.<br/>
 </p>
         </div>
       </div>
@@ -340,16 +342,16 @@ true, else, it is false. False is returned if there is no previous record.
       
         <div class="method-description">
           <p>
-Insert a record around the cursor. `<em>value</em>' specifies the
-value. `<em>cpmode</em>' specifies detail adjustment:
+Insert a record around the cursor.<br/> `<em>value</em>' specifies the
+value.<br/> `<em>cpmode</em>' specifies detail adjustment:
 `TokyoCabinet::BDBCUR::CPCURRENT', which means that the value of the
 current record is overwritten, `TokyoCabinet::BDBCUR::CPBEFORE',
 which means that the <a href="BDBCUR.html#M000059">new</a> record is
 inserted before the current record, `TokyoCabinet::BDBCUR::CPAFTER',
 which means that the <a href="BDBCUR.html#M000059">new</a> record is
-inserted after the current record. If successful, the return value is true,
-else, it is false. False is returned when the cursor is at invalid
-position. After insertion, the cursor is moved to the inserted record.
+inserted after the current record.<br/> If successful, the return value is
+true, else, it is false. False is returned when the cursor is at invalid
+position.<br/> After insertion, the cursor is moved to the inserted record.<br/>
 </p>
         </div>
       </div>
@@ -366,9 +368,9 @@ position. After insertion, the cursor is moved to the inserted record.
       
         <div class="method-description">
           <p>
-Get the value of the record where the cursor is. If successful, the return
-value is the value, else, it is `nil'. &#8216;nil' is returned
-when the cursor is at invalid position.
+Get the value of the record where the cursor is.<br/> If successful, the
+return value is the value, else, it is `nil'. &#8216;nil' is
+returned when the cursor is at invalid position.<br/>
 </p>
         </div>
       </div>
