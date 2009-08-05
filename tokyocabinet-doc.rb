@@ -73,8 +73,10 @@ module TokyoCabinet
     TLARGE = 1 << 0
     # tuning option: compress each record with Deflate
     TDEFLATE = 1 << 1
+    # tuning option: compress each record with BZIP2
+    TBZIP = 1 << 2
     # tuning option: compress each record with TCBS
-    TTCBS = 1 << 2
+    TTCBS = 1 << 3
     # open mode: open as a reader
     OREADER = 1 << 0
     # open mode: open as a writer
@@ -107,7 +109,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^4=16.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.
     def tune(bnum, apow, fpow, opts)
       # (native code)
@@ -212,7 +214,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of records.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
     # If successful, the return value is true, else, it is false.
     # This method is useful to reduce the size of the database file with data fragmentation by successive updating.
     def optimize(bnum, apow, fpow, opts)
@@ -309,8 +311,10 @@ module TokyoCabinet
     TLARGE = 1 << 0
     # tuning option: compress each record with Deflate
     TDEFLATE = 1 << 1
+    # tuning option: compress each record with BZIP2
+    TBZIP = 1 << 2
     # tuning option: compress each record with TCBS
-    TTCBS = 1 << 2
+    TTCBS = 1 << 3
     # open mode: open as a reader
     OREADER = 1 << 0
     # open mode: open as a writer
@@ -352,7 +356,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 1 to 4 times of the number of all pages to be stored.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^8=256.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.
     def tune(lmemb, nmemb, bnum, apow, fpow, opts)
       # (native code)
@@ -487,7 +491,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of pages.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
     # If successful, the return value is true, else, it is false.
     # This method is useful to reduce the size of the database file with data fragmentation by successive updating.
     def optimize(lmemb, nmemb, bnum, apow, fpow, opts)

@@ -12,7 +12,7 @@ tclibs = tclibs.gsub(/-L[\S]+/, "").strip
 
 tccflags = "-I/usr/local/include" if(tccflags.length < 1)
 tcldflags = "-L/usr/local/lib" if(tcldflags.length < 1)
-tclibs = "-ltokyocabinet -lz -lpthread -lm -lc" if(tclibs.length < 1)
+tclibs = "-ltokyocabinet -lz -lbz2 -lpthread -lm -lc" if(tclibs.length < 1)
 
 $CFLAGS = "-I. -I.. -I../.. #{tccflags} -Wall #{$CFLAGS} -O2"
 $LDFLAGS = "#{$LDFLAGS} -L. -L.. -L../.. #{tcldflags}"

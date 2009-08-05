@@ -43,11 +43,11 @@ def usage
   STDERR.printf("%s: test cases of the B+ tree database API\n", $0)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-tl] [-td|-tb] [-nl|-nb] [-as] path rnum" +
+  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] [-as] path rnum" +
                 " [lmemb [nmemb [bnum [apow [fpow]]]]]\n", $0)
   STDERR.printf("  %s read [-nl|-nb] path\n", $0)
   STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-tl] [-td|-tb] [-nl|-nb] path rnum\n", $0)
+  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $0)
   STDERR.printf("\n")
   exit(1)
 end
@@ -81,6 +81,8 @@ def runwrite
       elsif(ARGV[i] == "-td")
         opts |= BDB::TDEFLATE
       elsif(ARGV[i] == "-tb")
+        opts |= BDB::TBZIP
+      elsif(ARGV[i] == "-tt")
         opts |= BDB::TTCBS
       elsif(ARGV[i] == "-nl")
         omode |= BDB::ONOLCK
@@ -189,6 +191,8 @@ def runmisc
       elsif(ARGV[i] == "-td")
         opts |= BDB::TDEFLATE
       elsif(ARGV[i] == "-tb")
+        opts |= BDB::TBZIP
+      elsif(ARGV[i] == "-tt")
         opts |= BDB::TTCBS
       elsif(ARGV[i] == "-nl")
         omode |= BDB::ONOLCK
@@ -351,7 +355,7 @@ def procmisc(path, rnum, opts, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.tune(rnum / 50, 2, -1, opts))
+  if(!bdb.tune(rnum / 50, 2, -1, -1, -1, opts))
     eprint(bdb, "tune")
     err = true
   end

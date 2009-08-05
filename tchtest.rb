@@ -43,10 +43,11 @@ def usage
   STDERR.printf("%s: test cases of the hash database API\n", $0)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-tl] [-td|-tb] [-nl|-nb] [-as] path rnum [bnum [apow [fpow]]]\n", $0)
+  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] [-as] path rnum" +
+                " [bnum [apow [fpow]]]\n", $0)
   STDERR.printf("  %s read [-nl|-nb] path\n", $0)
   STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-tl] [-td|-tb] [-nl|-nb] path rnum\n", $0)
+  STDERR.printf("  %s misc [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum\n", $0)
   STDERR.printf("\n")
   exit(1)
 end
@@ -78,6 +79,8 @@ def runwrite
       elsif(ARGV[i] == "-td")
         opts |= HDB::TDEFLATE
       elsif(ARGV[i] == "-tb")
+        opts |= HDB::TBZIP
+      elsif(ARGV[i] == "-tt")
         opts |= HDB::TTCBS
       elsif(ARGV[i] == "-nl")
         omode |= HDB::ONOLCK
@@ -180,6 +183,8 @@ def runmisc
       elsif(ARGV[i] == "-td")
         opts |= HDB::TDEFLATE
       elsif(ARGV[i] == "-tb")
+        opts |= HDB::TBZIP
+      elsif(ARGV[i] == "-tt")
         opts |= HDB::TTCBS
       elsif(ARGV[i] == "-nl")
         omode |= HDB::ONOLCK

@@ -403,9 +403,19 @@ tuning option: compress each record with Deflate
 </td>
         </tr>
         <tr class="top-aligned-row context-row">
-          <td class="context-item-name">TTCBS</td>
+          <td class="context-item-name">TBZIP</td>
           <td>=</td>
           <td class="context-item-value">1 &lt;&lt; 2</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+tuning option: compress each record with BZIP2
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">TTCBS</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 3</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
 tuning option: compress each record with TCBS
@@ -751,12 +761,13 @@ current setting is not changed. `<em>opts</em>' specifies options by
 bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of
 the database can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::HDB::TDEFLATE' specifies that each record is
-compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS'
-specifies that each record is compressed with TCBS encoding. If it is not
-defined or 0xff, the current setting is not changed. If successful, the
-return value is true, else, it is false. This method is useful to reduce
-the size of the database file with data fragmentation by successive
-updating.
+compressed with Deflate encoding, `TokyoCabinet::HDB::TBZIP'
+specifies that each record is compressed with BZIP2 encoding,
+`TokyoCabinet::HDB::TTCBS' specifies that each record is compressed
+with TCBS encoding. If it is not defined or 0xff, the current setting is
+not changed. If successful, the return value is true, else, it is false.
+This method is useful to reduce the size of the database file with data
+fragmentation by successive updating.
 </p>
         </div>
       </div>
@@ -964,11 +975,13 @@ value is specified. The default value is 10 standing for 2^10=1024.
 `TokyoCabinet::HDB::TLARGE' specifies that the size of the database
 can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::HDB::TDEFLATE' specifies that each record is
-compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS'
-specifies that each record is compressed with TCBS encoding. If it is not
-defined, no option is specified. If successful, the return value is true,
-else, it is false. Note that the tuning parameters of the database should
-be set before the database is opened.
+compressed with Deflate encoding, `TokyoCabinet::HDB::TDBZIP'
+specifies that each record is compressed with BZIP2 encoding,
+`TokyoCabinet::HDB::TTCBS' specifies that each record is compressed
+with TCBS encoding. If it is not defined, no option is specified. If
+successful, the return value is true, else, it is false. Note that the
+tuning parameters of the database should be set before the database is
+opened.
 </p>
         </div>
       </div>

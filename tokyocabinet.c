@@ -245,6 +245,7 @@ static void hdb_init(void){
   rb_define_const(cls_hdb, "EMISC", INT2NUM(TCEMISC));
   rb_define_const(cls_hdb, "TLARGE", INT2NUM(HDBTLARGE));
   rb_define_const(cls_hdb, "TDEFLATE", INT2NUM(HDBTDEFLATE));
+  rb_define_const(cls_hdb, "TBZIP", INT2NUM(HDBTBZIP));
   rb_define_const(cls_hdb, "TTCBS", INT2NUM(HDBTTCBS));
   rb_define_const(cls_hdb, "OREADER", INT2NUM(HDBOREADER));
   rb_define_const(cls_hdb, "OWRITER", INT2NUM(HDBOWRITER));
@@ -861,6 +862,7 @@ static void bdb_init(void){
   rb_define_const(cls_bdb, "CMPINT64", rb_str_new2("CMPINT64"));
   rb_define_const(cls_bdb, "TLARGE", INT2NUM(BDBTLARGE));
   rb_define_const(cls_bdb, "TDEFLATE", INT2NUM(BDBTDEFLATE));
+  rb_define_const(cls_bdb, "TBZIP", INT2NUM(BDBTBZIP));
   rb_define_const(cls_bdb, "TTCBS", INT2NUM(BDBTTCBS));
   rb_define_const(cls_bdb, "OREADER", INT2NUM(BDBOREADER));
   rb_define_const(cls_bdb, "OWRITER", INT2NUM(BDBOWRITER));
