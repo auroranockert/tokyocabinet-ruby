@@ -267,6 +267,7 @@ static VALUE adb_tranabort(VALUE vself);
 static VALUE adb_path(VALUE vself);
 static VALUE adb_rnum(VALUE vself);
 static VALUE adb_size(VALUE vself);
+static VALUE adb_misc(int argc, VALUE *argv, VALUE vself);
 static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself);
 static VALUE adb_check(VALUE vself, VALUE vkey);
 static VALUE adb_check_value(VALUE vself, VALUE vval);
@@ -3295,6 +3296,7 @@ static void adb_init(void){
   rb_define_method(cls_adb, "path", adb_path, 0);
   rb_define_method(cls_adb, "rnum", adb_rnum, 0);
   rb_define_method(cls_adb, "size", adb_size, 0);
+  rb_define_method(cls_adb, "misc", adb_misc, -1);
   rb_define_method(cls_adb, "[]", adb_get, 1);
   rb_define_method(cls_adb, "[]=", adb_put, 2);
   rb_define_method(cls_adb, "store", adb_put, 2);
@@ -3582,6 +3584,32 @@ static VALUE adb_size(VALUE vself){
   vadb = rb_iv_get(vself, ADBVNDATA);
   Data_Get_Struct(vadb, TCADB, adb);
   return LL2NUM(tcadbsize(adb));
+}
+
+
+static VALUE adb_misc(int argc, VALUE *argv, VALUE vself){
+  VALUE vadb, vname, vargs, vrv;
+  TCADB *adb;
+  TCLIST *targs, *res;
+  rb_scan_args(argc, argv, "11", &vname, &vargs);
+  vname = StringValueEx(vname);
+  if(vargs == Qnil){
+    targs = tclistnew2(1);
+  } else {
+    Check_Type(vargs, T_ARRAY);
+    targs = varytolist(vargs);
+  }
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  res = tcadbmisc(adb, RSTRING_PTR(vname), targs);
+  if(res){
+    vrv = listtovary(res);
+    tclistdel(res);
+  } else {
+    vrv = Qnil;
+  }
+  tclistdel(targs);
+  return vrv;
 }
 
 

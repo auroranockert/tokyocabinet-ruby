@@ -356,6 +356,27 @@ def procmisc(name, rnum)
       end
     end
   end
+  printf("checking versatile functions:\n")
+  for i in 1..rnum
+    rnd = rand(3)
+    if rnd == 0
+      name = "putlist"
+    elsif rnd == 1
+      name = "outlist"
+    else
+      name = "getlist"
+    end
+    if !adb.misc(name, [rand(rnum), rand(rnum)])
+      eprint(adb, "(validation)")
+      err = true
+    end
+    if i > 0 && rnum > 250 && i % (rnum / 250) == 0
+      print('.')
+      if i == rnum || i % (rnum / 10) == 0
+        printf(" (%08d)\n", i)
+      end
+    end
+  end
   if !adb.sync
     eprint(adb, "sync")
     err = true

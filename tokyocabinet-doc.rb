@@ -1483,5 +1483,12 @@ module TokyoCabinet
     def size()
       # (native code)
     end
+    # Call a versatile function for miscellaneous operations.%%
+    # `<i>name</i>' specifies the name of the function.%%
+    # `<i>args</i>' specifies an array of arguments.  If it is not defined, no argument is specified.%%
+    # If successful, the return value is an array of the result.  `nil' is returned on failure.%%
+    def misc(name, args)
+      # (native code)
+    end
   end
 end
