@@ -403,8 +403,8 @@ query object.<br/>
       
         <div class="method-description">
           <p>
-Add a narrowing condition. `<em>name</em>' specifies the name of a
-column. An empty string means the primary key. `<em>op</em>'
+Add a narrowing condition.<br/> `<em>name</em>' specifies the name of a
+column. An empty string means the primary key.<br/> `<em>op</em>'
 specifies an operation type: `TokyoCabinet::TDBQRY::QCSTREQ' for
 string which is equal to the expression,
 `TokyoCabinet::TDBQRY::QCSTRINC' for string which is included in the
@@ -428,9 +428,9 @@ number which is between two tokens of the expression,
 `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at
 least one token in the expression. All operations can be flagged by bitwise
 or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation,
-`TokyoCabinet::TDBQRY::QCNOIDX' for using no index.
-`<em>expr</em>' specifies an operand exression. The return value is
-always `undef'.
+`TokyoCabinet::TDBQRY::QCNOIDX' for using no index.<br/>
+`<em>expr</em>' specifies an operand exression.<br/> The return value is
+always `nil'.<br/>
 </p>
         </div>
       </div>
@@ -447,8 +447,8 @@ always `undef'.
       
         <div class="method-description">
           <p>
-Get the <a href="TDBQRY.html#M000076">hint</a> of a query object. The
-return value is the <a href="TDBQRY.html#M000076">hint</a> string.
+Get the <a href="TDBQRY.html#M000076">hint</a> of a query object.<br/> The
+return value is the <a href="TDBQRY.html#M000076">hint</a> string.<br/>
 </p>
         </div>
       </div>
@@ -465,14 +465,14 @@ return value is the <a href="TDBQRY.html#M000076">hint</a> string.
       
         <div class="method-description">
           <p>
-Process each corresponding record. This function needs a block parameter of
-the iterator called for each record. The block receives two parameters. The
-first parameter is the primary key. The second parameter is a hash
+Process each corresponding record.<br/> This function needs a block parameter
+of the iterator called for each record. The block receives two parameters.
+The first parameter is the primary key. The second parameter is a hash
 containing columns. It returns flags of the post treatment by bitwise or:
 `TokyoCabinet::TDBQRY::QPPUT' to modify the record,
 `TokyoCabinet::TDBQRY::QPOUT' to remove the record,
-`TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration. If successful,
-the return value is true, else, it is false.
+`TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.<br/> If
+successful, the return value is true, else, it is false.<br/>
 </p>
         </div>
       </div>
@@ -489,9 +489,9 @@ the return value is true, else, it is false.
       
         <div class="method-description">
           <p>
-Execute the <a href="TDBQRY.html#M000073">search</a>. The return value is
+Execute the <a href="TDBQRY.html#M000073">search</a>.<br/> The return value is
 an array of the primary keys of the corresponding records. This method does
-never fail and return an empty array even if no record corresponds.
+never fail and return an empty array even if no record corresponds.<br/>
 </p>
         </div>
       </div>
@@ -508,8 +508,8 @@ never fail and return an empty array even if no record corresponds.
       
         <div class="method-description">
           <p>
-Remove each corresponding record. If successful, the return value is true,
-else, it is false.
+Remove each corresponding record.<br/> If successful, the return value is
+true, else, it is false.<br/>
 </p>
         </div>
       </div>
@@ -526,9 +526,9 @@ else, it is false.
       
         <div class="method-description">
           <p>
-Set the maximum number of records of the result. `<em>max</em>'
-specifies the maximum number of records of the result. The return value is
-always `undef'.
+Set the maximum number of records of the result.<br/> `<em>max</em>'
+specifies the maximum number of records of the result.<br/> The return value
+is always `nil'.<br/>
 </p>
         </div>
       </div>
@@ -545,13 +545,13 @@ always `undef'.
       
         <div class="method-description">
           <p>
-Set the order of the result. `<em>name</em>' specifies the name of a
-column. An empty string means the primary key. `<em>type</em>'
+Set the order of the result.<br/> `<em>name</em>' specifies the name of
+a column. An empty string means the primary key.<br/> `<em>type</em>'
 specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string
 ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending,
 `TokyoCabinet::TDBQRY::QONUMASC' for number ascending,
-`TokyoCabinet::TDBQRY::QONUMDESC' for number descending. The return
-value is always `undef'.
+`TokyoCabinet::TDBQRY::QONUMDESC' for number descending.<br/> The return
+value is always `nil'.<br/>
 </p>
         </div>
       </div>

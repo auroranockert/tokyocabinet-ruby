@@ -5,7 +5,7 @@ include TokyoCabinet
 hdb = HDB::new
 
 # open the database
-if !hdb.open("casket.tch", HDB::OWRITER | HDB::OCREAT)
+if !hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT)
   ecode = hdb.ecode
   STDERR.printf("open error: %s\n", hdb.errmsg(ecode))
 end

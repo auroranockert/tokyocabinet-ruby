@@ -784,8 +784,8 @@ because every key in the database is scanned.<br/>
       
         <div class="method-description">
           <p>
-Generate a unique ID number. The return value is the <a
-href="TDB.html#M000107">new</a> unique ID number or -1 on failure.
+Generate a unique ID number.<br/> The return value is the <a
+href="TDB.html#M000107">new</a> unique ID number or -1 on failure.<br/>
 </p>
         </div>
       </div>
@@ -973,7 +973,7 @@ file or `nil' if the object does not connect to any database file.<br/>
         <div class="method-description">
           <p>
 Store a record.<br/> `<em>pkey</em>' specifies the primary key.<br/>
-`<em>cols</em>' specifies a hash containing columns. If successful,
+`<em>cols</em>' specifies a hash containing columns.<br/> If successful,
 the return value is true, else, it is false.<br/> If a record with the same
 key exists in the database, it is overwritten.<br/>
 </p>
@@ -994,7 +994,7 @@ key exists in the database, it is overwritten.<br/>
           <p>
 Concatenate columns of the existing record.<br/> `<em>pkey</em>'
 specifies the primary key.<br/> `<em>cols</em>' specifies a hash
-containing columns. If successful, the return value is true, else, it is
+containing columns.<br/> If successful, the return value is true, else, it is
 false.<br/> If there is no corresponding record, a <a
 href="TDB.html#M000107">new</a> record is created.<br/>
 </p>
@@ -1015,7 +1015,7 @@ href="TDB.html#M000107">new</a> record is created.<br/>
           <p>
 Store a <a href="TDB.html#M000107">new</a> record.<br/> `<em>pkey</em>'
 specifies the primary key.<br/> `<em>cols</em>' specifies a hash
-containing columns. If successful, the return value is true, else, it is
+containing columns.<br/> If successful, the return value is true, else, it is
 false.<br/> If a record with the same key exists in the database, this method
 has no effect.<br/>
 </p>
@@ -1079,15 +1079,15 @@ database is opened.<br/>
       
         <div class="method-description">
           <p>
-Set a column index. `<em>name</em>' specifies the name of a column.
+Set a column index.<br/> `<em>name</em>' specifies the name of a column.
 If the name of an existing index is specified, the index is rebuilt. An
-empty string means the primary key. `<em>type</em>' specifies the
+empty string means the primary key.<br/> `<em>type</em>' specifies the
 index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string,
 `TokyoCabinet::TDB::ITDECIMAL' for decimal string. If it is
 `TokyoCabinet::TDB::ITVOID', the index is removed. If
 `TokyoCabinet::TDB::ITKEEP' is added by bitwise or and the index
-exists, this method merely returns failure. If successful, the return value
-is true, else, it is false.
+exists, this method merely returns failure.<br/> If successful, the return
+value is true, else, it is false.<br/>
 </p>
         </div>
       </div>

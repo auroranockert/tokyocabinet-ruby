@@ -5,7 +5,7 @@ include TokyoCabinet
 tdb = TDB::new
 
 # open the database
-if !tdb.open("casket.tct", TDB::OWRITER | TDB::OCREAT)
+if !tdb.open("casket.tdb", TDB::OWRITER | TDB::OCREAT)
   ecode = tdb.ecode
   STDERR.printf("open error: %s\n", tdb.errmsg(ecode))
 end

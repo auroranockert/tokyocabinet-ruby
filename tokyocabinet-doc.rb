@@ -1036,7 +1036,7 @@ module TokyoCabinet
     end
     # Store a record.%%
     # `<i>pkey</i>' specifies the primary key.%%
-    # `<i>cols</i>' specifies a hash containing columns.
+    # `<i>cols</i>' specifies a hash containing columns.%%
     # If successful, the return value is true, else, it is false.%%
     # If a record with the same key exists in the database, it is overwritten.%%
     def put(pkey, cols)
@@ -1044,7 +1044,7 @@ module TokyoCabinet
     end
     # Store a new record.%%
     # `<i>pkey</i>' specifies the primary key.%%
-    # `<i>cols</i>' specifies a hash containing columns.
+    # `<i>cols</i>' specifies a hash containing columns.%%
     # If successful, the return value is true, else, it is false.%%
     # If a record with the same key exists in the database, this method has no effect.%%
     def putkeep(pkey, cols)
@@ -1052,7 +1052,7 @@ module TokyoCabinet
     end
     # Concatenate columns of the existing record.%%
     # `<i>pkey</i>' specifies the primary key.%%
-    # `<i>cols</i>' specifies a hash containing columns.
+    # `<i>cols</i>' specifies a hash containing columns.%%
     # If successful, the return value is true, else, it is false.%%
     # If there is no corresponding record, a new record is created.%%
     def putcat(pkey, value)
@@ -1173,15 +1173,15 @@ module TokyoCabinet
     def fsiz()
       # (native code)
     end
-    # Set a column index.
-    # `<i>name</i>' specifies the name of a column.  If the name of an existing index is specified, the index is rebuilt.  An empty string means the primary key.
-    # `<i>type</i>' specifies the index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string, `TokyoCabinet::TDB::ITDECIMAL' for decimal string.  If it is `TokyoCabinet::TDB::ITVOID', the index is removed.  If `TokyoCabinet::TDB::ITKEEP' is added by bitwise or and the index exists, this method merely returns failure.
-# If successful, the return value is true, else, it is false.
+    # Set a column index.%%
+    # `<i>name</i>' specifies the name of a column.  If the name of an existing index is specified, the index is rebuilt.  An empty string means the primary key.%%
+    # `<i>type</i>' specifies the index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string, `TokyoCabinet::TDB::ITDECIMAL' for decimal string.  If it is `TokyoCabinet::TDB::ITVOID', the index is removed.  If `TokyoCabinet::TDB::ITKEEP' is added by bitwise or and the index exists, this method merely returns failure.%%
+# If successful, the return value is true, else, it is false.%%
     def setindex(name, type)
       # (native code)
     end
-    # Generate a unique ID number.
-    # The return value is the new unique ID number or -1 on failure.
+    # Generate a unique ID number.%%
+    # The return value is the new unique ID number or -1 on failure.%%
     def genuid()
       # (native code)
     end
@@ -1242,45 +1242,45 @@ module TokyoCabinet
     def initialize(tdb)
       # (native code)
     end
-    # Add a narrowing condition.
-    # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.
-    # `<i>op</i>' specifies an operation type: `TokyoCabinet::TDBQRY::QCSTREQ' for string which is equal to the expression, `TokyoCabinet::TDBQRY::QCSTRINC' for string which is included in the expression, `TokyoCabinet::TDBQRY::QCSTRBW' for string which begins with the expression, `TokyoCabinet::TDBQRY::QCSTREW' for string which ends with the expression, `TokyoCabinet::TDBQRY::QCSTRAND' for string which includes all tokens in the expression, `TokyoCabinet::TDBQRY::QCSTROR' for string which includes at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTROREQ' for string which is equal to at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTRRX' for string which matches regular expressions of the expression, `TokyoCabinet::TDBQRY::QCNUMEQ' for number which is equal to the expression, `TokyoCabinet::TDBQRY::QCNUMGT' for number which is greater than the expression, `TokyoCabinet::TDBQRY::QCNUMGE' for number which is greater than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMLT' for number which is less than the expression, `TokyoCabinet::TDBQRY::QCNUMLE' for number which is less than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for number which is between two tokens of the expression, `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at least one token in the expression.  All operations can be flagged by bitwise or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation, `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.
-    # `<i>expr</i>' specifies an operand exression.
-    # The return value is always `undef'.
+    # Add a narrowing condition.%%
+    # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.%%
+    # `<i>op</i>' specifies an operation type: `TokyoCabinet::TDBQRY::QCSTREQ' for string which is equal to the expression, `TokyoCabinet::TDBQRY::QCSTRINC' for string which is included in the expression, `TokyoCabinet::TDBQRY::QCSTRBW' for string which begins with the expression, `TokyoCabinet::TDBQRY::QCSTREW' for string which ends with the expression, `TokyoCabinet::TDBQRY::QCSTRAND' for string which includes all tokens in the expression, `TokyoCabinet::TDBQRY::QCSTROR' for string which includes at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTROREQ' for string which is equal to at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTRRX' for string which matches regular expressions of the expression, `TokyoCabinet::TDBQRY::QCNUMEQ' for number which is equal to the expression, `TokyoCabinet::TDBQRY::QCNUMGT' for number which is greater than the expression, `TokyoCabinet::TDBQRY::QCNUMGE' for number which is greater than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMLT' for number which is less than the expression, `TokyoCabinet::TDBQRY::QCNUMLE' for number which is less than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for number which is between two tokens of the expression, `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at least one token in the expression.  All operations can be flagged by bitwise or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation, `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.%%
+    # `<i>expr</i>' specifies an operand exression.%%
+    # The return value is always `nil'.%%
     def addcond(name, op, expr)
       # (native code)
     end
-    # Set the order of the result.
-    # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.
-    # `<i>type</i>' specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending, `TokyoCabinet::TDBQRY::QONUMASC' for number ascending, `TokyoCabinet::TDBQRY::QONUMDESC' for number descending.
-    # The return value is always `undef'.
+    # Set the order of the result.%%
+    # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.%%
+    # `<i>type</i>' specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending, `TokyoCabinet::TDBQRY::QONUMASC' for number ascending, `TokyoCabinet::TDBQRY::QONUMDESC' for number descending.%%
+    # The return value is always `nil'.%%
     def setorder(name, type)
       # (native code)
     end
-    # Set the maximum number of records of the result.
-    # `<i>max</i>' specifies the maximum number of records of the result.
-    # The return value is always `undef'.
+    # Set the maximum number of records of the result.%%
+    # `<i>max</i>' specifies the maximum number of records of the result.%%
+    # The return value is always `nil'.%%
     def setmax(max)
       # (native code)
     end
-    # Execute the search.
-    # The return value is an array of the primary keys of the corresponding records.  This method does never fail and return an empty array even if no record corresponds.
+    # Execute the search.%%
+    # The return value is an array of the primary keys of the corresponding records.  This method does never fail and return an empty array even if no record corresponds.%%
     def search()
       # (native code)
     end
-    # Remove each corresponding record.
-    # If successful, the return value is true, else, it is false.
+    # Remove each corresponding record.%%
+    # If successful, the return value is true, else, it is false.%%
     def searchout()
       # (native code)
     end
-    # Process each corresponding record.
-    # This function needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.
-    # If successful, the return value is true, else, it is false.
+    # Process each corresponding record.%%
+    # This function needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
+    # If successful, the return value is true, else, it is false.%%
     def proc()
       # (native code)
     end
-    # Get the hint of a query object.
-    # The return value is the hint string.
+    # Get the hint of a query object.%%
+    # The return value is the hint string.%%
     def hint()
       # (native code)
     end

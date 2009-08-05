@@ -5,7 +5,7 @@ include TokyoCabinet
 fdb = FDB::new
 
 # open the database
-if !fdb.open("casket.tcf", FDB::OWRITER | FDB::OCREAT)
+if !fdb.open("casket.fdb", FDB::OWRITER | FDB::OCREAT)
   ecode = fdb.ecode
   STDERR.printf("open error: %s\n", fdb.errmsg(ecode))
 end

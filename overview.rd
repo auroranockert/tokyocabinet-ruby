@@ -12,6 +12,8 @@ As for database of B+ tree, records whose keys are duplicated can be stored.  Ac
 
 As for database of fixed-length array, records are stored with unique natural numbers.  It is impossible to store two or more records with a key overlaps.  Moreover, the length of each record is limited by the specified length.  Provided operations are the same as ones of hash database.
 
+Table database is also provided as a variant of hash database.  Each record is identified by the primary key and has a set of named columns.  Although there is no concept of data schema, it is possible to search for records with complex conditions efficiently by using indexes of arbitrary columns.
+
 === Setting
 
 Install the latest version of Tokyo Cabinet beforehand and get the package of the Ruby binding of Tokyo Cabinet.
@@ -43,7 +45,7 @@ The following code is an example to use a hash database.
  hdb = HDB::new
  
  # open the database
- if !hdb.open("casket.hdb", HDB::OWRITER | HDB::OCREAT)
+ if !hdb.open("casket.tch", HDB::OWRITER | HDB::OCREAT)
    ecode = hdb.ecode
    STDERR.printf("open error: %s\n", hdb.errmsg(ecode))
  end
@@ -96,7 +98,7 @@ The following code is an example to use a B+ tree database.
  bdb = BDB::new
  
  # open the database
- if !bdb.open("casket.bdb", BDB::OWRITER | BDB::OCREAT)
+ if !bdb.open("casket.tcb", BDB::OWRITER | BDB::OCREAT)
    ecode = bdb.ecode
    STDERR.printf("open error: %s\n", bdb.errmsg(ecode))
  end
@@ -151,7 +153,7 @@ The following code is an example to use a fixed-length database.
  fdb = FDB::new
  
  # open the database
- if !fdb.open("casket.fdb", FDB::OWRITER | FDB::OCREAT)
+ if !fdb.open("casket.tcf", FDB::OWRITER | FDB::OCREAT)
    ecode = fdb.ecode
    STDERR.printf("open error: %s\n", fdb.errmsg(ecode))
  end
@@ -204,7 +206,7 @@ The following code is an example to use a table database.
  tdb = TDB::new
  
  # open the database
- if !tdb.open("casket.tdb", TDB::OWRITER | TDB::OCREAT)
+ if !tdb.open("casket.tct", TDB::OWRITER | TDB::OCREAT)
    ecode = tdb.ecode
    STDERR.printf("open error: %s\n", tdb.errmsg(ecode))
  end
