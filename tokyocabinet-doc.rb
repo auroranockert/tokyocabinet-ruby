@@ -297,6 +297,14 @@ module TokyoCabinet
     ENOREC = 22
     # error code: miscellaneous error
     EMISC = 9999
+    # comparison function: by lexical order
+    CMPLEXICAL = "CMPLEXICAL"
+    # comparison function: as decimal strings of real numbers
+    CMPDECIMAL = "CMPDECIMAL"
+    # comparison function: as 32-bit integers in the native byte order
+    CMPINT32 = "CMPINT32"
+    # comparison function: as 64-bit integers in the native byte order
+    CMPINT64 = "CMPINT64"
     # tuning option: use 64-bit bucket array
     TLARGE = 1 << 0
     # tuning option: compress each record with Deflate
@@ -329,6 +337,13 @@ module TokyoCabinet
     # Get the last happened error code.
     # The return value is the last happened error code.
     def ecode()
+      # (native code)
+    end
+    # Set the custom comparison function.
+    # `<i>cmp</i>' specifies the custom comparison function.  It should be an instance of the class `Proc'.
+    # If successful, the return value is true, else, it is false.
+    # The default comparison function compares keys of two records by lexical order.  The constants `TokyoCabinet::BDB::CMPLEXICAL' (dafault), `TokyoCabinet::BDB::CMPDECIMAL', `TokyoCabinet::BDB::CMPINT32', and `TokyoCabinet::BDB::CMPINT64' are built-in.  Note that the comparison function should be set before the database is opened.  Moreover, user-defined comparison functions should be set every time the database is being opened.
+    def setcmpfunc(cmp)
       # (native code)
     end
     # Set the tuning parameters.

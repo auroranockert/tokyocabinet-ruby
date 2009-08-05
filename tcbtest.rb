@@ -212,6 +212,8 @@ def runmisc
 end
 
 
+
+
 # perform write command
 def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
   printf("<Writing Test>\n  path=%s  rnum=%d  lmemb=%d  nmemb=%d  bnum=%d  apow=%d  fpow=%d" +

@@ -74,9 +74,11 @@ static VALUE hdb_each_value(VALUE vself);
 static VALUE hdb_keys(VALUE vself);
 static VALUE hdb_values(VALUE vself);
 static void bdb_init(void);
+static int bdb_cmpobj(const char *aptr, int asiz, const char *bptr, int bsiz, VALUE vcmp);
 static VALUE bdb_initialize(VALUE vself);
 static VALUE bdb_errmsg(VALUE vself, VALUE vecode);
 static VALUE bdb_ecode(VALUE vself);
+static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp);
 static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_open(int argc, VALUE *argv, VALUE vself);
@@ -140,6 +142,7 @@ VALUE cls_bdb;
 VALUE cls_bdb_data;
 VALUE cls_bdbcur;
 VALUE cls_bdbcur_data;
+ID bdb_cmp_call_mid;
 
 
 int Init_tokyocabinet(void){
@@ -772,6 +775,7 @@ static VALUE hdb_values(VALUE vself){
 static void bdb_init(void){
   cls_bdb = rb_define_class_under(mod_tokyocabinet, "BDB", rb_cObject);
   cls_bdb_data = rb_define_class_under(mod_tokyocabinet, "BDB_data", rb_cObject);
+  bdb_cmp_call_mid = rb_intern("call");
   rb_define_const(cls_bdb, "ESUCCESS", INT2NUM(TCESUCCESS));
   rb_define_const(cls_bdb, "ETHREAD", INT2NUM(TCETHREAD));
   rb_define_const(cls_bdb, "EINVALID", INT2NUM(TCEINVALID));
@@ -796,6 +800,10 @@ static void bdb_init(void){
   rb_define_const(cls_bdb, "EKEEP", INT2NUM(TCEKEEP));
   rb_define_const(cls_bdb, "ENOREC", INT2NUM(TCENOREC));
   rb_define_const(cls_bdb, "EMISC", INT2NUM(TCEMISC));
+  rb_define_const(cls_bdb, "CMPLEXICAL", rb_str_new2("CMPLEXICAL"));
+  rb_define_const(cls_bdb, "CMPDECIMAL", rb_str_new2("CMPDECIMAL"));
+  rb_define_const(cls_bdb, "CMPINT32", rb_str_new2("CMPINT32"));
+  rb_define_const(cls_bdb, "CMPINT64", rb_str_new2("CMPINT64"));
   rb_define_const(cls_bdb, "TLARGE", INT2NUM(BDBTLARGE));
   rb_define_const(cls_bdb, "TDEFLATE", INT2NUM(BDBTDEFLATE));
   rb_define_const(cls_bdb, "TTCBS", INT2NUM(BDBTTCBS));
@@ -808,6 +816,7 @@ static void bdb_init(void){
   rb_define_private_method(cls_bdb, "initialize", bdb_initialize, 0);
   rb_define_method(cls_bdb, "errmsg", bdb_errmsg, 1);
   rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
+  rb_define_method(cls_bdb, "setcmpfunc", bdb_setcmpfunc, 1);
   rb_define_method(cls_bdb, "tune", bdb_tune, -1);
   rb_define_method(cls_bdb, "setcache", bdb_setcache, -1);
   rb_define_method(cls_bdb, "open", bdb_open, -1);
@@ -860,6 +869,13 @@ static void bdb_init(void){
 }
 
 
+static int bdb_cmpobj(const char *aptr, int asiz, const char *bptr, int bsiz, VALUE vcmp){
+  VALUE vrv;
+  vrv = rb_funcall(vcmp, bdb_cmp_call_mid, 2, rb_str_new(aptr, asiz), rb_str_new(bptr, bsiz));
+  return (vrv == Qnil) ? 0 : NUM2INT(vrv);
+}
+
+
 static VALUE bdb_initialize(VALUE vself){
   VALUE vbdb;
   TCBDB *bdb;
@@ -891,6 +907,33 @@ static VALUE bdb_ecode(VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return INT2NUM(tcbdbecode(bdb));
+}
+
+
+static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp){
+  VALUE vbdb;
+  TCBDB *bdb;
+  const char *cmpname;
+  BDBCMP cmp = (BDBCMP)bdb_cmpobj;
+  if(TYPE(vcmp) == T_STRING){
+    cmpname = RSTRING_PTR(vcmp);
+    if(!strcmp(cmpname, "CMPLEXICAL")){
+      cmp = tcbdbcmplexical;
+    } else if(!strcmp(cmpname, "CMPDECIMAL")){
+      cmp = tcbdbcmpdecimal;
+    } else if(!strcmp(cmpname, "CMPINT32")){
+      cmp = tcbdbcmpint32;
+    } else if(!strcmp(cmpname, "CMPINT64")){
+      cmp = tcbdbcmpint64;
+    } else {
+      rb_raise(rb_eArgError, "unknown comparison function: %s", cmpname);
+    }
+  } else if(!rb_respond_to(vcmp, bdb_cmp_call_mid)){
+    rb_raise(rb_eArgError, "call method is not implemented");
+  }
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  return tcbdbsetcmpfunc(bdb, cmp, (void *)(intptr_t)vcmp);
 }
 
 
