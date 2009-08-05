@@ -427,9 +427,77 @@ def procmisc(path, rnum, omode)
     eprint(fdb, "vanish")
     err = true
   end
+  printf("checking transaction commit:\n")
+  if !fdb.tranbegin
+    eprint(fdb, "tranbegin")
+    err = true
+  end
+  for i in 1..rnum
+    buf = sprintf("%d", rand(rnum) + 1)
+    if rand(2) == 0
+      if !fdb.putcat(buf, buf)
+        eprint(fdb, "putcat")
+        err = true
+        break
+      end
+    else
+      if !fdb.out(buf) && fdb.ecode != FDB::ENOREC
+        eprint(fdb, "out")
+        err = true
+        break
+      end
+    end
+    if rnum > 250 && i % (rnum / 250) == 0
+      print('.')
+      if i == rnum || i % (rnum / 10) == 0
+        printf(" (%08d)\n", i)
+      end
+    end
+  end
+  if !fdb.trancommit
+    eprint(fdb, "trancommit")
+    err = true
+  end
+  printf("checking transaction abort:\n")
+  ornum = fdb.rnum
+  ofsiz = fdb.fsiz
+  if !fdb.tranbegin
+    eprint(fdb, "tranbegin")
+    err = true
+  end
+  for i in 1..rnum
+    buf = sprintf("%d", rand(rnum) + 1)
+    if rand(2) == 0
+      if !fdb.putcat(buf, buf)
+        eprint(fdb, "putcat")
+        err = true
+        break
+      end
+    else
+      if !fdb.out(buf) && fdb.ecode != FDB::ENOREC
+        eprint(fdb, "out")
+        err = true
+        break
+      end
+    end
+    if rnum > 250 && i % (rnum / 250) == 0
+      print('.')
+      if i == rnum || i % (rnum / 10) == 0
+        printf(" (%08d)\n", i)
+      end
+    end
+  end
+  if !fdb.tranabort
+    eprint(fdb, "trancommit")
+    err = true
+  end
+  if fdb.rnum != ornum || fdb.fsiz != ofsiz
+    eprint(fdb, "(validation)")
+    err = true
+  end
   printf("checking hash-like updating:\n")
   for i in 1..rnum
-    buf = sprintf("[%d]", rand(rnum))
+    buf = sprintf("[%d]", rand(rnum) + 1)
     rnd = rand(4)
     if rnd == 0
       fdb[buf] = buf

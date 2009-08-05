@@ -31,6 +31,10 @@ commands = [
             "tcttest.rb read -nl casket",
             "tcttest.rb remove -nb casket",
             "tcttest.rb misc -tl -tb casket 100",
+            "tcatest.rb write 'casket.tch#mode=wct' 10000",
+            "tcatest.rb read 'casket.tch#mode=r'",
+            "tcatest.rb remove 'casket.tch#mode=w'",
+            "tcatest.rb misc 'casket.tch#mode=wct' 1000",
            ]
 rubycmd = Config::CONFIG["bindir"] + "/" + RbConfig::CONFIG['ruby_install_name']
 num = 1
@@ -46,4 +50,4 @@ commands.each do |command|
 end
 printf("all ok\n")
 
-system("rm -rf casket")
+system("rm -rf casket*")

@@ -882,6 +882,24 @@ module TokyoCabinet
     def copy(path)
       # (native code)
     end
+    # Begin the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # The database is locked by the thread while the transaction so that only one transaction can be activated with a database object at the same time.  Thus, the serializable isolation level is assumed if every database operation is performed in the transaction.  All updated regions are kept track of by write ahead logging while the transaction.  If the database is closed during transaction, the transaction is aborted implicitly.%%
+    def tranbegin()
+      # (native code)
+    end
+    # Commit the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is fixed when it is committed successfully.%%
+    def trancommit()
+      # (native code)
+    end
+    # Abort the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is discarded when it is aborted.  The state of the database is rollbacked to before transaction.%%
+    def tranabort()
+      # (native code)
+    end
     # Get the path of the database file.%%
     # The return value is the path of the database file or `nil' if the object does not connect to any database file.%%
     def path()
@@ -1178,7 +1196,7 @@ module TokyoCabinet
     # Set a column index.%%
     # `<i>name</i>' specifies the name of a column.  If the name of an existing index is specified, the index is rebuilt.  An empty string means the primary key.%%
     # `<i>type</i>' specifies the index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string, `TokyoCabinet::TDB::ITDECIMAL' for decimal string.  If it is `TokyoCabinet::TDB::ITOPT', the index is optimized.  If it is `TokyoCabinet::TDB::ITVOID', the index is removed.  If `TokyoCabinet::TDB::ITKEEP' is added by bitwise-or and the index exists, this method merely returns failure.%%
-# If successful, the return value is true, else, it is false.%%
+    # If successful, the return value is true, else, it is false.%%
     def setindex(name, type)
       # (native code)
     end
@@ -1285,6 +1303,163 @@ module TokyoCabinet
     # Get the hint of a query object.%%
     # The return value is the hint string.%%
     def hint()
+      # (native code)
+    end
+  end
+  # Abstract database is a set of interfaces to use on-memory hash database, on-memory tree database, hash database, B+ tree database, fixed-length database, and table database with the same API.  Before operations to store or retrieve records, it is necessary to connect the abstract database object to the concrete one.  The method `open' is used to open a concrete database and the method `close' is used to close the database.  To avoid data missing or corruption, it is important to close every database instance when it is no longer in use.%%
+  # Except for the interface below, methods compatible with the `Hash' class are also provided; `[]', `[]=', `store', `delete', `fetch', `has_key?', `has_value?', `key', `clear', `size', `empty?', `each', `each_key', `each_value', and `keys'.%%
+  class ADB
+    # Create an abstract database object.%%
+    # The return value is the new abstract database object.%%
+    def initialize()
+      # (native code)
+    end
+    # Open a database.%%
+    # `<i>name</i>' specifies the name of the database.  If it is "*", the database will be an on-memory hash database.  If it is "+", the database will be an on-memory tree database.  If its suffix is ".tch", the database will be a hash database.  If its suffix is ".tcb", the database will be a B+ tree database.  If its suffix is ".tcf", the database will be a fixed-length database.  If its suffix is ".tct", the database will be a table database.  Otherwise, this function fails.  Tuning parameters can trail the name, separated by "#".  Each parameter is composed of the name and the value, separated by "=".  On-memory hash database supports "bnum", "capnum", and "capsiz".  On-memory tree database supports "capnum" and "capsiz".  Hash database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", and "xmsiz".  B+ tree database supports "mode", "lmemb", "nmemb", "bnum", "apow", "fpow", "opts", "lcnum", "ncnum", and "xmsiz".  Fixed-length database supports "mode", "width", and "limsiz".  Table database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", "lcnum", "ncnum", "xmsiz", and "idx".%%
+    # If successful, the return value is true, else, it is false.%%
+    # The tuning parameter "capnum" specifies the capacity number of records.  "capsiz" specifies the capacity size of using memory.  Records spilled the capacity are removed by the storing order.  "mode" can contain "w" of writer, "r" of reader, "c" of creating, "t" of truncating, "e" of no locking, and "f" of non-blocking lock.  The default mode is relevant to "wc".  "opts" can contains "l" of large option, "d" of Deflate option, "b" of BZIP2 option, and "t" of TCBS option.  "idx" specifies the column name of an index and its type separated by ":".  For example, "casket.tch#bnum=1000000#opts=ld" means that the name of the database file is "casket.tch", and the bucket number is 1000000, and the options are large and Deflate.%%
+    def open(name)
+      # (native code)
+    end
+    # Close the database.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update of a database is assured to be written when the database is closed.  If a writer opens a database but does not close it appropriately, the database will be broken.%%
+    def close()
+      # (native code)
+    end
+    # Store a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # `<i>value</i>' specifies the value.%%
+    # If successful, the return value is true, else, it is false.%%
+    # If a record with the same key exists in the database, it is overwritten.%%
+    def put(key, value)
+      # (native code)
+    end
+    # Store a new record.%%
+    # `<i>key</i>' specifies the key.%%
+    # `<i>value</i>' specifies the value.%%
+    # If successful, the return value is true, else, it is false.%%
+    # If a record with the same key exists in the database, this method has no effect.%%
+    def putkeep(key, value)
+      # (native code)
+    end
+    # Concatenate a value at the end of the existing record.%%
+    # `<i>key</i>' specifies the key.%%
+    # `<i>value</i>' specifies the value.%%
+    # If successful, the return value is true, else, it is false.%%
+    # If there is no corresponding record, a new record is created.%%
+    def putcat(key, value)
+      # (native code)
+    end
+    # Remove a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # If successful, the return value is true, else, it is false.%%
+    def out(key)
+      # (native code)
+    end
+    # Retrieve a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # If successful, the return value is the value of the corresponding record.  `nil' is returned if no record corresponds.%%
+    def get(key)
+      # (native code)
+    end
+    # Get the size of the value of a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # If successful, the return value is the size of the value of the corresponding record, else, it is -1.%%
+    def vsiz(key)
+      # (native code)
+    end
+    # Initialize the iterator.%%
+    # If successful, the return value is true, else, it is false.%%
+    # The iterator is used in order to access the key of every record stored in a database.%%
+    def iterinit()
+      # (native code)
+    end
+    # Get the next key of the iterator.%%
+    # If successful, the return value is the next key, else, it is `nil'.  `nil' is returned when no record is to be get out of the iterator.%%
+    # It is possible to access every record by iteration of calling this method.  It is allowed to update or remove records whose keys are fetched while the iteration.  However, it is not assured if updating the database is occurred while the iteration.  Besides, the order of this traversal access method is arbitrary, so it is not assured that the order of storing matches the one of the traversal access.%%
+    def iternext()
+      # (native code)
+    end
+    # Get forward matching keys.%%
+    # `<i>prefix</i>' specifies the prefix of the corresponding keys.%%
+    # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.%%
+    # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.%%
+    # Note that this function may be very slow because every key in the database is scanned.%%
+    def fwmkeys(prefix, max)
+      # (native code)
+    end
+    # Add an integer to a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # `<i>num</i>' specifies the additional value.%%
+    # If successful, the return value is the summation value, else, it is `nil'.%%
+    # If the corresponding record exists, the value is treated as an integer and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `i' operator after retrieval.%%
+    def addint(key, num)
+      # (native code)
+    end
+    # Add a real number to a record.%%
+    # `<i>key</i>' specifies the key.%%
+    # `<i>num</i>' specifies the additional value.%%
+    # If successful, the return value is the summation value, else, it is `nil'.%%
+    # If the corresponding record exists, the value is treated as a real number and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `d' operator after retrieval.%%
+    def adddouble(key, num)
+      # (native code)
+    end
+    # Synchronize updated contents with the file and the device.%%
+    # If successful, the return value is true, else, it is false.%%
+    # This method is useful when another process connects the same database file.%%
+    def sync()
+      # (native code)
+    end
+    # Optimize the storage.%%
+    # `<i>params</i>' specifies the string of the tuning parameters, which works as with the tuning of parameters the function `tcadbopen'.  If it is not defined, it is not used.%%
+    # If successful, the return value is true, else, it is false.%%
+    def optimize(params)
+      # (native code)
+    end
+    # Remove all records.%%
+    # If successful, the return value is true, else, it is false.%%
+    def vanish()
+      # (native code)
+    end
+    # Copy the database file.%%
+    # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.%%
+    # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.%%
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this method is useful to create a backup file of the database file.%%
+    def copy(path)
+      # (native code)
+    end
+    # Begin the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # The database is locked by the thread while the transaction so that only one transaction can be activated with a database object at the same time.  Thus, the serializable isolation level is assumed if every database operation is performed in the transaction.  All updated regions are kept track of by write ahead logging while the transaction.  If the database is closed during transaction, the transaction is aborted implicitly.%%
+    def tranbegin()
+      # (native code)
+    end
+    # Commit the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is fixed when it is committed successfully.%%
+    def trancommit()
+      # (native code)
+    end
+    # Abort the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is discarded when it is aborted.  The state of the database is rollbacked to before transaction.%%
+    def tranabort()
+      # (native code)
+    end
+    # Get the path of the database file.%%
+    # The return value is the path of the database file or `nil' if the object does not connect to any database instance.  "*" stands for on-memory hash database.  "+" stands for on-memory tree database.%%
+    def path()
+      # (native code)
+    end
+    # Get the number of records.%%
+    # The return value is the number of records or 0 if the object does not connect to any database instance.%%
+    def rnum()
+      # (native code)
+    end
+    # Get the size of the database.%%
+    # The return value is the size of the database or 0 if the object does not connect to any database instance.%%
+    def size()
       # (native code)
     end
   end

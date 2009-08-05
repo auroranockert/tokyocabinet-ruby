@@ -20,6 +20,7 @@
 #include <tcbdb.h>
 #include <tcfdb.h>
 #include <tctdb.h>
+#include <tcadb.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -32,6 +33,7 @@
 #define FDBVNDATA      "@fdb"
 #define TDBVNDATA      "@tdb"
 #define TDBQRYVNDATA   "@tdbqry"
+#define ADBVNDATA      "@adb"
 #define NUMBUFSIZ      32
 
 #if !defined(RSTRING_PTR)
@@ -171,6 +173,9 @@ static VALUE fdb_sync(VALUE vself);
 static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE fdb_vanish(VALUE vself);
 static VALUE fdb_copy(VALUE vself, VALUE vpath);
+static VALUE fdb_tranbegin(VALUE vself);
+static VALUE fdb_trancommit(VALUE vself);
+static VALUE fdb_tranabort(VALUE vself);
 static VALUE fdb_path(VALUE vself);
 static VALUE fdb_rnum(VALUE vself);
 static VALUE fdb_fsiz(VALUE vself);
@@ -234,6 +239,41 @@ static VALUE tdbqry_search(VALUE vself);
 static VALUE tdbqry_searchout(VALUE vself);
 static VALUE tdbqry_proc(VALUE vself, VALUE vproc);
 static VALUE tdbqry_hint(VALUE vself);
+static void adb_init(void);
+static VALUE adb_initialize(VALUE vself);
+static VALUE adb_open(VALUE vself, VALUE vname);
+static VALUE adb_close(VALUE vself);
+static VALUE adb_put(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE adb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE adb_putcat(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE adb_out(VALUE vself, VALUE vkey);
+static VALUE adb_get(VALUE vself, VALUE vkey);
+static VALUE adb_vsiz(VALUE vself, VALUE vkey);
+static VALUE adb_iterinit(VALUE vself);
+static VALUE adb_iternext(VALUE vself);
+static VALUE adb_fwmkeys(int argc, VALUE *argv, VALUE vself);
+static VALUE adb_addint(VALUE vself, VALUE vkey, VALUE vnum);
+static VALUE adb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
+static VALUE adb_sync(VALUE vself);
+static VALUE adb_optimize(int argc, VALUE *argv, VALUE vself);
+static VALUE adb_vanish(VALUE vself);
+static VALUE adb_copy(VALUE vself, VALUE vpath);
+static VALUE adb_tranbegin(VALUE vself);
+static VALUE adb_trancommit(VALUE vself);
+static VALUE adb_tranabort(VALUE vself);
+static VALUE adb_path(VALUE vself);
+static VALUE adb_rnum(VALUE vself);
+static VALUE adb_size(VALUE vself);
+static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself);
+static VALUE adb_check(VALUE vself, VALUE vkey);
+static VALUE adb_check_value(VALUE vself, VALUE vval);
+static VALUE adb_get_reverse(VALUE vself, VALUE vval);
+static VALUE adb_empty(VALUE vself);
+static VALUE adb_each(VALUE vself);
+static VALUE adb_each_key(VALUE vself);
+static VALUE adb_each_value(VALUE vself);
+static VALUE adb_keys(VALUE vself);
+static VALUE adb_values(VALUE vself);
 
 
 
@@ -256,6 +296,8 @@ VALUE cls_tdb;
 VALUE cls_tdb_data;
 VALUE cls_tdbqry;
 VALUE cls_tdbqry_data;
+VALUE cls_adb;
+VALUE cls_adb_data;
 
 
 int Init_tokyocabinet(void){
@@ -267,6 +309,7 @@ int Init_tokyocabinet(void){
   fdb_init();
   tdb_init();
   tdbqry_init();
+  adb_init();
   return 0;
 }
 
@@ -559,7 +602,7 @@ static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbput(hdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		  RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                  RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -571,7 +614,7 @@ static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputkeep(hdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		      RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                      RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -583,7 +626,7 @@ static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputcat(hdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		     RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                     RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -595,7 +638,7 @@ static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputasync(hdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		       RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                       RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -831,18 +874,18 @@ static VALUE hdb_check_value(VALUE vself, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
-  int hit;
+  bool hit;
   vval = StringValueEx(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
-  hit = 0;
+  hit = false;
   kxstr = tcxstrnew();
   vxstr = tcxstrnew();
   tchdbiterinit(hdb);
   while(tchdbiternext3(hdb, kxstr, vxstr)){
     if(tcxstrsize(vxstr) == RSTRING_LEN(vval) &&
        memcmp(tcxstrptr(vxstr), RSTRING_PTR(vval), RSTRING_LEN(vval)) == 0){
-      hit = 1;
+      hit = true;
       break;
     }
   }
@@ -1226,7 +1269,7 @@ static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbput(bdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), RSTRING_PTR(vval),
-		  RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                  RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -1238,7 +1281,7 @@ static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputkeep(bdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), RSTRING_PTR(vval),
-		      RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                      RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -1250,7 +1293,7 @@ static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputcat(bdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), RSTRING_PTR(vval),
-		     RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                     RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -1262,7 +1305,7 @@ static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputdup(bdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), RSTRING_PTR(vval),
-		     RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                     RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -1563,16 +1606,17 @@ static VALUE bdb_check_value(VALUE vself, VALUE vval){
   TCBDB *bdb;
   BDBCUR *cur;
   const char *tvbuf;
-  int tvsiz, hit;
+  bool hit;
+  int tvsiz;
   vval = StringValueEx(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
-  hit = 0;
+  hit = false;
   cur = tcbdbcurnew(bdb);
   tcbdbcurfirst(cur);
   while((tvbuf = tcbdbcurval3(cur, &tvsiz)) != NULL){
     if(tvsiz == RSTRING_LEN(vval) && memcmp(tvbuf, RSTRING_PTR(vval), RSTRING_LEN(vval)) == 0){
-      hit = 1;
+      hit = true;
       break;
     }
     tcbdbcurnext(cur);
@@ -1907,6 +1951,9 @@ static void fdb_init(void){
   rb_define_method(cls_fdb, "optimize", fdb_optimize, -1);
   rb_define_method(cls_fdb, "vanish", fdb_vanish, 0);
   rb_define_method(cls_fdb, "copy", fdb_copy, 1);
+  rb_define_method(cls_fdb, "tranbegin", fdb_tranbegin, 0);
+  rb_define_method(cls_fdb, "trancommit", fdb_trancommit, 0);
+  rb_define_method(cls_fdb, "tranabort", fdb_tranabort, 0);
   rb_define_method(cls_fdb, "path", fdb_path, 0);
   rb_define_method(cls_fdb, "rnum", fdb_rnum, 0);
   rb_define_method(cls_fdb, "fsiz", fdb_fsiz, 0);
@@ -2013,7 +2060,7 @@ static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval){
   vfdb = rb_iv_get(vself, FDBVNDATA);
   Data_Get_Struct(vfdb, TCFDB, fdb);
   return tcfdbput2(fdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		   RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                   RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -2025,7 +2072,7 @@ static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   vfdb = rb_iv_get(vself, FDBVNDATA);
   Data_Get_Struct(vfdb, TCFDB, fdb);
   return tcfdbputkeep2(fdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		       RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                       RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -2037,7 +2084,7 @@ static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   vfdb = rb_iv_get(vself, FDBVNDATA);
   Data_Get_Struct(vfdb, TCFDB, fdb);
   return tcfdbputcat2(fdb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
-		      RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+                      RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
 }
 
 
@@ -2182,6 +2229,33 @@ static VALUE fdb_copy(VALUE vself, VALUE vpath){
 }
 
 
+static VALUE fdb_tranbegin(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbtranbegin(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_trancommit(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbtrancommit(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_tranabort(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbtranabort(fdb) ? Qtrue : Qfalse;
+}
+
+
 static VALUE fdb_path(VALUE vself){
   VALUE vfdb;
   TCFDB *fdb;
@@ -2244,19 +2318,20 @@ static VALUE fdb_check_value(VALUE vself, VALUE vval){
   VALUE vfdb;
   TCFDB *fdb;
   char *tvbuf;
-  int tvsiz, hit;
+  bool hit;
+  int tvsiz;
   uint64_t id;
   vval = StringValueEx(vval);
   vfdb = rb_iv_get(vself, FDBVNDATA);
   Data_Get_Struct(vfdb, TCFDB, fdb);
-  hit = 0;
+  hit = false;
   tcfdbiterinit(fdb);
   while((id = tcfdbiternext(fdb)) > 0){
     tvbuf = tcfdbget(fdb, id, &tvsiz);
     if(tvbuf && tvsiz == RSTRING_LEN(vval) &&
        memcmp(tvbuf, RSTRING_PTR(vval), RSTRING_LEN(vval)) == 0){
       tcfree(tvbuf);
-      hit = 1;
+      hit = true;
       break;
     }
     tcfree(tvbuf);
@@ -3148,6 +3223,514 @@ static VALUE tdbqry_hint(VALUE vself){
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
   Data_Get_Struct(vqry, TDBQRY, qry);
   return rb_str_new2(tctdbqryhint(qry));
+}
+
+
+static void adb_init(void){
+  cls_adb = rb_define_class_under(mod_tokyocabinet, "ADB", rb_cObject);
+  cls_adb_data = rb_define_class_under(mod_tokyocabinet, "ADB_data", rb_cObject);
+  rb_define_private_method(cls_adb, "initialize", adb_initialize, 0);
+  rb_define_method(cls_adb, "open", adb_open, 1);
+  rb_define_method(cls_adb, "close", adb_close, 0);
+  rb_define_method(cls_adb, "put", adb_put, 2);
+  rb_define_method(cls_adb, "putkeep", adb_putkeep, 2);
+  rb_define_method(cls_adb, "putcat", adb_putcat, 2);
+  rb_define_method(cls_adb, "out", adb_out, 1);
+  rb_define_method(cls_adb, "get", adb_get, 1);
+  rb_define_method(cls_adb, "vsiz", adb_vsiz, 1);
+  rb_define_method(cls_adb, "iterinit", adb_iterinit, 0);
+  rb_define_method(cls_adb, "iternext", adb_iternext, 0);
+  rb_define_method(cls_adb, "fwmkeys", adb_fwmkeys, -1);
+  rb_define_method(cls_adb, "addint", adb_addint, 2);
+  rb_define_method(cls_adb, "adddouble", adb_adddouble, 2);
+  rb_define_method(cls_adb, "sync", adb_sync, 0);
+  rb_define_method(cls_adb, "optimize", adb_optimize, -1);
+  rb_define_method(cls_adb, "vanish", adb_vanish, 0);
+  rb_define_method(cls_adb, "copy", adb_copy, 1);
+  rb_define_method(cls_adb, "tranbegin", adb_tranbegin, 0);
+  rb_define_method(cls_adb, "trancommit", adb_trancommit, 0);
+  rb_define_method(cls_adb, "tranabort", adb_tranabort, 0);
+  rb_define_method(cls_adb, "path", adb_path, 0);
+  rb_define_method(cls_adb, "rnum", adb_rnum, 0);
+  rb_define_method(cls_adb, "size", adb_size, 0);
+  rb_define_method(cls_adb, "[]", adb_get, 1);
+  rb_define_method(cls_adb, "[]=", adb_put, 2);
+  rb_define_method(cls_adb, "store", adb_put, 2);
+  rb_define_method(cls_adb, "delete", adb_out, 1);
+  rb_define_method(cls_adb, "fetch", adb_fetch, -1);
+  rb_define_method(cls_adb, "has_key?", adb_check, 1);
+  rb_define_method(cls_adb, "key?", adb_check, 1);
+  rb_define_method(cls_adb, "include?", adb_check, 1);
+  rb_define_method(cls_adb, "member?", adb_check, 1);
+  rb_define_method(cls_adb, "has_value?", adb_check_value, 1);
+  rb_define_method(cls_adb, "value?", adb_check_value, 1);
+  rb_define_method(cls_adb, "key", adb_get_reverse, 1);
+  rb_define_method(cls_adb, "clear", adb_vanish, 0);
+  rb_define_method(cls_adb, "size", adb_rnum, 0);
+  rb_define_method(cls_adb, "length", adb_rnum, 0);
+  rb_define_method(cls_adb, "empty?", adb_empty, 0);
+  rb_define_method(cls_adb, "each", adb_each, 0);
+  rb_define_method(cls_adb, "each_pair", adb_each, 0);
+  rb_define_method(cls_adb, "each_key", adb_each_key, 0);
+  rb_define_method(cls_adb, "each_value", adb_each_value, 0);
+  rb_define_method(cls_adb, "keys", adb_keys, 0);
+  rb_define_method(cls_adb, "values", adb_values, 0);
+}
+
+
+static VALUE adb_initialize(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  adb = tcadbnew();
+  vadb = Data_Wrap_Struct(cls_adb_data, 0, tcadbdel, adb);
+  rb_iv_set(vself, ADBVNDATA, vadb);
+  return Qnil;
+}
+
+
+static VALUE adb_open(VALUE vself, VALUE vname){
+  VALUE vadb;
+  TCADB *adb;
+  Check_Type(vname, T_STRING);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbopen(adb, RSTRING_PTR(vname)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_close(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbclose(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_put(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vval = StringValueEx(vval);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbput(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
+                  RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vval = StringValueEx(vval);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbputkeep(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
+                      RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vval = StringValueEx(vval);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbputcat(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey),
+                     RSTRING_PTR(vval), RSTRING_LEN(vval)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_out(VALUE vself, VALUE vkey){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbout(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_get(VALUE vself, VALUE vkey){
+  VALUE vadb, vval;
+  TCADB *adb;
+  char *vbuf;
+  int vsiz;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  if(!(vbuf = tcadbget(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), &vsiz))) return Qnil;
+  vval = rb_str_new(vbuf, vsiz);
+  tcfree(vbuf);
+  return vval;
+}
+
+
+static VALUE adb_vsiz(VALUE vself, VALUE vkey){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return INT2NUM(tcadbvsiz(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey)));
+}
+
+
+static VALUE adb_iterinit(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbiterinit(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_iternext(VALUE vself){
+  VALUE vadb, vval;
+  TCADB *adb;
+  char *vbuf;
+  int vsiz;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  if(!(vbuf = tcadbiternext(adb, &vsiz))) return Qnil;
+  vval = rb_str_new(vbuf, vsiz);
+  tcfree(vbuf);
+  return vval;
+}
+
+
+static VALUE adb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+  VALUE vadb, vprefix, vmax, vary;
+  TCADB *adb;
+  TCLIST *keys;
+  int max;
+  rb_scan_args(argc, argv, "11", &vprefix, &vmax);
+  vprefix = StringValueEx(vprefix);
+  max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  keys = tcadbfwmkeys(adb, RSTRING_PTR(vprefix), RSTRING_LEN(vprefix), max);
+  vary = listtovary(keys);
+  tclistdel(keys);
+  return vary;
+}
+
+
+static VALUE adb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vadb;
+  TCADB *adb;
+  int num;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  num = tcadbaddint(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), NUM2INT(vnum));
+  return num == INT_MIN ? Qnil : INT2NUM(num);
+}
+
+
+static VALUE adb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vadb;
+  TCADB *adb;
+  double num;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  num = tcadbadddouble(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), NUM2DBL(vnum));
+  return isnan(num) ? Qnil : rb_float_new(num);
+}
+
+
+static VALUE adb_sync(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbsync(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_optimize(int argc, VALUE *argv, VALUE vself){
+  VALUE vadb, vparams;
+  TCADB *adb;
+  const char *params;
+  rb_scan_args(argc, argv, "01", &vparams);
+  if(vparams == Qnil){
+    params = NULL;
+  } else {
+    Check_Type(vparams, T_STRING);
+    params = RSTRING_PTR(vparams);
+  }
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadboptimize(adb, params) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_vanish(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbvanish(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_copy(VALUE vself, VALUE vpath){
+  VALUE vadb;
+  TCADB *adb;
+  Check_Type(vpath, T_STRING);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbcopy(adb, RSTRING_PTR(vpath)) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_tranbegin(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbtranbegin(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_trancommit(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbtrancommit(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_tranabort(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbtranabort(adb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_path(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  const char *path;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  if(!(path = tcadbpath(adb))) return Qnil;
+  return rb_str_new2(path);
+}
+
+
+static VALUE adb_rnum(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return LL2NUM(tcadbrnum(adb));
+}
+
+
+static VALUE adb_size(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return LL2NUM(tcadbsize(adb));
+}
+
+
+static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself){
+  VALUE vadb, vkey, vdef, vval;
+  TCADB *adb;
+  char *vbuf;
+  int vsiz;
+  rb_scan_args(argc, argv, "11", &vkey, &vdef);
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  if((vbuf = tcadbget(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey), &vsiz)) != NULL){
+    vval = rb_str_new(vbuf, vsiz);
+    tcfree(vbuf);
+  } else {
+    vval = vdef;
+  }
+  return vval;
+}
+
+
+static VALUE adb_check(VALUE vself, VALUE vkey){
+  VALUE vadb;
+  TCADB *adb;
+  vkey = StringValueEx(vkey);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbvsiz(adb, RSTRING_PTR(vkey), RSTRING_LEN(vkey)) >= 0 ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_check_value(VALUE vself, VALUE vval){
+  VALUE vadb;
+  TCADB *adb;
+  char *tkbuf, *tvbuf;
+  bool hit;
+  int tksiz, tvsiz;
+  vval = StringValueEx(vval);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  hit = false;
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    tvbuf = tcadbget(adb, tkbuf, tksiz, &tvsiz);
+    if(tvbuf && tvsiz == RSTRING_LEN(vval) &&
+       memcmp(tvbuf, RSTRING_PTR(vval), RSTRING_LEN(vval)) == 0){
+      tcfree(tvbuf);
+      tcfree(tkbuf);
+      hit = true;
+      break;
+    }
+    tcfree(tvbuf);
+    tcfree(tkbuf);
+  }
+  return hit ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_get_reverse(VALUE vself, VALUE vval){
+  VALUE vadb, vrv;
+  TCADB *adb;
+  char *tkbuf, *tvbuf;
+  int tksiz, tvsiz;
+  vval = StringValueEx(vval);
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vrv = Qnil;
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    tvbuf = tcadbget(adb, tkbuf, tksiz, &tvsiz);
+    if(tvbuf && tvsiz == RSTRING_LEN(vval) &&
+       memcmp(tvbuf, RSTRING_PTR(vval), RSTRING_LEN(vval)) == 0){
+      vrv = rb_str_new(tkbuf, tksiz);
+      tcfree(tvbuf);
+      tcfree(tkbuf);
+      break;
+    }
+    tcfree(tvbuf);
+    tcfree(tkbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE adb_empty(VALUE vself){
+  VALUE vadb;
+  TCADB *adb;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  return tcadbrnum(adb) < 1 ? Qtrue : Qfalse;
+}
+
+
+static VALUE adb_each(VALUE vself){
+  VALUE vadb, vrv;
+  TCADB *adb;
+  char *tkbuf, *tvbuf;
+  int tksiz, tvsiz;
+  if(rb_block_given_p() != Qtrue) rb_raise(rb_eArgError, "no block given");
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vrv = Qnil;
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    tvbuf = tcadbget(adb, tkbuf, tksiz, &tvsiz);
+    if(tvbuf){
+      vrv = rb_yield_values(2, rb_str_new(tkbuf, tksiz), rb_str_new(tvbuf, tvsiz));
+      tcfree(tvbuf);
+    }
+    tcfree(tkbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE adb_each_key(VALUE vself){
+  VALUE vadb, vrv;
+  TCADB *adb;
+  char *tkbuf;
+  int tksiz;
+  if(rb_block_given_p() != Qtrue) rb_raise(rb_eArgError, "no block given");
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vrv = Qnil;
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    vrv = rb_yield(rb_str_new(tkbuf, tksiz));
+    tcfree(tkbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE adb_each_value(VALUE vself){
+  VALUE vadb, vrv;
+  TCADB *adb;
+  char *tkbuf, *tvbuf;
+  int tksiz, tvsiz;
+  if(rb_block_given_p() != Qtrue) rb_raise(rb_eArgError, "no block given");
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vrv = Qnil;
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    tvbuf = tcadbget(adb, tkbuf, tksiz, &tvsiz);
+    if(tvbuf){
+      vrv = rb_yield(rb_str_new(tvbuf, tvsiz));
+      tcfree(tvbuf);
+    }
+    tcfree(tkbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE adb_keys(VALUE vself){
+  VALUE vadb, vary;
+  TCADB *adb;
+  char *tkbuf;
+  int tksiz;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vary = rb_ary_new2(tcadbrnum(adb));
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    rb_ary_push(vary, rb_str_new(tkbuf, tksiz));
+    tcfree(tkbuf);
+  }
+  return vary;
+}
+
+
+static VALUE adb_values(VALUE vself){
+  VALUE vadb, vary;
+  TCADB *adb;
+  char *tkbuf, *tvbuf;
+  int tksiz, tvsiz;
+  vadb = rb_iv_get(vself, ADBVNDATA);
+  Data_Get_Struct(vadb, TCADB, adb);
+  vary = rb_ary_new2(tcadbrnum(adb));
+  tcadbiterinit(adb);
+  while((tkbuf = tcadbiternext(adb, &tksiz)) != NULL){
+    tvbuf = tcadbget(adb, tkbuf, tksiz, &tvsiz);
+    if(tvbuf){
+      rb_ary_push(vary, rb_str_new(tvbuf, tvsiz));
+      tcfree(tvbuf);
+    }
+    tcfree(tkbuf);
+  }
+  return vary;
 }
 
 

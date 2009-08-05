@@ -6,10 +6,13 @@ tchtest.rb
 tcbtest.rb
 tcftest.rb
 tcttest.rb
+tcatest.rb
 test.rb
+memsize.rb
 example/tchdbex.rb
 example/tcbdbex.rb
 example/tcfdbex.rb
 example/tctdbex.rb
+example/tcadbex.rb
 tokyocabinet.gemspec
 COPYING

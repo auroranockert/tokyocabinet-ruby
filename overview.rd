@@ -12,7 +12,7 @@ As for database of B+ tree, records whose keys are duplicated can be stored.  Ac
 
 As for database of fixed-length array, records are stored with unique natural numbers.  It is impossible to store two or more records with a key overlaps.  Moreover, the length of each record is limited by the specified length.  Provided operations are the same as ones of hash database.
 
-Table database is also provided as a variant of hash database.  Each record is identified by the primary key and has a set of named columns.  Although there is no concept of data schema, it is possible to search for records with complex conditions efficiently by using indexes of arbitrary columns.
+Table database is also provided as a variant of hash database.  Each record is identified by the primary key and has a set of named columns.  Although there is no concept of data schema, it is possible to search for records with complex conditions efficiently by using indices of arbitrary columns.
 
 === Setting
 
@@ -249,6 +249,55 @@ The following code is an example to use a table database.
  if !tdb.close
    ecode = tdb.ecode
    STDERR.printf("close error: %s\n", tdb.errmsg(ecode))
+ end
+
+The following code is an example to use an abstract database.
+
+ require 'tokyocabinet'
+ include TokyoCabinet
+ 
+ # create the object
+ adb = ADB::new
+ 
+ # open the database
+ if !adb.open("casket.tch")
+   STDERR.printf("open error\n")
+ end
+ 
+ # store records
+ if !adb.put("foo", "hop") ||
+     !adb.put("bar", "step") ||
+     !adb.put("baz", "jump")
+   STDERR.printf("put error\n")
+ end
+ 
+ # retrieve records
+ value = adb.get("foo")
+ if value
+   printf("%s\n", value)
+ else
+   STDERR.printf("get error\n")
+ end
+ 
+ # traverse records
+ adb.iterinit
+ while key = adb.iternext
+   value = adb.get(key)
+   if value
+     printf("%s:%s\n", key, value)
+   end
+ end
+ 
+ # hash-like usage
+ adb["quux"] = "touchdown"
+ printf("%s\n", adb["quux"])
+ adb.each do |key, value|
+   printf("%s:%s\n", key, value)
+ end
+ 
+ # close the database
+ if !adb.close
+   STDERR.printf("close error\n")
  end
 
 
