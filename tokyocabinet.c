@@ -26,6 +26,16 @@
 #define BDBVNDATA      "bdb"
 #define BDBCURVNDATA   "bdbcur"
 
+#if !defined(RSTRING_PTR)
+#define RSTRING_PTR(TC_s) (RSTRING(TC_s)->ptr)
+#endif
+#if !defined(RSTRING_LEN)
+#define RSTRING_LEN(TC_s) (RSTRING(TC_s)->len)
+#endif
+#if !defined(RARRAY_LEN)
+#define RARRAY_LEN(TC_a) (RARRAY(TC_a)->len)
+#endif
+
 
 /* private function prototypes */
 static void hdb_init(void);
@@ -302,7 +312,7 @@ static VALUE hdb_open(int argc, VALUE *argv, VALUE vself){
   int omode;
   rb_scan_args(argc, argv, "11", &vpath, &vomode);
   Check_Type(vpath, T_STRING);
-  path = RSTRING(vpath)->ptr;
+  path = RSTRING_PTR(vpath);
   omode = (vomode == Qnil) ? HDBOREADER : NUM2INT(vomode);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
@@ -325,11 +335,11 @@ static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbput(hdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -342,11 +352,11 @@ static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputkeep(hdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -359,11 +369,11 @@ static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputcat(hdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -376,11 +386,11 @@ static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbputasync(hdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -393,8 +403,8 @@ static VALUE hdb_out(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbout(hdb, kbuf, ksiz) ? Qtrue : Qfalse;
@@ -408,8 +418,8 @@ static VALUE hdb_get(VALUE vself, VALUE vkey){
   char *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   if(!(vbuf = tchdbget(hdb, kbuf, ksiz, &vsiz))) return Qnil;
@@ -425,8 +435,8 @@ static VALUE hdb_vsiz(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return INT2NUM(tchdbvsiz(hdb, kbuf, ksiz));
@@ -466,8 +476,8 @@ static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   vprefix = StringValue(vprefix);
-  pbuf = RSTRING(vprefix)->ptr;
-  psiz = RSTRING(vprefix)->len;
+  pbuf = RSTRING_PTR(vprefix);
+  psiz = RSTRING_LEN(vprefix);
   max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
   keys = tchdbfwmkeys(hdb, pbuf, psiz, max);
   knum = tclistnum(keys);
@@ -521,7 +531,7 @@ static VALUE hdb_copy(VALUE vself, VALUE vpath){
   TCHDB *hdb;
   const char *path;
   Check_Type(vpath, T_STRING);
-  path = RSTRING(vpath)->ptr;
+  path = RSTRING_PTR(vpath);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbcopy(hdb, path) ? Qtrue : Qfalse;
@@ -566,8 +576,8 @@ static VALUE hdb_fetch(int argc, VALUE *argv, VALUE vself){
   int ksiz, vsiz;
   rb_scan_args(argc, argv, "11", &vkey, &vdef);
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   if((vbuf = tchdbget(hdb, kbuf, ksiz, &vsiz)) != NULL){
@@ -586,8 +596,8 @@ static VALUE hdb_check(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdbvsiz(hdb, kbuf, ksiz) >= 0 ? Qtrue : Qfalse;
@@ -601,8 +611,8 @@ static VALUE hdb_check_value(VALUE vself, VALUE vval){
   const char *vbuf;
   int vsiz, hit;
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   hit = 0;
@@ -628,8 +638,8 @@ static VALUE hdb_get_reverse(VALUE vself, VALUE vval){
   const char *vbuf;
   int vsiz;
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   vrv = Qnil;
@@ -798,8 +808,6 @@ static void bdb_init(void){
   rb_define_private_method(cls_bdb, "initialize", bdb_initialize, 0);
   rb_define_method(cls_bdb, "errmsg", bdb_errmsg, 1);
   rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
-  rb_define_method(cls_bdb, "errmsg", bdb_errmsg, 1);
-  rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
   rb_define_method(cls_bdb, "tune", bdb_tune, -1);
   rb_define_method(cls_bdb, "setcache", bdb_setcache, -1);
   rb_define_method(cls_bdb, "open", bdb_open, -1);
@@ -924,7 +932,7 @@ static VALUE bdb_open(int argc, VALUE *argv, VALUE vself){
   int omode;
   rb_scan_args(argc, argv, "11", &vpath, &vomode);
   Check_Type(vpath, T_STRING);
-  path = RSTRING(vpath)->ptr;
+  path = RSTRING_PTR(vpath);
   omode = (vomode == Qnil) ? BDBOREADER : NUM2INT(vomode);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
@@ -947,11 +955,11 @@ static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbput(bdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -964,11 +972,11 @@ static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputkeep(bdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -981,11 +989,11 @@ static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputcat(bdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -998,11 +1006,11 @@ static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbputdup(bdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
@@ -1017,15 +1025,15 @@ static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
   int i, num, ksiz;
   bool err;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   Check_Type(vvals, T_ARRAY);
   tvals = tclistnew();
-  num = RARRAY(vvals)->len;
+  num = RARRAY_LEN(vvals);
   for(i = 0; i < num; i++){
     vval = rb_ary_entry(vvals, i);
     vval = StringValue(vval);
-    tclistpush(tvals, RSTRING(vval)->ptr, RSTRING(vval)->len);
+    tclistpush(tvals, RSTRING_PTR(vval), RSTRING_LEN(vval));
   }
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
@@ -1042,8 +1050,8 @@ static VALUE bdb_out(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbout(bdb, kbuf, ksiz) ? Qtrue : Qfalse;
@@ -1056,8 +1064,8 @@ static VALUE bdb_outlist(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbout3(bdb, kbuf, ksiz) ? Qtrue : Qfalse;
@@ -1070,8 +1078,8 @@ static VALUE bdb_get(VALUE vself, VALUE vkey){
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if(!(vbuf = tcbdbget3(bdb, kbuf, ksiz, &vsiz))) return Qnil;
@@ -1087,8 +1095,8 @@ static VALUE bdb_getlist(VALUE vself, VALUE vkey){
   const char *kbuf, *vbuf;
   int i, ksiz, vnum, vsiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if(!(vals = tcbdbget4(bdb, kbuf, ksiz))) return Qnil;
@@ -1110,8 +1118,8 @@ static VALUE bdb_vnum(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return INT2NUM(tcbdbvnum(bdb, kbuf, ksiz));
@@ -1124,8 +1132,8 @@ static VALUE bdb_vsiz(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return INT2NUM(tcbdbvsiz(bdb, kbuf, ksiz));
@@ -1144,8 +1152,8 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if(vbkey != Qnil){
     vbkey = StringValue(vbkey);
-    bkbuf = RSTRING(vbkey)->ptr;
-    bksiz = RSTRING(vbkey)->len;
+    bkbuf = RSTRING_PTR(vbkey);
+    bksiz = RSTRING_LEN(vbkey);
   } else {
     bkbuf = NULL;
     bksiz = -1;
@@ -1153,8 +1161,8 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
   binc = (vbinc != Qnil && vbinc != Qfalse);
   if(vekey != Qnil){
     vekey = StringValue(vekey);
-    ekbuf = RSTRING(vekey)->ptr;
-    eksiz = RSTRING(vekey)->len;
+    ekbuf = RSTRING_PTR(vekey);
+    eksiz = RSTRING_LEN(vekey);
   } else {
     ekbuf = NULL;
     eksiz = -1;
@@ -1184,8 +1192,8 @@ static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   vprefix = StringValue(vprefix);
-  pbuf = RSTRING(vprefix)->ptr;
-  psiz = RSTRING(vprefix)->len;
+  pbuf = RSTRING_PTR(vprefix);
+  psiz = RSTRING_LEN(vprefix);
   max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
   keys = tcbdbfwmkeys(bdb, pbuf, psiz, max);
   knum = tclistnum(keys);
@@ -1241,7 +1249,7 @@ static VALUE bdb_copy(VALUE vself, VALUE vpath){
   TCBDB *bdb;
   const char *path;
   Check_Type(vpath, T_STRING);
-  path = RSTRING(vpath)->ptr;
+  path = RSTRING_PTR(vpath);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbcopy(bdb, path) ? Qtrue : Qfalse;
@@ -1313,8 +1321,8 @@ static VALUE bdb_fetch(int argc, VALUE *argv, VALUE vself){
   int ksiz, vsiz;
   rb_scan_args(argc, argv, "11", &vkey, &vdef);
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if((vbuf = tcbdbget(bdb, kbuf, ksiz, &vsiz)) != NULL){
@@ -1333,8 +1341,8 @@ static VALUE bdb_check(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbvsiz(bdb, kbuf, ksiz) >= 0 ? Qtrue : Qfalse;
@@ -1348,8 +1356,8 @@ static VALUE bdb_check_value(VALUE vself, VALUE vval){
   const char *vbuf, *tvbuf;
   int vsiz, tvsiz, hit;
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   hit = 0;
@@ -1374,8 +1382,8 @@ static VALUE bdb_get_reverse(VALUE vself, VALUE vval){
   const char *vbuf, *tvbuf, *tkbuf;
   int vsiz, tvsiz, tksiz;
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   vrv = Qnil;
@@ -1570,8 +1578,8 @@ static VALUE bdbcur_jump(VALUE vself, VALUE vkey){
   const char *kbuf;
   int ksiz;
   vkey = StringValue(vkey);
-  kbuf = RSTRING(vkey)->ptr;
-  ksiz = RSTRING(vkey)->len;
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
   vcur = rb_iv_get(vself, BDBCURVNDATA);
   Data_Get_Struct(vcur, BDBCUR, cur);
   return tcbdbcurjump(cur, kbuf, ksiz) ? Qtrue : Qfalse;
@@ -1603,8 +1611,8 @@ static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself){
   int vsiz, cpmode;
   rb_scan_args(argc, argv, "11", &vval, &vcpmode);
   vval = StringValue(vval);
-  vbuf = RSTRING(vval)->ptr;
-  vsiz = RSTRING(vval)->len;
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
   cpmode = (vcpmode == Qnil) ? BDBCPCURRENT : NUM2INT(vcpmode);
   vcur = rb_iv_get(vself, BDBCURVNDATA);
   Data_Get_Struct(vcur, BDBCUR, cur);
