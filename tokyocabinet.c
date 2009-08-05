@@ -74,6 +74,7 @@ static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
 static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval);
 static VALUE bdb_out(VALUE vself, VALUE vkey);
 static VALUE bdb_get(VALUE vself, VALUE vkey);
+static VALUE bdb_getlist(VALUE vself, VALUE vkey);
 static VALUE bdb_vnum(VALUE vself, VALUE vkey);
 static VALUE bdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE bdb_sync(VALUE vself);
@@ -272,17 +273,17 @@ static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself){
 
 
 static VALUE hdb_open(int argc, VALUE *argv, VALUE vself){
-  VALUE vhdb, vname, vomode;
+  VALUE vhdb, vpath, vomode;
   TCHDB *hdb;
-  const char *name;
+  const char *path;
   int omode;
-  rb_scan_args(argc, argv, "11", &vname, &vomode);
-  Check_Type(vname, T_STRING);
-  name = RSTRING(vname)->ptr;
+  rb_scan_args(argc, argv, "11", &vpath, &vomode);
+  Check_Type(vpath, T_STRING);
+  path = RSTRING(vpath)->ptr;
   omode = (vomode == Qnil) ? HDBOREADER : NUM2INT(vomode);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
-  return tchdbopen(hdb, name, omode) ? Qtrue : Qfalse;
+  return tchdbopen(hdb, path, omode) ? Qtrue : Qfalse;
 }
 
 
@@ -748,6 +749,7 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "putdup", bdb_putdup, 2);
   rb_define_method(cls_bdb, "out", bdb_out, 1);
   rb_define_method(cls_bdb, "get", bdb_get, 1);
+  rb_define_method(cls_bdb, "getlist", bdb_getlist, 1);
   rb_define_method(cls_bdb, "vnum", bdb_vnum, 1);
   rb_define_method(cls_bdb, "vsiz", bdb_vsiz, 1);
   rb_define_method(cls_bdb, "sync", bdb_sync, 0);
@@ -850,17 +852,17 @@ static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself){
 
 
 static VALUE bdb_open(int argc, VALUE *argv, VALUE vself){
-  VALUE vbdb, vname, vomode;
+  VALUE vbdb, vpath, vomode;
   TCBDB *bdb;
-  const char *name;
+  const char *path;
   int omode;
-  rb_scan_args(argc, argv, "11", &vname, &vomode);
-  Check_Type(vname, T_STRING);
-  name = RSTRING(vname)->ptr;
+  rb_scan_args(argc, argv, "11", &vpath, &vomode);
+  Check_Type(vpath, T_STRING);
+  path = RSTRING(vpath)->ptr;
   omode = (vomode == Qnil) ? BDBOREADER : NUM2INT(vomode);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
-  return tcbdbopen(bdb, name, omode) ? Qtrue : Qfalse;
+  return tcbdbopen(bdb, path, omode) ? Qtrue : Qfalse;
 }
 
 
@@ -968,6 +970,30 @@ static VALUE bdb_get(VALUE vself, VALUE vkey){
   if(!(vbuf = tcbdbget3(bdb, kbuf, ksiz, &vsiz))) return Qnil;
   vval = rb_str_new(vbuf, vsiz);
   return vval;
+}
+
+
+static VALUE bdb_getlist(VALUE vself, VALUE vkey){
+  VALUE vbdb, vary, vval;
+  TCBDB *bdb;
+  TCLIST *vals;
+  const char *kbuf, *vbuf;
+  int i, ksiz, vnum, vsiz;
+  vkey = StringValue(vkey);
+  kbuf = RSTRING(vkey)->ptr;
+  ksiz = RSTRING(vkey)->len;
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  if(!(vals = tcbdbget4(bdb, kbuf, ksiz))) return Qnil;
+  vnum = tclistnum(vals);
+  vary = rb_ary_new2(vnum);
+  for(i = 0; i < vnum; i++){
+    vbuf = tclistval(vals, i, &vsiz);
+    vval = rb_str_new(vbuf, vsiz);
+    rb_ary_push(vary, vval);
+  }
+  tclistdel(vals);
+  return vary;
 }
 
 

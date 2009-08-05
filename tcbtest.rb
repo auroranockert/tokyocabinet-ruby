@@ -514,6 +514,11 @@ def procmisc(path, rnum, opts, omode)
   cur.put("2C", BDBCUR::CPAFTER)
   cur.prev()
   cur.out
+  vals = bdb.getlist("::2")
+  if(!vals || vals.size != 4)
+    eprint(bdb, "(validation)")
+    err = true
+  end
   if(!bdb.trancommit)
     eprint(bdb, "put")
     err = true
