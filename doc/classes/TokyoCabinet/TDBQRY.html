@@ -99,7 +99,7 @@ retrieve records corresponding conditions from table database.<br/>
       <a href="#M000075">proc</a>&nbsp;&nbsp;
       <a href="#M000073">search</a>&nbsp;&nbsp;
       <a href="#M000074">searchout</a>&nbsp;&nbsp;
-      <a href="#M000072">setmax</a>&nbsp;&nbsp;
+      <a href="#M000072">setlimit</a>&nbsp;&nbsp;
       <a href="#M000071">setorder</a>&nbsp;&nbsp;
       </div>
     </div>
@@ -426,8 +426,8 @@ expression, `TokyoCabinet::TDBQRY::QCNUMLE' for number which is less
 than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for
 number which is between two tokens of the expression,
 `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at
-least one token in the expression. All operations can be flagged by bitwise
-or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation,
+least one token in the expression. All operations can be flagged by
+bitwise-or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation,
 `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.<br/>
 `<em>expr</em>' specifies an operand exression.<br/> The return value is
 always `nil'.<br/>
@@ -468,7 +468,7 @@ return value is the <a href="TDBQRY.html#M000076">hint</a> string.<br/>
 Process each corresponding record.<br/> This function needs a block parameter
 of the iterator called for each record. The block receives two parameters.
 The first parameter is the primary key. The second parameter is a hash
-containing columns. It returns flags of the post treatment by bitwise or:
+containing columns. It returns flags of the post treatment by bitwise-or:
 `TokyoCabinet::TDBQRY::QPPUT' to modify the record,
 `TokyoCabinet::TDBQRY::QPOUT' to remove the record,
 `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.<br/> If
@@ -520,15 +520,17 @@ true, else, it is false.<br/>
         <div class="method-heading">
           <a href="TDBQRY.src/M000072.html" target="Code" class="method-signature"
             onclick="popupCode('TDBQRY.src/M000072.html');return false;">
-          <span class="method-name">setmax</span><span class="method-args">(max)</span>
+          <span class="method-name">setlimit</span><span class="method-args">(max, skip)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
 Set the maximum number of records of the result.<br/> `<em>max</em>'
-specifies the maximum number of records of the result.<br/> The return value
-is always `nil'.<br/>
+specifies the maximum number of records of the result. If it is not defined
+or negative, no limit is specified.<br/> `<em>skip</em>' specifies the
+maximum number of records of the result. If it is not defined or not more
+than 0, no record is skipped.<br/> The return value is always `nil'.<br/>
 </p>
         </div>
       </div>

@@ -11,4 +11,5 @@ example/tchdbex.rb
 example/tcbdbex.rb
 example/tcfdbex.rb
 example/tctdbex.rb
+tokyocabinet.gemspec
 COPYING

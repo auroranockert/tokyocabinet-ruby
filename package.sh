@@ -10,7 +10,7 @@ then
   make distclean
 fi
 
-rm -rf casket casket* *~ *.tmp hoge moge
+rm -rf casket casket* *~ *.tmp *.gem hoge moge
 
 name="${PWD##*/}"
 cd ..

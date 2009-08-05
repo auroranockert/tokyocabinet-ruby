@@ -831,15 +831,15 @@ href="BDB.html#M000032">path</a> of the database file.<br/>
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::BDB::OWRITER' as a writer,
 `TokyoCabinet::BDB::OREADER' as a reader. If the mode is
-`TokyoCabinet::BDB::OWRITER', the following may be added by bitwise
-or: `TokyoCabinet::BDB::OCREAT', which means it creates a <a
+`TokyoCabinet::BDB::OWRITER', the following may be added by
+bitwise-or: `TokyoCabinet::BDB::OCREAT', which means it creates a <a
 href="BDB.html#M000001">new</a> database if not exist,
 `TokyoCabinet::BDB::OTRUNC', which means it creates a <a
 href="BDB.html#M000001">new</a> database regardless if one exists,
 `TokyoCabinet::BDB::OTSYNC', which means every transaction
 synchronizes updated contents with the device. Both of
 `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER'
-can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which
+can be added to by bitwise-or: `TokyoCabinet::BDB::ONOLCK', which
 means it opens the database file without file locking, or
 `TokyoCabinet::BDB::OLCKNB', which means locking is performed without
 blocking. If it is not defined, `TokyoCabinet::BDB::OREADER' is
@@ -873,7 +873,7 @@ alignment by power of 2. If it is not defined or negative, the current
 setting is not changed.<br/> `<em>fpow</em>' specifies the maximum
 number of elements of the free block pool by power of 2. If it is not
 defined or negative, the current setting is not changed.<br/>
-`<em>opts</em>' specifies options by bitwise or:
+`<em>opts</em>' specifies options by bitwise-or:
 `TokyoCabinet::BDB::TLARGE' specifies that the size of the database
 can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::BDB::TDEFLATE' specifies that each record is
@@ -1275,7 +1275,7 @@ default value is specified. The default value is 4 standing for 2^8=256.<br/>
 `<em>fpow</em>' specifies the maximum number of elements of the free
 block pool by power of 2. If it is not defined or negative, the default
 value is specified. The default value is 10 standing for 2^10=1024.<br/>
-`<em>opts</em>' specifies options by bitwise or:
+`<em>opts</em>' specifies options by bitwise-or:
 `TokyoCabinet::BDB::TLARGE' specifies that the size of the database
 can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::BDB::TDEFLATE' specifies that each record is

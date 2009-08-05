@@ -21,10 +21,14 @@ commands = [
             "tcftest.rb read casket",
             "tcftest.rb remove casket",
             "tcftest.rb misc casket 1000",
-            "tcttest.rb write casket 10000",
+            "tcttest.rb write -ip -is -in casket 1000",
             "tcttest.rb read casket",
             "tcttest.rb remove casket",
-            "tcttest.rb misc casket 1000",
+            "tcttest.rb misc casket 100",
+            "tcttest.rb write -tl -is -td casket 1000 1000 1 1",
+            "tcttest.rb read -nl casket",
+            "tcttest.rb remove -nb casket",
+            "tcttest.rb misc -tl -tb casket 100",
            ]
 num = 1
 commands.each do |command|

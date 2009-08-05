@@ -229,7 +229,7 @@ static int tdbqry_procrec(const void *pkbuf, int pksiz, TCMAP *cols, void *opq);
 static VALUE tdbqry_initialize(VALUE vself, VALUE vtdb);
 static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr);
 static VALUE tdbqry_setorder(VALUE vself, VALUE vname, VALUE vtype);
-static VALUE tdbqry_setmax(VALUE vself, VALUE vmax);
+static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself);
 static VALUE tdbqry_search(VALUE vself);
 static VALUE tdbqry_searchout(VALUE vself);
 static VALUE tdbqry_proc(VALUE vself, VALUE vproc);
@@ -3026,7 +3026,8 @@ static void tdbqry_init(void){
   rb_define_private_method(cls_tdbqry, "initialize", tdbqry_initialize, 1);
   rb_define_method(cls_tdbqry, "addcond", tdbqry_addcond, 3);
   rb_define_method(cls_tdbqry, "setorder", tdbqry_setorder, 2);
-  rb_define_method(cls_tdbqry, "setmax", tdbqry_setmax, 1);
+  rb_define_method(cls_tdbqry, "setlimit", tdbqry_setlimit, -1);
+  rb_define_method(cls_tdbqry, "setmax", tdbqry_setlimit, -1);
   rb_define_method(cls_tdbqry, "search", tdbqry_search, 0);
   rb_define_method(cls_tdbqry, "searchout", tdbqry_searchout, 0);
   rb_define_method(cls_tdbqry, "proc", tdbqry_proc, 0);
@@ -3095,12 +3096,16 @@ static VALUE tdbqry_setorder(VALUE vself, VALUE vname, VALUE vtype){
 }
 
 
-static VALUE tdbqry_setmax(VALUE vself, VALUE vmax){
-  VALUE vqry;
+static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself){
+  VALUE vqry, vmax, vskip;
   TDBQRY *qry;
+  int max, skip;
+  rb_scan_args(argc, argv, "02", &vmax, &vskip);
+  max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
+  skip = (vskip == Qnil) ? -1 : NUM2INT(vskip);
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
   Data_Get_Struct(vqry, TDBQRY, qry);
-  tctdbqrysetmax(qry, NUM2INT(vmax));
+  tctdbqrysetlimit(qry, max, skip);
   return Qnil;
 }
 

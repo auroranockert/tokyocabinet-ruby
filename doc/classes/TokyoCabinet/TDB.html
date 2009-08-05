@@ -523,6 +523,16 @@ index type: decimal string
 </td>
         </tr>
         <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ITOPT</td>
+          <td>=</td>
+          <td class="context-item-value">9998</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+index type: <a href="TDB.html#M000127">optimize</a>
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
           <td class="context-item-name">ITVOID</td>
           <td>=</td>
           <td class="context-item-value">9999</td>
@@ -872,15 +882,15 @@ href="TDB.html#M000133">path</a> of the database file.<br/>
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::TDB::OWRITER' as a writer,
 `TokyoCabinet::TDB::OREADER' as a reader. If the mode is
-`TokyoCabinet::TDB::OWRITER', the following may be added by bitwise
-or: `TokyoCabinet::TDB::OCREAT', which means it creates a <a
+`TokyoCabinet::TDB::OWRITER', the following may be added by
+bitwise-or: `TokyoCabinet::TDB::OCREAT', which means it creates a <a
 href="TDB.html#M000107">new</a> database if not exist,
 `TokyoCabinet::TDB::OTRUNC', which means it creates a <a
 href="TDB.html#M000107">new</a> database regardless if one exists,
 `TokyoCabinet::TDB::OTSYNC', which means every transaction
 synchronizes updated contents with the device. Both of
 `TokyoCabinet::TDB::OREADER' and `TokyoCabinet::TDB::OWRITER'
-can be added to by bitwise or: `TokyoCabinet::TDB::ONOLCK', which
+can be added to by bitwise-or: `TokyoCabinet::TDB::ONOLCK', which
 means it opens the database file without file locking, or
 `TokyoCabinet::TDB::OLCKNB', which means locking is performed without
 blocking. If it is not defined, `TokyoCabinet::TDB::OREADER' is
@@ -909,7 +919,7 @@ power of 2. If it is not defined or negative, the current setting is not
 changed.<br/> `<em>fpow</em>' specifies the maximum number of elements
 of the free block pool by power of 2. If it is not defined or negative, the
 current setting is not changed.<br/> `<em>opts</em>' specifies options
-by bitwise or: `TokyoCabinet::TDB::TLARGE' specifies that the size of
+by bitwise-or: `TokyoCabinet::TDB::TLARGE' specifies that the size of
 the database can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::TDB::TDEFLATE' specifies that each record is
 compressed with Deflate encoding, `TokyoCabinet::TDB::TBZIP'
@@ -1084,8 +1094,9 @@ If the name of an existing index is specified, the index is rebuilt. An
 empty string means the primary key.<br/> `<em>type</em>' specifies the
 index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string,
 `TokyoCabinet::TDB::ITDECIMAL' for decimal string. If it is
+`TokyoCabinet::TDB::ITOPT', the index is optimized. If it is
 `TokyoCabinet::TDB::ITVOID', the index is removed. If
-`TokyoCabinet::TDB::ITKEEP' is added by bitwise or and the index
+`TokyoCabinet::TDB::ITKEEP' is added by bitwise-or and the index
 exists, this method merely returns failure.<br/> If successful, the return
 value is true, else, it is false.<br/>
 </p>
@@ -1215,7 +1226,7 @@ value is specified. The default value is 4 standing for 2^4=16.<br/>
 `<em>fpow</em>' specifies the maximum number of elements of the free
 block pool by power of 2. If it is not defined or negative, the default
 value is specified. The default value is 10 standing for 2^10=1024.<br/>
-`<em>opts</em>' specifies options by bitwise or:
+`<em>opts</em>' specifies options by bitwise-or:
 `TokyoCabinet::TDB::TLARGE' specifies that the size of the database
 can be larger than 2GB by using 64-bit bucket array,
 `TokyoCabinet::TDB::TDEFLATE' specifies that each record is

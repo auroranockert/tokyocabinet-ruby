@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Fri Feb 13 14:48:11 +0900 2009</td>
+      <td>Tue Mar 10 12:06:08 +0900 2009</td>
     </tr>
     </table>
   </div>
@@ -346,7 +346,7 @@ The following code is an example to use a table database.
  qry.addcond(&quot;age&quot;, TDBQRY::QCNUMGE, &quot;20&quot;)
  qry.addcond(&quot;lang&quot;, TDBQRY::QCSTROR, &quot;ja,en&quot;)
  qry.setorder(&quot;name&quot;, TDBQRY::QOSTRASC)
- qry.setmax(10)
+ qry.setlimit(10)
  res = qry.search
  res.each do |rkey|
    rcols = tdb.get(rkey)

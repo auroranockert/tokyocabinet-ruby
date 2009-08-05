@@ -231,7 +231,7 @@ The following code is an example to use a table database.
  qry.addcond("age", TDBQRY::QCNUMGE, "20")
  qry.addcond("lang", TDBQRY::QCSTROR, "ja,en")
  qry.setorder("name", TDBQRY::QOSTRASC)
- qry.setmax(10)
+ qry.setlimit(10)
  res = qry.search
  res.each do |rkey|
    rcols = tdb.get(rkey)

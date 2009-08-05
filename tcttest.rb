@@ -537,7 +537,7 @@ def procmisc(path, rnum, opts, omode)
       type = types[rand(types.length)]
       qry.setorder(name, type)
     end
-    qry.setmax(rand(i)) if rand(3) != 0
+    qry.setlimit(rand(i), rand(10)) if rand(3) != 0
     res = qry.search
     if rnum > 250 && i % (rnum / 250) == 0
       print('.')

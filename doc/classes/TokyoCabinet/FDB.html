@@ -747,13 +747,13 @@ href="FDB.html#M000056">path</a> of the database file.<br/>
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::FDB::OWRITER' as a writer,
 `TokyoCabinet::FDB::OREADER' as a reader. If the mode is
-`TokyoCabinet::FDB::OWRITER', the following may be added by bitwise
-or: `TokyoCabinet::FDB::OCREAT', which means it creates a <a
+`TokyoCabinet::FDB::OWRITER', the following may be added by
+bitwise-or: `TokyoCabinet::FDB::OCREAT', which means it creates a <a
 href="FDB.html#M000035">new</a> database if not exist,
 `TokyoCabinet::FDB::OTRUNC', which means it creates a <a
 href="FDB.html#M000035">new</a> database regardless if one exists. Both of
 `TokyoCabinet::FDB::OREADER' and `TokyoCabinet::FDB::OWRITER'
-can be added to by bitwise or: `TokyoCabinet::FDB::ONOLCK', which
+can be added to by bitwise-or: `TokyoCabinet::FDB::ONOLCK', which
 means it opens the database file without file locking, or
 `TokyoCabinet::FDB::OLCKNB', which means locking is performed without
 blocking. If it is not defined, `TokyoCabinet::FDB::OREADER' is

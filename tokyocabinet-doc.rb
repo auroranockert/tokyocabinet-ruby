@@ -112,7 +112,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 131071.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^4=16.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.%%
     def tune(bnum, apow, fpow, opts)
       # (native code)
@@ -133,7 +133,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::HDB::OWRITER' as a writer, `TokyoCabinet::HDB::OREADER' as a reader.  If the mode is `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::HDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::HDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::HDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::HDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::HDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::HDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::HDB::OWRITER' as a writer, `TokyoCabinet::HDB::OREADER' as a reader.  If the mode is `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise-or: `TokyoCabinet::HDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::HDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::HDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER' can be added to by bitwise-or: `TokyoCabinet::HDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::HDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::HDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)
@@ -240,7 +240,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of records.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
     # If successful, the return value is true, else, it is false.%%
     # This method is useful to reduce the size of the database file with data fragmentation by successive updating.%%
     def optimize(bnum, apow, fpow, opts)
@@ -403,7 +403,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 32749.  Suggested size of the bucket array is about from 1 to 4 times of the number of all pages to be stored.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^8=256.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.%%
     def tune(lmemb, nmemb, bnum, apow, fpow, opts)
       # (native code)
@@ -425,7 +425,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::BDB::OWRITER' as a writer, `TokyoCabinet::BDB::OREADER' as a reader.  If the mode is `TokyoCabinet::BDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::BDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::BDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::BDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::BDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::BDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::BDB::OWRITER' as a writer, `TokyoCabinet::BDB::OREADER' as a reader.  If the mode is `TokyoCabinet::BDB::OWRITER', the following may be added by bitwise-or: `TokyoCabinet::BDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::BDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::BDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER' can be added to by bitwise-or: `TokyoCabinet::BDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::BDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::BDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)
@@ -561,7 +561,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of pages.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
     # If successful, the return value is true, else, it is false.%%
     # This method is useful to reduce the size of the database file with data fragmentation by successive updating.%%
     def optimize(lmemb, nmemb, bnum, apow, fpow, opts)
@@ -769,7 +769,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::FDB::OWRITER' as a writer, `TokyoCabinet::FDB::OREADER' as a reader.  If the mode is `TokyoCabinet::FDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::FDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::FDB::OTRUNC', which means it creates a new database regardless if one exists.  Both of `TokyoCabinet::FDB::OREADER' and `TokyoCabinet::FDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::FDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::FDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::FDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::FDB::OWRITER' as a writer, `TokyoCabinet::FDB::OREADER' as a reader.  If the mode is `TokyoCabinet::FDB::OWRITER', the following may be added by bitwise-or: `TokyoCabinet::FDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::FDB::OTRUNC', which means it creates a new database regardless if one exists.  Both of `TokyoCabinet::FDB::OREADER' and `TokyoCabinet::FDB::OWRITER' can be added to by bitwise-or: `TokyoCabinet::FDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::FDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::FDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)
@@ -975,6 +975,8 @@ module TokyoCabinet
     ITLEXICAL = 0
     # index type: decimal string
     ITDECIMAL = 1
+    # index type: optimize
+    ITOPT = 9998
     # index type: void
     ITVOID = 9999
     # index type: keep existing index
@@ -1000,7 +1002,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 131071.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^4=16.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::TDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::TDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::TDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::TDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::TDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::TDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::TDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.%%
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.%%
     def tune(bnum, apow, fpow, opts)
       # (native code)
@@ -1023,7 +1025,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::TDB::OWRITER' as a writer, `TokyoCabinet::TDB::OREADER' as a reader.  If the mode is `TokyoCabinet::TDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::TDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::TDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::TDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::TDB::OREADER' and `TokyoCabinet::TDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::TDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::TDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::TDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::TDB::OWRITER' as a writer, `TokyoCabinet::TDB::OREADER' as a reader.  If the mode is `TokyoCabinet::TDB::OWRITER', the following may be added by bitwise-or: `TokyoCabinet::TDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::TDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::TDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::TDB::OREADER' and `TokyoCabinet::TDB::OWRITER' can be added to by bitwise-or: `TokyoCabinet::TDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::TDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::TDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)
@@ -1122,7 +1124,7 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of records.%%
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.%%
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.%%
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::TDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::TDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::TDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::TDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::TDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::TDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::TDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.%%
     # If successful, the return value is true, else, it is false.%%
     # This method is useful to reduce the size of the database file with data fragmentation by successive updating.%%
     def optimize(bnum, apow, fpow, opts)
@@ -1175,7 +1177,7 @@ module TokyoCabinet
     end
     # Set a column index.%%
     # `<i>name</i>' specifies the name of a column.  If the name of an existing index is specified, the index is rebuilt.  An empty string means the primary key.%%
-    # `<i>type</i>' specifies the index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string, `TokyoCabinet::TDB::ITDECIMAL' for decimal string.  If it is `TokyoCabinet::TDB::ITVOID', the index is removed.  If `TokyoCabinet::TDB::ITKEEP' is added by bitwise or and the index exists, this method merely returns failure.%%
+    # `<i>type</i>' specifies the index type: `TokyoCabinet::TDB::ITLEXICAL' for lexical string, `TokyoCabinet::TDB::ITDECIMAL' for decimal string.  If it is `TokyoCabinet::TDB::ITOPT', the index is optimized.  If it is `TokyoCabinet::TDB::ITVOID', the index is removed.  If `TokyoCabinet::TDB::ITKEEP' is added by bitwise-or and the index exists, this method merely returns failure.%%
 # If successful, the return value is true, else, it is false.%%
     def setindex(name, type)
       # (native code)
@@ -1244,7 +1246,7 @@ module TokyoCabinet
     end
     # Add a narrowing condition.%%
     # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.%%
-    # `<i>op</i>' specifies an operation type: `TokyoCabinet::TDBQRY::QCSTREQ' for string which is equal to the expression, `TokyoCabinet::TDBQRY::QCSTRINC' for string which is included in the expression, `TokyoCabinet::TDBQRY::QCSTRBW' for string which begins with the expression, `TokyoCabinet::TDBQRY::QCSTREW' for string which ends with the expression, `TokyoCabinet::TDBQRY::QCSTRAND' for string which includes all tokens in the expression, `TokyoCabinet::TDBQRY::QCSTROR' for string which includes at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTROREQ' for string which is equal to at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTRRX' for string which matches regular expressions of the expression, `TokyoCabinet::TDBQRY::QCNUMEQ' for number which is equal to the expression, `TokyoCabinet::TDBQRY::QCNUMGT' for number which is greater than the expression, `TokyoCabinet::TDBQRY::QCNUMGE' for number which is greater than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMLT' for number which is less than the expression, `TokyoCabinet::TDBQRY::QCNUMLE' for number which is less than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for number which is between two tokens of the expression, `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at least one token in the expression.  All operations can be flagged by bitwise or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation, `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.%%
+    # `<i>op</i>' specifies an operation type: `TokyoCabinet::TDBQRY::QCSTREQ' for string which is equal to the expression, `TokyoCabinet::TDBQRY::QCSTRINC' for string which is included in the expression, `TokyoCabinet::TDBQRY::QCSTRBW' for string which begins with the expression, `TokyoCabinet::TDBQRY::QCSTREW' for string which ends with the expression, `TokyoCabinet::TDBQRY::QCSTRAND' for string which includes all tokens in the expression, `TokyoCabinet::TDBQRY::QCSTROR' for string which includes at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTROREQ' for string which is equal to at least one token in the expression, `TokyoCabinet::TDBQRY::QCSTRRX' for string which matches regular expressions of the expression, `TokyoCabinet::TDBQRY::QCNUMEQ' for number which is equal to the expression, `TokyoCabinet::TDBQRY::QCNUMGT' for number which is greater than the expression, `TokyoCabinet::TDBQRY::QCNUMGE' for number which is greater than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMLT' for number which is less than the expression, `TokyoCabinet::TDBQRY::QCNUMLE' for number which is less than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for number which is between two tokens of the expression, `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at least one token in the expression.  All operations can be flagged by bitwise-or: `TokyoCabinet::TDBQRY::QCNEGATE' for negation, `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.%%
     # `<i>expr</i>' specifies an operand exression.%%
     # The return value is always `nil'.%%
     def addcond(name, op, expr)
@@ -1258,9 +1260,10 @@ module TokyoCabinet
       # (native code)
     end
     # Set the maximum number of records of the result.%%
-    # `<i>max</i>' specifies the maximum number of records of the result.%%
+    # `<i>max</i>' specifies the maximum number of records of the result.  If it is not defined or negative, no limit is specified.%%
+    # `<i>skip</i>' specifies the maximum number of records of the result.  If it is not defined or not more than 0, no record is skipped.%%
     # The return value is always `nil'.%%
-    def setmax(max)
+    def setlimit(max, skip)
       # (native code)
     end
     # Execute the search.%%
@@ -1274,7 +1277,7 @@ module TokyoCabinet
       # (native code)
     end
     # Process each corresponding record.%%
-    # This function needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
+    # This function needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise-or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
     # If successful, the return value is true, else, it is false.%%
     def proc()
       # (native code)
