@@ -82,10 +82,10 @@
       <p>
 Fixed-Length database is a file containing a fixed-length table and is
 handled with the fixed-length database API. Before operations to store or
-retrieve records, it is necessary to <a href="FDB.html#M000037">open</a> a
+retrieve records, it is necessary to <a href="FDB.html#M000039">open</a> a
 database file and connect the fixed-length database object to it. To avoid
 data missing or corruption, it is important to <a
-href="FDB.html#M000038">close</a> every database file when it is no longer
+href="FDB.html#M000040">close</a> every database file when it is no longer
 in use. Except for the interface below, methods compatible with the
 `Hash' class are also provided; `[]', `[]=',
 `store', `delete', `fetch', `has_key?',
@@ -103,28 +103,30 @@ in use. Except for the interface below, methods compatible with the
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000038">close</a>&nbsp;&nbsp;
-      <a href="#M000051">copy</a>&nbsp;&nbsp;
-      <a href="#M000035">ecode</a>&nbsp;&nbsp;
-      <a href="#M000034">errmsg</a>&nbsp;&nbsp;
-      <a href="#M000054">fsiz</a>&nbsp;&nbsp;
-      <a href="#M000043">get</a>&nbsp;&nbsp;
-      <a href="#M000045">iterinit</a>&nbsp;&nbsp;
-      <a href="#M000046">iternext</a>&nbsp;&nbsp;
-      <a href="#M000033">new</a>&nbsp;&nbsp;
-      <a href="#M000037">open</a>&nbsp;&nbsp;
-      <a href="#M000049">optimize</a>&nbsp;&nbsp;
-      <a href="#M000042">out</a>&nbsp;&nbsp;
-      <a href="#M000052">path</a>&nbsp;&nbsp;
-      <a href="#M000039">put</a>&nbsp;&nbsp;
-      <a href="#M000041">putcat</a>&nbsp;&nbsp;
-      <a href="#M000040">putkeep</a>&nbsp;&nbsp;
-      <a href="#M000047">range</a>&nbsp;&nbsp;
-      <a href="#M000053">rnum</a>&nbsp;&nbsp;
-      <a href="#M000048">sync</a>&nbsp;&nbsp;
-      <a href="#M000036">tune</a>&nbsp;&nbsp;
-      <a href="#M000050">vanish</a>&nbsp;&nbsp;
-      <a href="#M000044">vsiz</a>&nbsp;&nbsp;
+      <a href="#M000051">adddouble</a>&nbsp;&nbsp;
+      <a href="#M000050">addint</a>&nbsp;&nbsp;
+      <a href="#M000040">close</a>&nbsp;&nbsp;
+      <a href="#M000055">copy</a>&nbsp;&nbsp;
+      <a href="#M000037">ecode</a>&nbsp;&nbsp;
+      <a href="#M000036">errmsg</a>&nbsp;&nbsp;
+      <a href="#M000058">fsiz</a>&nbsp;&nbsp;
+      <a href="#M000045">get</a>&nbsp;&nbsp;
+      <a href="#M000047">iterinit</a>&nbsp;&nbsp;
+      <a href="#M000048">iternext</a>&nbsp;&nbsp;
+      <a href="#M000035">new</a>&nbsp;&nbsp;
+      <a href="#M000039">open</a>&nbsp;&nbsp;
+      <a href="#M000053">optimize</a>&nbsp;&nbsp;
+      <a href="#M000044">out</a>&nbsp;&nbsp;
+      <a href="#M000056">path</a>&nbsp;&nbsp;
+      <a href="#M000041">put</a>&nbsp;&nbsp;
+      <a href="#M000043">putcat</a>&nbsp;&nbsp;
+      <a href="#M000042">putkeep</a>&nbsp;&nbsp;
+      <a href="#M000049">range</a>&nbsp;&nbsp;
+      <a href="#M000057">rnum</a>&nbsp;&nbsp;
+      <a href="#M000052">sync</a>&nbsp;&nbsp;
+      <a href="#M000038">tune</a>&nbsp;&nbsp;
+      <a href="#M000054">vanish</a>&nbsp;&nbsp;
+      <a href="#M000046">vsiz</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -217,7 +219,7 @@ error code: invalid record header
           <td class="context-item-value">7</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="FDB.html#M000037">open</a> error
+error code: <a href="FDB.html#M000039">open</a> error
 
 </td>
         </tr>
@@ -227,7 +229,7 @@ error code: <a href="FDB.html#M000037">open</a> error
           <td class="context-item-value">8</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="FDB.html#M000038">close</a> error
+error code: <a href="FDB.html#M000040">close</a> error
 
 </td>
         </tr>
@@ -247,7 +249,7 @@ error code: trunc error
           <td class="context-item-value">10</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: <a href="FDB.html#M000048">sync</a> error
+error code: <a href="FDB.html#M000052">sync</a> error
 
 </td>
         </tr>
@@ -387,8 +389,8 @@ error code: miscellaneous error
           <td class="context-item-value">1 &lt;&lt; 0</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: <a
-href="FDB.html#M000037">open</a> as a reader
+<a href="FDB.html#M000039">open</a> mode: <a
+href="FDB.html#M000039">open</a> as a reader
 
 </td>
         </tr>
@@ -398,8 +400,8 @@ href="FDB.html#M000037">open</a> as a reader
           <td class="context-item-value">1 &lt;&lt; 1</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: <a
-href="FDB.html#M000037">open</a> as a writer
+<a href="FDB.html#M000039">open</a> mode: <a
+href="FDB.html#M000039">open</a> as a writer
 
 </td>
         </tr>
@@ -409,7 +411,7 @@ href="FDB.html#M000037">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 2</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: writer creating
+<a href="FDB.html#M000039">open</a> mode: writer creating
 
 </td>
         </tr>
@@ -419,7 +421,7 @@ href="FDB.html#M000037">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 3</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: writer truncating
+<a href="FDB.html#M000039">open</a> mode: writer truncating
 
 </td>
         </tr>
@@ -429,8 +431,8 @@ href="FDB.html#M000037">open</a> as a writer
           <td class="context-item-value">1 &lt;&lt; 4</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: <a
-href="FDB.html#M000037">open</a> without locking
+<a href="FDB.html#M000039">open</a> mode: <a
+href="FDB.html#M000039">open</a> without locking
 
 </td>
         </tr>
@@ -440,7 +442,7 @@ href="FDB.html#M000037">open</a> without locking
           <td class="context-item-value">1 &lt;&lt; 5</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-<a href="FDB.html#M000037">open</a> mode: lock without blocking
+<a href="FDB.html#M000039">open</a> mode: lock without blocking
 
 </td>
         </tr>
@@ -457,12 +459,12 @@ href="FDB.html#M000037">open</a> without locking
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000033" class="method-detail">
-        <a name="M000033"></a>
+      <div id="method-M000035" class="method-detail">
+        <a name="M000035"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000033.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000033.html');return false;">
+          <a href="FDB.src/M000035.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000035.html');return false;">
           <span class="method-name">new</span><span class="method-args">()</span>
           </a>
         </div>
@@ -470,19 +472,77 @@ href="FDB.html#M000037">open</a> without locking
         <div class="method-description">
           <p>
 Create a fixed-length database object. The return value is the <a
-href="FDB.html#M000033">new</a> fixed-length database object.
+href="FDB.html#M000035">new</a> fixed-length database object.
 </p>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000038" class="method-detail">
-        <a name="M000038"></a>
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000038.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000038.html');return false;">
+          <a href="FDB.src/M000051.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000051.html');return false;">
+          <span class="method-name">adddouble</span><span class="method-args">(key, num)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Add a real number to a record `<em>key</em>' specifies the key. It
+should be more than 0. If it is &quot;min&quot;, the minimum ID number of
+existing records is specified. If it is &quot;prev&quot;, the number less
+by one than the minimum ID number of existing records is specified. If it
+is &quot;max&quot;, the maximum ID number of existing records is specified.
+If it is &quot;next&quot;, the number greater by one than the maximum ID
+number of existing records is specified. `<em>num</em>' specifies the
+additional value. If successful, the return value is the summation value,
+else, it is `nil'. If the corresponding record exists, the value is
+treated as a real number and is added to. If no record corresponds, a <a
+href="FDB.html#M000035">new</a> record of the additional value is stored.
+Because records are stored in binary format, they should be processed with
+the `unpack' method with the `d' operator after retrieval.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
+
+        <div class="method-heading">
+          <a href="FDB.src/M000050.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000050.html');return false;">
+          <span class="method-name">addint</span><span class="method-args">(key, num)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Add an integer to a record `<em>key</em>' specifies the key. It
+should be more than 0. If it is &quot;min&quot;, the minimum ID number of
+existing records is specified. If it is &quot;prev&quot;, the number less
+by one than the minimum ID number of existing records is specified. If it
+is &quot;max&quot;, the maximum ID number of existing records is specified.
+If it is &quot;next&quot;, the number greater by one than the maximum ID
+number of existing records is specified. `<em>num</em>' specifies the
+additional value. If successful, the return value is the summation value,
+else, it is `nil'. If the corresponding record exists, the value is
+treated as an integer and is added to. If no record corresponds, a <a
+href="FDB.html#M000035">new</a> record of the additional value is stored.
+Because records are stored in binary format, they should be processed with
+the `unpack' method with the `i' operator after retrieval.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
+
+        <div class="method-heading">
+          <a href="FDB.src/M000040.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000040.html');return false;">
           <span class="method-name">close</span><span class="method-args">()</span>
           </a>
         </div>
@@ -492,18 +552,18 @@ href="FDB.html#M000033">new</a> fixed-length database object.
 Close the database file. If successful, the return value is true, else, it
 is false. Update of a database is assured to be written when the database
 is closed. If a writer opens a database but does not <a
-href="FDB.html#M000038">close</a> it appropriately, the database will be
+href="FDB.html#M000040">close</a> it appropriately, the database will be
 broken.
 </p>
         </div>
       </div>
 
-      <div id="method-M000051" class="method-detail">
-        <a name="M000051"></a>
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000051.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000051.html');return false;">
+          <a href="FDB.src/M000055.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000055.html');return false;">
           <span class="method-name">copy</span><span class="method-args">(path)</span>
           </a>
         </div>
@@ -511,8 +571,8 @@ broken.
         <div class="method-description">
           <p>
 Copy the database file. `<em><a
-href="FDB.html#M000052">path</a></em>' specifies the <a
-href="FDB.html#M000052">path</a> of the destination file. If it begins with
+href="FDB.html#M000056">path</a></em>' specifies the <a
+href="FDB.html#M000056">path</a> of the destination file. If it begins with
 `@', the trailing substring is executed as a command line. If
 successful, the return value is true, else, it is false. False is returned
 if the executed command returns non-zero code. The database file is assured
@@ -523,12 +583,12 @@ of the database file.
         </div>
       </div>
 
-      <div id="method-M000035" class="method-detail">
-        <a name="M000035"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000035.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000035.html');return false;">
+          <a href="FDB.src/M000037.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000037.html');return false;">
           <span class="method-name">ecode</span><span class="method-args">()</span>
           </a>
         </div>
@@ -541,12 +601,12 @@ error code.
         </div>
       </div>
 
-      <div id="method-M000034" class="method-detail">
-        <a name="M000034"></a>
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000034.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000034.html');return false;">
+          <a href="FDB.src/M000036.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000036.html');return false;">
           <span class="method-name">errmsg</span><span class="method-args">(ecode)</span>
           </a>
         </div>
@@ -554,18 +614,18 @@ error code.
         <div class="method-description">
           <p>
 Get the message string corresponding to an error code. `<em><a
-href="FDB.html#M000035">ecode</a></em>' specifies the error code. The
+href="FDB.html#M000037">ecode</a></em>' specifies the error code. The
 return value is the message string of the error code.
 </p>
         </div>
       </div>
 
-      <div id="method-M000054" class="method-detail">
-        <a name="M000054"></a>
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000054.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000054.html');return false;">
+          <a href="FDB.src/M000058.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000058.html');return false;">
           <span class="method-name">fsiz</span><span class="method-args">()</span>
           </a>
         </div>
@@ -578,12 +638,12 @@ database file or 0 if the object does not connect to any database file.
         </div>
       </div>
 
-      <div id="method-M000043" class="method-detail">
-        <a name="M000043"></a>
+      <div id="method-M000045" class="method-detail">
+        <a name="M000045"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000043.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000043.html');return false;">
+          <a href="FDB.src/M000045.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000045.html');return false;">
           <span class="method-name">get</span><span class="method-args">(key)</span>
           </a>
         </div>
@@ -600,12 +660,12 @@ corresponds.
         </div>
       </div>
 
-      <div id="method-M000045" class="method-detail">
-        <a name="M000045"></a>
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000045.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000045.html');return false;">
+          <a href="FDB.src/M000047.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000047.html');return false;">
           <span class="method-name">iterinit</span><span class="method-args">()</span>
           </a>
         </div>
@@ -619,12 +679,12 @@ stored in a database.
         </div>
       </div>
 
-      <div id="method-M000046" class="method-detail">
-        <a name="M000046"></a>
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000046.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000046.html');return false;">
+          <a href="FDB.src/M000048.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000048.html');return false;">
           <span class="method-name">iternext</span><span class="method-args">()</span>
           </a>
         </div>
@@ -633,8 +693,8 @@ stored in a database.
           <p>
 Get the next key of the iterator. If successful, the return value is the
 next key, else, it is `nil'. `nil' is returned when no record
-is to be <a href="FDB.html#M000043">get</a> <a
-href="FDB.html#M000042">out</a> of the iterator. It is possible to access
+is to be <a href="FDB.html#M000045">get</a> <a
+href="FDB.html#M000044">out</a> of the iterator. It is possible to access
 every record by iteration of calling this function. It is allowed to update
 or remove records whose keys are fetched while the iteration. The order of
 this traversal access method is ascending of the ID number.
@@ -642,28 +702,28 @@ this traversal access method is ascending of the ID number.
         </div>
       </div>
 
-      <div id="method-M000037" class="method-detail">
-        <a name="M000037"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000037.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000037.html');return false;">
+          <a href="FDB.src/M000039.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000039.html');return false;">
           <span class="method-name">open</span><span class="method-args">(path, omode)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Open a database file. `<em><a href="FDB.html#M000052">path</a></em>'
-specifies the <a href="FDB.html#M000052">path</a> of the database file.
+Open a database file. `<em><a href="FDB.html#M000056">path</a></em>'
+specifies the <a href="FDB.html#M000056">path</a> of the database file.
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::FDB::OWRITER' as a writer,
 `TokyoCabinet::FDB::OREADER' as a reader. If the mode is
 `TokyoCabinet::FDB::OWRITER', the following may be added by bitwise
 or: `TokyoCabinet::FDB::OCREAT', which means it creates a <a
-href="FDB.html#M000033">new</a> database if not exist,
+href="FDB.html#M000035">new</a> database if not exist,
 `TokyoCabinet::FDB::OTRUNC', which means it creates a <a
-href="FDB.html#M000033">new</a> database regardless if one exists. Both of
+href="FDB.html#M000035">new</a> database regardless if one exists. Both of
 `TokyoCabinet::FDB::OREADER' and `TokyoCabinet::FDB::OWRITER'
 can be added to by bitwise or: `TokyoCabinet::FDB::ONOLCK', which
 means it opens the database file without file locking, or
@@ -674,12 +734,12 @@ specified. If successful, the return value is true, else, it is false.
         </div>
       </div>
 
-      <div id="method-M000049" class="method-detail">
-        <a name="M000049"></a>
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000049.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000049.html');return false;">
+          <a href="FDB.src/M000053.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000053.html');return false;">
           <span class="method-name">optimize</span><span class="method-args">(bnum, width, limsiz)</span>
           </a>
         </div>
@@ -695,12 +755,12 @@ is not changed. If successful, the return value is true, else, it is false.
         </div>
       </div>
 
-      <div id="method-M000042" class="method-detail">
-        <a name="M000042"></a>
+      <div id="method-M000044" class="method-detail">
+        <a name="M000044"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000042.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000042.html');return false;">
+          <a href="FDB.src/M000044.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000044.html');return false;">
           <span class="method-name">out</span><span class="method-args">(key)</span>
           </a>
         </div>
@@ -716,31 +776,31 @@ else, it is false.
         </div>
       </div>
 
-      <div id="method-M000052" class="method-detail">
-        <a name="M000052"></a>
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000052.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000052.html');return false;">
+          <a href="FDB.src/M000056.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000056.html');return false;">
           <span class="method-name">path</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Get the <a href="FDB.html#M000052">path</a> of the database file. The
-return value is the <a href="FDB.html#M000052">path</a> of the database
+Get the <a href="FDB.html#M000056">path</a> of the database file. The
+return value is the <a href="FDB.html#M000056">path</a> of the database
 file or `nil' if the object does not connect to any database file.
 </p>
         </div>
       </div>
 
-      <div id="method-M000039" class="method-detail">
-        <a name="M000039"></a>
+      <div id="method-M000041" class="method-detail">
+        <a name="M000041"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000039.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000039.html');return false;">
+          <a href="FDB.src/M000041.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000041.html');return false;">
           <span class="method-name">put</span><span class="method-args">(key, value)</span>
           </a>
         </div>
@@ -760,12 +820,12 @@ record with the same key exists in the database, it is overwritten.
         </div>
       </div>
 
-      <div id="method-M000041" class="method-detail">
-        <a name="M000041"></a>
+      <div id="method-M000043" class="method-detail">
+        <a name="M000043"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000041.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000041.html');return false;">
+          <a href="FDB.src/M000043.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000043.html');return false;">
           <span class="method-name">putcat</span><span class="method-args">(key, value)</span>
           </a>
         </div>
@@ -781,24 +841,24 @@ number of existing records is specified. If it is &quot;next&quot;, the
 number greater by one than the maximum ID number of existing records is
 specified. `<em>value</em>' specifies the value. If successful, the
 return value is true, else, it is false. If there is no corresponding
-record, a <a href="FDB.html#M000033">new</a> record is created.
+record, a <a href="FDB.html#M000035">new</a> record is created.
 </p>
         </div>
       </div>
 
-      <div id="method-M000040" class="method-detail">
-        <a name="M000040"></a>
+      <div id="method-M000042" class="method-detail">
+        <a name="M000042"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000040.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000040.html');return false;">
+          <a href="FDB.src/M000042.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000042.html');return false;">
           <span class="method-name">putkeep</span><span class="method-args">(key, value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Store a <a href="FDB.html#M000033">new</a> record. `<em>key</em>'
+Store a <a href="FDB.html#M000035">new</a> record. `<em>key</em>'
 specifies the key. It should be more than 0. If it is &quot;min&quot;, the
 minimum ID number of existing records is specified. If it is
 &quot;prev&quot;, the number less by one than the minimum ID number of
@@ -812,12 +872,12 @@ exists in the database, this method has no effect.
         </div>
       </div>
 
-      <div id="method-M000047" class="method-detail">
-        <a name="M000047"></a>
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000047.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000047.html');return false;">
+          <a href="FDB.src/M000049.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000049.html');return false;">
           <span class="method-name">range</span><span class="method-args">(interval, max)</span>
           </a>
         </div>
@@ -834,12 +894,12 @@ even if no record corresponds.
         </div>
       </div>
 
-      <div id="method-M000053" class="method-detail">
-        <a name="M000053"></a>
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000053.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000053.html');return false;">
+          <a href="FDB.src/M000057.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000057.html');return false;">
           <span class="method-name">rnum</span><span class="method-args">()</span>
           </a>
         </div>
@@ -852,12 +912,12 @@ if the object does not connect to any database file.
         </div>
       </div>
 
-      <div id="method-M000048" class="method-detail">
-        <a name="M000048"></a>
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000048.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000048.html');return false;">
+          <a href="FDB.src/M000052.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000052.html');return false;">
           <span class="method-name">sync</span><span class="method-args">()</span>
           </a>
         </div>
@@ -871,12 +931,12 @@ another process connects the same database file.
         </div>
       </div>
 
-      <div id="method-M000036" class="method-detail">
-        <a name="M000036"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000036.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000036.html');return false;">
+          <a href="FDB.src/M000038.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000038.html');return false;">
           <span class="method-name">tune</span><span class="method-args">(bnum, width, limsiz)</span>
           </a>
         </div>
@@ -895,12 +955,12 @@ before the database is opened.
         </div>
       </div>
 
-      <div id="method-M000050" class="method-detail">
-        <a name="M000050"></a>
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000050.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000050.html');return false;">
+          <a href="FDB.src/M000054.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000054.html');return false;">
           <span class="method-name">vanish</span><span class="method-args">()</span>
           </a>
         </div>
@@ -913,12 +973,12 @@ false.
         </div>
       </div>
 
-      <div id="method-M000044" class="method-detail">
-        <a name="M000044"></a>
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
 
         <div class="method-heading">
-          <a href="FDB.src/M000044.html" target="Code" class="method-signature"
-            onclick="popupCode('FDB.src/M000044.html');return false;">
+          <a href="FDB.src/M000046.html" target="Code" class="method-signature"
+            onclick="popupCode('FDB.src/M000046.html');return false;">
           <span class="method-name">vsiz</span><span class="method-args">(key)</span>
           </a>
         </div>

@@ -211,6 +211,22 @@ module TokyoCabinet
     def fwmkeys(prefix, max)
       # (native code)
     end
+    # Add an integer to a record
+    # `<i>key</i>' specifies the key.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as an integer and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `i' operator after retrieval.
+    def addint(key, num)
+      # (native code)
+    end
+    # Add a real number to a record
+    # `<i>key</i>' specifies the key.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as a real number and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `d' operator after retrieval.
+    def adddouble(key, num)
+      # (native code)
+    end
     # Synchronize updated contents with the file and the device.
     # If successful, the return value is true, else, it is false.
     # This method is useful when another process connects the same database file.
@@ -491,6 +507,22 @@ module TokyoCabinet
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
     # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
     def fwmkeys(prefix, max)
+      # (native code)
+    end
+    # Add an integer to a record
+    # `<i>key</i>' specifies the key.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as an integer and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `i' operator after retrieval.
+    def addint(key, num)
+      # (native code)
+    end
+    # Add a real number to a record
+    # `<i>key</i>' specifies the key.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as a real number and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `d' operator after retrieval.
+    def adddouble(key, num)
       # (native code)
     end
     # Synchronize updated contents with the file and the device.
@@ -782,6 +814,22 @@ module TokyoCabinet
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
     # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
     def range(interval, max)
+      # (native code)
+    end
+    # Add an integer to a record
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as an integer and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `i' operator after retrieval.
+    def addint(key, num)
+      # (native code)
+    end
+    # Add a real number to a record
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
+    # `<i>num</i>' specifies the additional value.
+    # If successful, the return value is the summation value, else, it is `nil'.
+    # If the corresponding record exists, the value is treated as a real number and is added to.  If no record corresponds, a new record of the additional value is stored.  Because records are stored in binary format, they should be processed with the `unpack' method with the `d' operator after retrieval.
+    def adddouble(key, num)
       # (native code)
     end
     # Synchronize updated contents with the file and the device.

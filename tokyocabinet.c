@@ -61,6 +61,8 @@ static VALUE hdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE hdb_iterinit(VALUE vself);
 static VALUE hdb_iternext(VALUE vself);
 static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
+static VALUE hdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
+static VALUE hdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
 static VALUE hdb_sync(VALUE vself);
 static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_vanish(VALUE vself);
@@ -102,6 +104,8 @@ static VALUE bdb_vnum(VALUE vself, VALUE vkey);
 static VALUE bdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE bdb_range(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
+static VALUE bdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
+static VALUE bdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
 static VALUE bdb_sync(VALUE vself);
 static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_vanish(VALUE vself);
@@ -149,6 +153,8 @@ static VALUE fdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE fdb_iterinit(VALUE vself);
 static VALUE fdb_iternext(VALUE vself);
 static VALUE fdb_range(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
+static VALUE fdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
 static VALUE fdb_sync(VALUE vself);
 static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE fdb_vanish(VALUE vself);
@@ -273,6 +279,8 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "iterinit", hdb_iterinit, 0);
   rb_define_method(cls_hdb, "iternext", hdb_iternext, 0);
   rb_define_method(cls_hdb, "fwmkeys", hdb_fwmkeys, -1);
+  rb_define_method(cls_hdb, "addint", hdb_addint, 2);
+  rb_define_method(cls_hdb, "adddouble", hdb_adddouble, 2);
   rb_define_method(cls_hdb, "sync", hdb_sync, 0);
   rb_define_method(cls_hdb, "optimize", hdb_optimize, -1);
   rb_define_method(cls_hdb, "vanish", hdb_vanish, 0);
@@ -563,6 +571,39 @@ static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   }
   tclistdel(keys);
   return vary;
+}
+
+
+static VALUE hdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vhdb;
+  TCHDB *hdb;
+  const char *kbuf;
+  int ksiz, num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2INT(vnum);
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  num = tchdbaddint(hdb, kbuf, ksiz, num);
+  return num == INT_MIN ? Qnil : INT2NUM(num);
+}
+
+
+static VALUE hdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vhdb;
+  TCHDB *hdb;
+  const char *kbuf;
+  int ksiz;
+  double num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2DBL(vnum);
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  num = tchdbadddouble(hdb, kbuf, ksiz, num);
+  return isnan(num) ? Qnil : rb_float_new(num);
 }
 
 
@@ -907,6 +948,8 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "vsiz", bdb_vsiz, 1);
   rb_define_method(cls_bdb, "range", bdb_range, -1);
   rb_define_method(cls_bdb, "fwmkeys", bdb_fwmkeys, -1);
+  rb_define_method(cls_bdb, "addint", bdb_addint, 2);
+  rb_define_method(cls_bdb, "adddouble", bdb_adddouble, 2);
   rb_define_method(cls_bdb, "sync", bdb_sync, 0);
   rb_define_method(cls_bdb, "optimize", bdb_optimize, -1);
   rb_define_method(cls_bdb, "vanish", bdb_vanish, 0);
@@ -1333,6 +1376,39 @@ static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   }
   tclistdel(keys);
   return vary;
+}
+
+
+static VALUE bdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vbdb;
+  TCBDB *bdb;
+  const char *kbuf;
+  int ksiz, num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2INT(vnum);
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  num = tcbdbaddint(bdb, kbuf, ksiz, num);
+  return num == INT_MIN ? Qnil : INT2NUM(num);
+}
+
+
+static VALUE bdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vbdb;
+  TCBDB *bdb;
+  const char *kbuf;
+  int ksiz;
+  double num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2DBL(vnum);
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  num = tcbdbadddouble(bdb, kbuf, ksiz, num);
+  return isnan(num) ? Qnil : rb_float_new(num);
 }
 
 
@@ -1833,6 +1909,8 @@ static void fdb_init(void){
   rb_define_method(cls_fdb, "iterinit", fdb_iterinit, 0);
   rb_define_method(cls_fdb, "iternext", fdb_iternext, 0);
   rb_define_method(cls_fdb, "range", fdb_range, -1);
+  rb_define_method(cls_fdb, "addint", fdb_addint, 2);
+  rb_define_method(cls_fdb, "adddouble", fdb_adddouble, 2);
   rb_define_method(cls_fdb, "sync", fdb_sync, 0);
   rb_define_method(cls_fdb, "optimize", fdb_optimize, -1);
   rb_define_method(cls_fdb, "vanish", fdb_vanish, 0);
@@ -2080,6 +2158,39 @@ static VALUE fdb_range(int argc, VALUE *argv, VALUE vself){
   }
   tclistdel(keys);
   return vary;
+}
+
+
+static VALUE fdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf;
+  int ksiz, num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2INT(vnum);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  num = tcfdbaddint(fdb, tcfdbkeytoid(kbuf, ksiz), num);
+  return num == INT_MIN ? Qnil : INT2NUM(num);
+}
+
+
+static VALUE fdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf;
+  int ksiz;
+  double num;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  num = NUM2DBL(vnum);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  num = tcfdbadddouble(fdb, tcfdbkeytoid(kbuf, ksiz), num);
+  return isnan(num) ? Qnil : rb_float_new(num);
 }
 
 
