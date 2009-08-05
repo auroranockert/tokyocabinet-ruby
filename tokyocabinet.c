@@ -18,6 +18,7 @@
 #include <tcutil.h>
 #include <tchdb.h>
 #include <tcbdb.h>
+#include <tcfdb.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -25,6 +26,8 @@
 #define HDBVNDATA      "hdb"
 #define BDBVNDATA      "bdb"
 #define BDBCURVNDATA   "bdbcur"
+#define FDBVNDATA      "fdb"
+#define NUMBUFSIZ      32
 
 #if !defined(RSTRING_PTR)
 #define RSTRING_PTR(TC_s) (RSTRING(TC_s)->ptr)
@@ -38,6 +41,7 @@
 
 
 /* private function prototypes */
+static VALUE StringValueEx(VALUE vobj);
 static void hdb_init(void);
 static VALUE hdb_initialize(VALUE vself);
 static VALUE hdb_errmsg(VALUE vself, VALUE vecode);
@@ -127,6 +131,39 @@ static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself);
 static VALUE bdbcur_out(VALUE vself);
 static VALUE bdbcur_key(VALUE vself);
 static VALUE bdbcur_val(VALUE vself);
+static void fdb_init(void);
+static VALUE fdb_initialize(VALUE vself);
+static VALUE fdb_errmsg(VALUE vself, VALUE vecode);
+static VALUE fdb_ecode(VALUE vself);
+static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_open(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_close(VALUE vself);
+static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE fdb_out(VALUE vself, VALUE vkey);
+static VALUE fdb_get(VALUE vself, VALUE vkey);
+static VALUE fdb_vsiz(VALUE vself, VALUE vkey);
+static VALUE fdb_iterinit(VALUE vself);
+static VALUE fdb_iternext(VALUE vself);
+static VALUE fdb_range(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_sync(VALUE vself);
+static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_vanish(VALUE vself);
+static VALUE fdb_copy(VALUE vself, VALUE vpath);
+static VALUE fdb_path(VALUE vself);
+static VALUE fdb_rnum(VALUE vself);
+static VALUE fdb_fsiz(VALUE vself);
+static VALUE fdb_fetch(int argc, VALUE *argv, VALUE vself);
+static VALUE fdb_check(VALUE vself, VALUE vkey);
+static VALUE fdb_check_value(VALUE vself, VALUE vval);
+static VALUE fdb_get_reverse(VALUE vself, VALUE vval);
+static VALUE fdb_empty(VALUE vself);
+static VALUE fdb_each(VALUE vself);
+static VALUE fdb_each_key(VALUE vself);
+static VALUE fdb_each_value(VALUE vself);
+static VALUE fdb_keys(VALUE vself);
+static VALUE fdb_values(VALUE vself);
 
 
 
@@ -143,6 +180,8 @@ VALUE cls_bdb_data;
 VALUE cls_bdbcur;
 VALUE cls_bdbcur_data;
 ID bdb_cmp_call_mid;
+VALUE cls_fdb;
+VALUE cls_fdb_data;
 
 
 int Init_tokyocabinet(void){
@@ -151,6 +190,7 @@ int Init_tokyocabinet(void){
   hdb_init();
   bdb_init();
   bdbcur_init();
+  fdb_init();
   return 0;
 }
 
@@ -159,6 +199,21 @@ int Init_tokyocabinet(void){
 /*************************************************************************************************
  * private objects
  *************************************************************************************************/
+
+
+static VALUE StringValueEx(VALUE vobj){
+  char kbuf[NUMBUFSIZ];
+  int ksiz;
+  switch(TYPE(vobj)){
+  case T_FIXNUM:
+    ksiz = sprintf(kbuf, "%d", (int)FIX2INT(vobj));
+    return rb_str_new(kbuf, ksiz);
+  case T_BIGNUM:
+    ksiz = sprintf(kbuf, "%lld", (long long)NUM2LL(vobj));
+    return rb_str_new(kbuf, ksiz);
+  }
+  return StringValue(vobj);
+}
 
 
 static void hdb_init(void){
@@ -337,10 +392,10 @@ static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval){
   TCHDB *hdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -354,10 +409,10 @@ static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   TCHDB *hdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -371,10 +426,10 @@ static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   TCHDB *hdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -388,10 +443,10 @@ static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval){
   TCHDB *hdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -405,7 +460,7 @@ static VALUE hdb_out(VALUE vself, VALUE vkey){
   TCHDB *hdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -420,14 +475,14 @@ static VALUE hdb_get(VALUE vself, VALUE vkey){
   const char *kbuf;
   char *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   if(!(vbuf = tchdbget(hdb, kbuf, ksiz, &vsiz))) return Qnil;
   vval = rb_str_new(vbuf, vsiz);
-  free(vbuf);
+  tcfree(vbuf);
   return vval;
 }
 
@@ -437,7 +492,7 @@ static VALUE hdb_vsiz(VALUE vself, VALUE vkey){
   TCHDB *hdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -464,7 +519,7 @@ static VALUE hdb_iternext(VALUE vself){
   Data_Get_Struct(vhdb, TCHDB, hdb);
   if(!(vbuf = tchdbiternext(hdb, &vsiz))) return Qnil;
   vval = rb_str_new(vbuf, vsiz);
-  free(vbuf);
+  tcfree(vbuf);
   return vval;
 }
 
@@ -478,7 +533,7 @@ static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   rb_scan_args(argc, argv, "11", &vprefix, &vmax);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
-  vprefix = StringValue(vprefix);
+  vprefix = StringValueEx(vprefix);
   pbuf = RSTRING_PTR(vprefix);
   psiz = RSTRING_LEN(vprefix);
   max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
@@ -578,14 +633,14 @@ static VALUE hdb_fetch(int argc, VALUE *argv, VALUE vself){
   char *vbuf;
   int ksiz, vsiz;
   rb_scan_args(argc, argv, "11", &vkey, &vdef);
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   if((vbuf = tchdbget(hdb, kbuf, ksiz, &vsiz)) != NULL){
     vval = rb_str_new(vbuf, vsiz);
-    free(vbuf);
+    tcfree(vbuf);
   } else {
     vval = vdef;
   }
@@ -598,7 +653,7 @@ static VALUE hdb_check(VALUE vself, VALUE vkey){
   TCHDB *hdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -613,7 +668,7 @@ static VALUE hdb_check_value(VALUE vself, VALUE vval){
   TCXSTR *kxstr, *vxstr;
   const char *vbuf;
   int vsiz, hit;
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -640,7 +695,7 @@ static VALUE hdb_get_reverse(VALUE vself, VALUE vval){
   TCXSTR *kxstr, *vxstr;
   const char *vbuf;
   int vsiz;
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -997,10 +1052,10 @@ static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval){
   TCBDB *bdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1014,10 +1069,10 @@ static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
   TCBDB *bdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1031,10 +1086,10 @@ static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
   TCBDB *bdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1048,10 +1103,10 @@ static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
   TCBDB *bdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1067,7 +1122,7 @@ static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
   const char *kbuf;
   int i, num, ksiz;
   bool err;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   Check_Type(vvals, T_ARRAY);
@@ -1075,7 +1130,7 @@ static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
   num = RARRAY_LEN(vvals);
   for(i = 0; i < num; i++){
     vval = rb_ary_entry(vvals, i);
-    vval = StringValue(vval);
+    vval = StringValueEx(vval);
     tclistpush(tvals, RSTRING_PTR(vval), RSTRING_LEN(vval));
   }
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1092,7 +1147,7 @@ static VALUE bdb_out(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1106,7 +1161,7 @@ static VALUE bdb_outlist(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1120,7 +1175,7 @@ static VALUE bdb_get(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf, *vbuf;
   int ksiz, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1137,7 +1192,7 @@ static VALUE bdb_getlist(VALUE vself, VALUE vkey){
   TCLIST *vals;
   const char *kbuf, *vbuf;
   int i, ksiz, vnum, vsiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1160,7 +1215,7 @@ static VALUE bdb_vnum(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1174,7 +1229,7 @@ static VALUE bdb_vsiz(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1194,7 +1249,7 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if(vbkey != Qnil){
-    vbkey = StringValue(vbkey);
+    vbkey = StringValueEx(vbkey);
     bkbuf = RSTRING_PTR(vbkey);
     bksiz = RSTRING_LEN(vbkey);
   } else {
@@ -1203,7 +1258,7 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
   }
   binc = (vbinc != Qnil && vbinc != Qfalse);
   if(vekey != Qnil){
-    vekey = StringValue(vekey);
+    vekey = StringValueEx(vekey);
     ekbuf = RSTRING_PTR(vekey);
     eksiz = RSTRING_LEN(vekey);
   } else {
@@ -1234,7 +1289,7 @@ static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   rb_scan_args(argc, argv, "11", &vprefix, &vmax);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
-  vprefix = StringValue(vprefix);
+  vprefix = StringValueEx(vprefix);
   pbuf = RSTRING_PTR(vprefix);
   psiz = RSTRING_LEN(vprefix);
   max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
@@ -1363,14 +1418,14 @@ static VALUE bdb_fetch(int argc, VALUE *argv, VALUE vself){
   char *vbuf;
   int ksiz, vsiz;
   rb_scan_args(argc, argv, "11", &vkey, &vdef);
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   if((vbuf = tcbdbget(bdb, kbuf, ksiz, &vsiz)) != NULL){
     vval = rb_str_new(vbuf, vsiz);
-    free(vbuf);
+    tcfree(vbuf);
   } else {
     vval = vdef;
   }
@@ -1383,7 +1438,7 @@ static VALUE bdb_check(VALUE vself, VALUE vkey){
   TCBDB *bdb;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1398,7 +1453,7 @@ static VALUE bdb_check_value(VALUE vself, VALUE vval){
   BDBCUR *cur;
   const char *vbuf, *tvbuf;
   int vsiz, tvsiz, hit;
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1424,7 +1479,7 @@ static VALUE bdb_get_reverse(VALUE vself, VALUE vval){
   BDBCUR *cur;
   const char *vbuf, *tvbuf, *tkbuf;
   int vsiz, tvsiz, tksiz;
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1620,7 +1675,7 @@ static VALUE bdbcur_jump(VALUE vself, VALUE vkey){
   BDBCUR *cur;
   const char *kbuf;
   int ksiz;
-  vkey = StringValue(vkey);
+  vkey = StringValueEx(vkey);
   kbuf = RSTRING_PTR(vkey);
   ksiz = RSTRING_LEN(vkey);
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1653,7 +1708,7 @@ static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself){
   const char *vbuf;
   int vsiz, cpmode;
   rb_scan_args(argc, argv, "11", &vval, &vcpmode);
-  vval = StringValue(vval);
+  vval = StringValueEx(vval);
   vbuf = RSTRING_PTR(vval);
   vsiz = RSTRING_LEN(vval);
   cpmode = (vcpmode == Qnil) ? BDBCPCURRENT : NUM2INT(vcpmode);
@@ -1681,7 +1736,7 @@ static VALUE bdbcur_key(VALUE vself){
   Data_Get_Struct(vcur, BDBCUR, cur);
   if(!(kbuf = tcbdbcurkey(cur, &ksiz))) return Qnil;
   vkey = rb_str_new(kbuf, ksiz);
-  free(kbuf);
+  tcfree(kbuf);
   return vkey;
 }
 
@@ -1695,8 +1750,587 @@ static VALUE bdbcur_val(VALUE vself){
   Data_Get_Struct(vcur, BDBCUR, cur);
   if(!(vbuf = tcbdbcurval(cur, &vsiz))) return Qnil;
   vval = rb_str_new(vbuf, vsiz);
-  free(vbuf);
+  tcfree(vbuf);
   return vval;
+}
+
+
+static void fdb_init(void){
+  cls_fdb = rb_define_class_under(mod_tokyocabinet, "FDB", rb_cObject);
+  cls_fdb_data = rb_define_class_under(mod_tokyocabinet, "FDB_data", rb_cObject);
+  rb_define_const(cls_fdb, "ESUCCESS", INT2NUM(TCESUCCESS));
+  rb_define_const(cls_fdb, "ETHREAD", INT2NUM(TCETHREAD));
+  rb_define_const(cls_fdb, "EINVALID", INT2NUM(TCEINVALID));
+  rb_define_const(cls_fdb, "ENOFILE", INT2NUM(TCENOFILE));
+  rb_define_const(cls_fdb, "ENOPERM", INT2NUM(TCENOPERM));
+  rb_define_const(cls_fdb, "EMETA", INT2NUM(TCEMETA));
+  rb_define_const(cls_fdb, "ERHEAD", INT2NUM(TCERHEAD));
+  rb_define_const(cls_fdb, "EOPEN", INT2NUM(TCEOPEN));
+  rb_define_const(cls_fdb, "ECLOSE", INT2NUM(TCECLOSE));
+  rb_define_const(cls_fdb, "ETRUNC", INT2NUM(TCETRUNC));
+  rb_define_const(cls_fdb, "ESYNC", INT2NUM(TCESYNC));
+  rb_define_const(cls_fdb, "ESTAT", INT2NUM(TCESTAT));
+  rb_define_const(cls_fdb, "ESEEK", INT2NUM(TCESEEK));
+  rb_define_const(cls_fdb, "EREAD", INT2NUM(TCEREAD));
+  rb_define_const(cls_fdb, "EWRITE", INT2NUM(TCEWRITE));
+  rb_define_const(cls_fdb, "EMMAP", INT2NUM(TCEMMAP));
+  rb_define_const(cls_fdb, "ELOCK", INT2NUM(TCELOCK));
+  rb_define_const(cls_fdb, "EUNLINK", INT2NUM(TCEUNLINK));
+  rb_define_const(cls_fdb, "ERENAME", INT2NUM(TCERENAME));
+  rb_define_const(cls_fdb, "EMKDIR", INT2NUM(TCEMKDIR));
+  rb_define_const(cls_fdb, "ERMDIR", INT2NUM(TCERMDIR));
+  rb_define_const(cls_fdb, "EKEEP", INT2NUM(TCEKEEP));
+  rb_define_const(cls_fdb, "ENOREC", INT2NUM(TCENOREC));
+  rb_define_const(cls_fdb, "EMISC", INT2NUM(TCEMISC));
+  rb_define_const(cls_fdb, "OREADER", INT2NUM(FDBOREADER));
+  rb_define_const(cls_fdb, "OWRITER", INT2NUM(FDBOWRITER));
+  rb_define_const(cls_fdb, "OCREAT", INT2NUM(FDBOCREAT));
+  rb_define_const(cls_fdb, "OTRUNC", INT2NUM(FDBOTRUNC));
+  rb_define_const(cls_fdb, "ONOLCK", INT2NUM(FDBONOLCK));
+  rb_define_const(cls_fdb, "OLCKNB", INT2NUM(FDBOLCKNB));
+  rb_define_private_method(cls_fdb, "initialize", fdb_initialize, 0);
+  rb_define_method(cls_fdb, "errmsg", fdb_errmsg, 1);
+  rb_define_method(cls_fdb, "ecode", fdb_ecode, 0);
+  rb_define_method(cls_fdb, "tune", fdb_tune, -1);
+  rb_define_method(cls_fdb, "open", fdb_open, -1);
+  rb_define_method(cls_fdb, "close", fdb_close, 0);
+  rb_define_method(cls_fdb, "put", fdb_put, 2);
+  rb_define_method(cls_fdb, "putkeep", fdb_putkeep, 2);
+  rb_define_method(cls_fdb, "putcat", fdb_putcat, 2);
+  rb_define_method(cls_fdb, "out", fdb_out, 1);
+  rb_define_method(cls_fdb, "get", fdb_get, 1);
+  rb_define_method(cls_fdb, "vsiz", fdb_vsiz, 1);
+  rb_define_method(cls_fdb, "iterinit", fdb_iterinit, 0);
+  rb_define_method(cls_fdb, "iternext", fdb_iternext, 0);
+  rb_define_method(cls_fdb, "range", fdb_range, -1);
+  rb_define_method(cls_fdb, "sync", fdb_sync, 0);
+  rb_define_method(cls_fdb, "optimize", fdb_optimize, -1);
+  rb_define_method(cls_fdb, "vanish", fdb_vanish, 0);
+  rb_define_method(cls_fdb, "copy", fdb_copy, 1);
+  rb_define_method(cls_fdb, "path", fdb_path, 0);
+  rb_define_method(cls_fdb, "rnum", fdb_rnum, 0);
+  rb_define_method(cls_fdb, "fsiz", fdb_fsiz, 0);
+  rb_define_method(cls_fdb, "[]", fdb_get, 1);
+  rb_define_method(cls_fdb, "[]=", fdb_put, 2);
+  rb_define_method(cls_fdb, "store", fdb_put, 2);
+  rb_define_method(cls_fdb, "delete", fdb_out, 1);
+  rb_define_method(cls_fdb, "fetch", fdb_fetch, -1);
+  rb_define_method(cls_fdb, "has_key?", fdb_check, 1);
+  rb_define_method(cls_fdb, "key?", fdb_check, 1);
+  rb_define_method(cls_fdb, "include?", fdb_check, 1);
+  rb_define_method(cls_fdb, "member?", fdb_check, 1);
+  rb_define_method(cls_fdb, "has_value?", fdb_check_value, 1);
+  rb_define_method(cls_fdb, "value?", fdb_check_value, 1);
+  rb_define_method(cls_fdb, "key", fdb_get_reverse, 1);
+  rb_define_method(cls_fdb, "clear", fdb_vanish, 0);
+  rb_define_method(cls_fdb, "size", fdb_rnum, 0);
+  rb_define_method(cls_fdb, "length", fdb_rnum, 0);
+  rb_define_method(cls_fdb, "empty?", fdb_empty, 0);
+  rb_define_method(cls_fdb, "each", fdb_each, 0);
+  rb_define_method(cls_fdb, "each_pair", fdb_each, 0);
+  rb_define_method(cls_fdb, "each_key", fdb_each_key, 0);
+  rb_define_method(cls_fdb, "each_value", fdb_each_value, 0);
+  rb_define_method(cls_fdb, "keys", fdb_keys, 0);
+  rb_define_method(cls_fdb, "values", fdb_values, 0);
+}
+
+
+static VALUE fdb_initialize(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  fdb = tcfdbnew();
+  tcfdbsetmutex(fdb);
+  vfdb = Data_Wrap_Struct(cls_fdb_data, 0, tcfdbdel, fdb);
+  rb_iv_set(vself, FDBVNDATA, vfdb);
+  return Qnil;
+}
+
+
+static VALUE fdb_errmsg(VALUE vself, VALUE vecode){
+  VALUE vfdb, vmsg;
+  TCFDB *fdb;
+  const char *msg;
+  int ecode;
+  ecode = NUM2INT(vecode);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  msg = tcfdberrmsg(ecode);
+  vmsg = rb_str_new2(msg);
+  return vmsg;
+}
+
+
+static VALUE fdb_ecode(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return INT2NUM(tcfdbecode(fdb));
+}
+
+
+static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vwidth, vlimsiz;
+  TCFDB *fdb;
+  int width;
+  int64_t limsiz;
+  rb_scan_args(argc, argv, "02", &vwidth, &vlimsiz);
+  width = (vwidth == Qnil) ? -1 : NUM2INT(vwidth);
+  limsiz = (vlimsiz == Qnil) ? -1 : NUM2LL(vlimsiz);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbtune(fdb, width, limsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_open(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vpath, vomode;
+  TCFDB *fdb;
+  const char *path;
+  int omode;
+  rb_scan_args(argc, argv, "11", &vpath, &vomode);
+  Check_Type(vpath, T_STRING);
+  path = RSTRING_PTR(vpath);
+  omode = (vomode == Qnil) ? FDBOREADER : NUM2INT(vomode);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbopen(fdb, path, omode) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_close(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbclose(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf, *vbuf;
+  int ksiz, vsiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vval = StringValueEx(vval);
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbput2(fdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf, *vbuf;
+  int ksiz, vsiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vval = StringValueEx(vval);
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbputkeep2(fdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf, *vbuf;
+  int ksiz, vsiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vval = StringValueEx(vval);
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbputcat2(fdb, kbuf, ksiz, vbuf, vsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_out(VALUE vself, VALUE vkey){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf;
+  int ksiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbout2(fdb, kbuf, ksiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_get(VALUE vself, VALUE vkey){
+  VALUE vfdb, vval;
+  TCFDB *fdb;
+  const char *kbuf;
+  char *vbuf;
+  int ksiz, vsiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  if(!(vbuf = tcfdbget2(fdb, kbuf, ksiz, &vsiz))) return Qnil;
+  vval = rb_str_new(vbuf, vsiz);
+  tcfree(vbuf);
+  return vval;
+}
+
+
+static VALUE fdb_vsiz(VALUE vself, VALUE vkey){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf;
+  int ksiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return INT2NUM(tcfdbvsiz2(fdb, kbuf, ksiz));
+}
+
+
+static VALUE fdb_iterinit(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbiterinit(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_iternext(VALUE vself){
+  VALUE vfdb, vval;
+  TCFDB *fdb;
+  char *vbuf;
+  int vsiz;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  if(!(vbuf = tcfdbiternext2(fdb, &vsiz))) return Qnil;
+  vval = rb_str_new(vbuf, vsiz);
+  tcfree(vbuf);
+  return vval;
+}
+
+
+static VALUE fdb_range(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vinterval, vmax, vary, vkey;
+  TCFDB *fdb;
+  TCLIST *keys;
+  const char *ibuf, *kbuf;
+  int i, isiz, max, knum, ksiz;
+  rb_scan_args(argc, argv, "11", &vinterval, &vmax);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vinterval = StringValueEx(vinterval);
+  ibuf = RSTRING_PTR(vinterval);
+  isiz = RSTRING_LEN(vinterval);
+  max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
+  keys = tcfdbrange4(fdb, ibuf, isiz, max);
+  knum = tclistnum(keys);
+  vary = rb_ary_new2(knum);
+  for(i = 0; i < knum; i++){
+    kbuf = tclistval(keys, i, &ksiz);
+    vkey = rb_str_new(kbuf, ksiz);
+    rb_ary_push(vary, vkey);
+  }
+  tclistdel(keys);
+  return vary;
+}
+
+
+static VALUE fdb_sync(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbsync(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vwidth, vlimsiz;
+  TCFDB *fdb;
+  int width;
+  int64_t limsiz;
+  rb_scan_args(argc, argv, "02", &vwidth, &vlimsiz);
+  width = (vwidth == Qnil) ? -1 : NUM2INT(vwidth);
+  limsiz = (vlimsiz == Qnil) ? -1 : NUM2LL(vlimsiz);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdboptimize(fdb, width, limsiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_vanish(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbvanish(fdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_copy(VALUE vself, VALUE vpath){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *path;
+  Check_Type(vpath, T_STRING);
+  path = RSTRING_PTR(vpath);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbcopy(fdb, path) ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_path(VALUE vself){
+  VALUE vfdb, vpath;
+  TCFDB *fdb;
+  const char *path;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  if(!(path = tcfdbpath(fdb))) return Qnil;
+  vpath = rb_str_new2(path);
+  return vpath;
+}
+
+
+static VALUE fdb_rnum(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return LL2NUM(tcfdbrnum(fdb));
+}
+
+
+static VALUE fdb_fsiz(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return LL2NUM(tcfdbfsiz(fdb));
+}
+
+
+static VALUE fdb_fetch(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vkey, vdef, vval;
+  TCFDB *fdb;
+  const char *kbuf;
+  char *vbuf;
+  int ksiz, vsiz;
+  rb_scan_args(argc, argv, "11", &vkey, &vdef);
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  if((vbuf = tcfdbget2(fdb, kbuf, ksiz, &vsiz)) != NULL){
+    vval = rb_str_new(vbuf, vsiz);
+    tcfree(vbuf);
+  } else {
+    vval = vdef;
+  }
+  return vval;
+}
+
+
+static VALUE fdb_check(VALUE vself, VALUE vkey){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *kbuf;
+  int ksiz;
+  vkey = StringValueEx(vkey);
+  kbuf = RSTRING_PTR(vkey);
+  ksiz = RSTRING_LEN(vkey);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbvsiz2(fdb, kbuf, ksiz) >= 0 ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_check_value(VALUE vself, VALUE vval){
+  VALUE vfdb;
+  TCFDB *fdb;
+  const char *vbuf;
+  char *tvbuf;
+  int vsiz, tvsiz, hit;
+  uint64_t id;
+  vval = StringValueEx(vval);
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  hit = 0;
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    tvbuf = tcfdbget(fdb, id, &tvsiz);
+    if(tvbuf && tvsiz == vsiz && memcmp(tvbuf, vbuf, vsiz) == 0){
+      tcfree(tvbuf);
+      hit = 1;
+      break;
+    }
+    tcfree(tvbuf);
+  }
+  return hit ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_get_reverse(VALUE vself, VALUE vval){
+  VALUE vfdb, vrv;
+  TCFDB *fdb;
+  const char *vbuf;
+  char *tvbuf, kbuf[NUMBUFSIZ];
+  int vsiz, tvsiz, ksiz;
+  uint64_t id;
+  vval = StringValueEx(vval);
+  vbuf = RSTRING_PTR(vval);
+  vsiz = RSTRING_LEN(vval);
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vrv = Qnil;
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    tvbuf = tcfdbget(fdb, id, &tvsiz);
+    if(tvbuf && tvsiz == vsiz && memcmp(tvbuf, vbuf, vsiz) == 0){
+      tcfree(tvbuf);
+      ksiz = sprintf(kbuf, "%llu", (unsigned long long)id);
+      vrv = rb_str_new(kbuf, ksiz);
+      break;
+    }
+    tcfree(tvbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE fdb_empty(VALUE vself){
+  VALUE vfdb;
+  TCFDB *fdb;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  return tcfdbrnum(fdb) < 1 ? Qtrue : Qfalse;
+}
+
+
+static VALUE fdb_each(VALUE vself){
+  VALUE vfdb, vrv, vkey, vval, vary;
+  TCFDB *fdb;
+  char *vbuf, kbuf[NUMBUFSIZ];
+  int vsiz, ksiz;
+  uint64_t id;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vrv = Qnil;
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    vbuf = tcfdbget(fdb, id, &vsiz);
+    if(vbuf){
+      ksiz = sprintf(kbuf, "%llu", (unsigned long long)id);
+      vkey = rb_str_new(kbuf, ksiz);
+      vval = rb_str_new(vbuf, vsiz);
+      vary = rb_ary_new3(2, vkey, vval);
+      vrv = rb_yield(vary);
+    }
+    tcfree(vbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE fdb_each_key(VALUE vself){
+  VALUE vfdb, vrv, vkey;
+  TCFDB *fdb;
+  char kbuf[NUMBUFSIZ];
+  int ksiz;
+  uint64_t id;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vrv = Qnil;
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    ksiz = sprintf(kbuf, "%llu", (unsigned long long)id);
+    vkey = rb_str_new(kbuf, ksiz);
+    vrv = rb_yield(vkey);
+  }
+  return vrv;
+}
+
+
+static VALUE fdb_each_value(VALUE vself){
+  VALUE vfdb, vrv, vval;
+  TCFDB *fdb;
+  char *vbuf;
+  int vsiz;
+  uint64_t id;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vrv = Qnil;
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    vbuf = tcfdbget(fdb, id, &vsiz);
+    if(vbuf){
+      vval = rb_str_new(vbuf, vsiz);
+      vrv = rb_yield(vval);
+    }
+    free(vbuf);
+  }
+  return vrv;
+}
+
+
+static VALUE fdb_keys(VALUE vself){
+  VALUE vfdb, vkey, vary;
+  TCFDB *fdb;
+  char kbuf[NUMBUFSIZ];
+  int ksiz;
+  uint64_t id;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vary = rb_ary_new2(tcfdbrnum(fdb));
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    ksiz = sprintf(kbuf, "%llu", (unsigned long long)id);
+    vkey = rb_str_new(kbuf, ksiz);
+    rb_ary_push(vary, vkey);
+  }
+  return vary;
+}
+
+
+static VALUE fdb_values(VALUE vself){
+  VALUE vfdb, vval, vary;
+  TCFDB *fdb;
+  char *vbuf;
+  int vsiz;
+  uint64_t id;
+  vfdb = rb_iv_get(vself, FDBVNDATA);
+  Data_Get_Struct(vfdb, TCFDB, fdb);
+  vary = rb_ary_new2(tcfdbrnum(fdb));
+  tcfdbiterinit(fdb);
+  while((id = tcfdbiternext(fdb)) > 0){
+    vbuf = tcfdbget(fdb, id, &vsiz);
+    if(vbuf){
+      vval = rb_str_new(vbuf, vsiz);
+      rb_ary_push(vary, vval);
+    }
+    free(vbuf);
+  }
+  return vary;
 }
 
 

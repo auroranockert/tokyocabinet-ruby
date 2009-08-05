@@ -82,8 +82,9 @@
       <p>
 B+ tree database is a file containing a B+ tree and is handled with the B+
 tree database API. Before operations to store or retrieve records, it is
-necessary to open a database file and connect the B+ tree database object
-to it. To avoid data missing or corruption, it is important to close every
+necessary to <a href="BDB.html#M000007">open</a> a database file and
+connect the B+ tree database object to it. To avoid data missing or
+corruption, it is important to <a href="BDB.html#M000008">close</a> every
 database file when it is no longer in use. Except for the interface below,
 methods compatible with the `Hash' class are also provided;
 `[]', `[]=', `store', `delete', `fetch',
@@ -224,7 +225,7 @@ error code: invalid record header
           <td class="context-item-value">7</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: open error
+error code: <a href="BDB.html#M000007">open</a> error
 
 </td>
         </tr>
@@ -234,7 +235,7 @@ error code: open error
           <td class="context-item-value">8</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: close error
+error code: <a href="BDB.html#M000008">close</a> error
 
 </td>
         </tr>
@@ -254,7 +255,7 @@ error code: trunc error
           <td class="context-item-value">10</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-error code: sync error
+error code: <a href="BDB.html#M000022">sync</a> error
 
 </td>
         </tr>
@@ -464,7 +465,8 @@ tuning option: compress each record with TCBS
           <td class="context-item-value">1 &lt;&lt; 0</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: open as a reader
+<a href="BDB.html#M000007">open</a> mode: <a
+href="BDB.html#M000007">open</a> as a reader
 
 </td>
         </tr>
@@ -474,7 +476,8 @@ open mode: open as a reader
           <td class="context-item-value">1 &lt;&lt; 1</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: open as a writer
+<a href="BDB.html#M000007">open</a> mode: <a
+href="BDB.html#M000007">open</a> as a writer
 
 </td>
         </tr>
@@ -484,7 +487,7 @@ open mode: open as a writer
           <td class="context-item-value">1 &lt;&lt; 2</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: writer creating
+<a href="BDB.html#M000007">open</a> mode: writer creating
 
 </td>
         </tr>
@@ -494,7 +497,7 @@ open mode: writer creating
           <td class="context-item-value">1 &lt;&lt; 3</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: writer truncating
+<a href="BDB.html#M000007">open</a> mode: writer truncating
 
 </td>
         </tr>
@@ -504,7 +507,8 @@ open mode: writer truncating
           <td class="context-item-value">1 &lt;&lt; 4</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: open without locking
+<a href="BDB.html#M000007">open</a> mode: <a
+href="BDB.html#M000007">open</a> without locking
 
 </td>
         </tr>
@@ -514,7 +518,7 @@ open mode: open without locking
           <td class="context-item-value">1 &lt;&lt; 5</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-open mode: lock without blocking
+<a href="BDB.html#M000007">open</a> mode: lock without blocking
 
 </td>
         </tr>
@@ -543,8 +547,8 @@ open mode: lock without blocking
       
         <div class="method-description">
           <p>
-Create a B+ tree database object. The return value is the new B+ tree
-database object.
+Create a B+ tree database object. The return value is the <a
+href="BDB.html#M000001">new</a> B+ tree database object.
 </p>
         </div>
       </div>
@@ -565,8 +569,9 @@ database object.
           <p>
 Close the database file. If successful, the return value is true, else, it
 is false. Update of a database is assured to be written when the database
-is closed. If a writer opens a database but does not close it
-appropriately, the database will be broken.
+is closed. If a writer opens a database but does not <a
+href="BDB.html#M000008">close</a> it appropriately, the database will be
+broken.
 </p>
         </div>
       </div>
@@ -583,13 +588,15 @@ appropriately, the database will be broken.
       
         <div class="method-description">
           <p>
-Copy the database file. `<em>path</em>' specifies the path of the
-destination file. If it begins with `@', the trailing substring is
-executed as a command line. If successful, the return value is true, else,
-it is false. False is returned if the executed command returns non-zero
-code. The database file is assured to be kept synchronized and not modified
-while the copying or executing operation is in progress. So, this method is
-useful to create a backup file of the database file.
+Copy the database file. `<em><a
+href="BDB.html#M000029">path</a></em>' specifies the <a
+href="BDB.html#M000029">path</a> of the destination file. If it begins with
+`@', the trailing substring is executed as a command line. If
+successful, the return value is true, else, it is false. False is returned
+if the executed command returns non-zero code. The database file is assured
+to be kept synchronized and not modified while the copying or executing
+operation is in progress. So, this method is useful to create a backup file
+of the database file.
 </p>
         </div>
       </div>
@@ -624,9 +631,9 @@ error code.
       
         <div class="method-description">
           <p>
-Get the message string corresponding to an error code.
-`<em>ecode</em>' specifies the error code. The return value is the
-message string of the error code.
+Get the message string corresponding to an error code. `<em><a
+href="BDB.html#M000003">ecode</a></em>' specifies the error code. The
+return value is the message string of the error code.
 </p>
         </div>
       </div>
@@ -722,14 +729,16 @@ records. `nil' is returned if no record corresponds.
       
         <div class="method-description">
           <p>
-Open a database file. `<em>path</em>' specifies the path of the
-database file. `<em>omode</em>' specifies the connection mode:
+Open a database file. `<em><a href="BDB.html#M000029">path</a></em>'
+specifies the <a href="BDB.html#M000029">path</a> of the database file.
+`<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::BDB::OWRITER' as a writer,
 `TokyoCabinet::BDB::OREADER' as a reader. If the mode is
 `TokyoCabinet::BDB::OWRITER', the following may be added by bitwise
-or: `TokyoCabinet::BDB::OCREAT', which means it creates a new
-database if not exist, `TokyoCabinet::BDB::OTRUNC', which means it
-creates a new database regardless if one exists. Both of
+or: `TokyoCabinet::BDB::OCREAT', which means it creates a <a
+href="BDB.html#M000001">new</a> database if not exist,
+`TokyoCabinet::BDB::OTRUNC', which means it creates a <a
+href="BDB.html#M000001">new</a> database regardless if one exists. Both of
 `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER'
 can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which
 means it opens the database file without file locking, or
@@ -828,9 +837,9 @@ is specified, all of them are removed.
       
         <div class="method-description">
           <p>
-Get the path of the database file. The return value is the path of the
-database file or `nil' if the object does not connect to any database
-file.
+Get the <a href="BDB.html#M000029">path</a> of the database file. The
+return value is the <a href="BDB.html#M000029">path</a> of the database
+file or `nil' if the object does not connect to any database file.
 </p>
         </div>
       </div>
@@ -870,7 +879,8 @@ database, it is overwritten.
 Concatenate a value at the end of the existing record. `<em>key</em>'
 specifies the key. `<em>value</em>' specifies the value. If
 successful, the return value is true, else, it is false. If there is no
-corresponding record, a new record is created.
+corresponding record, a <a href="BDB.html#M000001">new</a> record is
+created.
 </p>
         </div>
       </div>
@@ -890,8 +900,8 @@ corresponding record, a new record is created.
 Store a record with allowing duplication of keys. `<em>key</em>'
 specifies the key. `<em>value</em>' specifies the value. If
 successful, the return value is true, else, it is false. If a record with
-the same key exists in the database, the new record is placed after the
-existing one.
+the same key exists in the database, the <a href="BDB.html#M000001">new</a>
+record is placed after the existing one.
 </p>
         </div>
       </div>
@@ -908,10 +918,10 @@ existing one.
       
         <div class="method-description">
           <p>
-Store a new record. `<em>key</em>' specifies the key.
-`<em>value</em>' specifies the value. If successful, the return value
-is true, else, it is false. If a record with the same key exists in the
-database, this method has no effect.
+Store a <a href="BDB.html#M000001">new</a> record. `<em>key</em>'
+specifies the key. `<em>value</em>' specifies the value. If
+successful, the return value is true, else, it is false. If a record with
+the same key exists in the database, this method has no effect.
 </p>
         </div>
       </div>
@@ -931,8 +941,8 @@ database, this method has no effect.
 Store records with allowing duplication of keys. `<em>key</em>'
 specifies the key. `<em>values</em>' specifies an array of the
 values. If successful, the return value is true, else, it is false. If a
-record with the same key exists in the database, the new records are placed
-after the existing one.
+record with the same key exists in the database, the <a
+href="BDB.html#M000001">new</a> records are placed after the existing one.
 </p>
         </div>
       </div>
@@ -1086,7 +1096,10 @@ Begin the transaction. If successful, the return value is true, else, it is
 false. The database is locked by the thread while the transaction so that
 only one transaction can be activated with a database object at the same
 time. Thus, the serializable isolation level is assumed if every database
-operation is performed in the transaction.
+operation is performed in the transaction. Because all pages are cached on
+memory while the transaction, the amount of referred records is limited by
+the memory capacity. If the database is closed during transaction, the
+transaction is aborted implicitly.
 </p>
         </div>
       </div>

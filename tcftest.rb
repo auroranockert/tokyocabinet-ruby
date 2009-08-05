@@ -1,7 +1,7 @@
 #! /usr/bin/ruby -w
 
 #-------------------------------------------------------------------------------------------------
-# The test cases of the B+ tree database API
+# The test cases of the fixed-length database API
 #                                                       Copyright (C) 2006-2008 Mikio Hirabayashi
 # This file is part of Tokyo Cabinet.
 # Tokyo Cabinet is free software; you can redistribute it and/or modify it under the terms of
@@ -40,24 +40,23 @@ end
 
 # print the usage and exit
 def usage
-  STDERR.printf("%s: test cases of the B+ tree database API\n", $0)
+  STDERR.printf("%s: test cases of the fixed-length database API\n", $0)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-tl] [-td|-tb] [-nl|-nb] [-as] path rnum" +
-                " [lmemb [nmemb [bnum [apow [fpow]]]]]\n", $0)
+  STDERR.printf("  %s write [-nl|-nb] path rnum [width [limsiz]]\n", $0)
   STDERR.printf("  %s read [-nl|-nb] path\n", $0)
   STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
-  STDERR.printf("  %s misc [-tl] [-td|-tb] [-nl|-nb] path rnum\n", $0)
+  STDERR.printf("  %s misc [-nl|-nb] path rnum\n", $0)
   STDERR.printf("\n")
   exit(1)
 end
 
 
-# print error message of B+ tree database
-def eprint(bdb, func)
-  path = bdb.path
-  ecode = bdb.ecode
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, bdb.errmsg(ecode))
+# print error message of fixed-length database
+def eprint(fdb, func)
+  path = fdb.path
+  ecode = fdb.ecode
+  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, fdb.errmsg(ecode))
 end
 
 
@@ -65,29 +64,16 @@ end
 def runwrite
   path = nil
   rnum = nil
-  lmemb = nil
-  nmemb = nil
-  bnum = nil
-  apow = nil
-  fpow = nil
-  opts = 0
+  width = nil
+  limsiz = nil
   omode = 0
-  as = false
   i = 1
   while(i < ARGV.length)
     if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
-        opts |= BDB::TLARGE
-      elsif(ARGV[i] == "-td")
-        opts |= BDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
-        opts |= BDB::TTCBS
-      elsif(ARGV[i] == "-nl")
-        omode |= BDB::ONOLCK
+      if(ARGV[i] == "-nl")
+        omode |= FDB::ONOLCK
       elsif(ARGV[i] == "-nb")
-        omode |= BDB::OLCKNB
-      elsif(ARGV[i] == "-as")
-        as = true
+        omode |= FDB::OLCKNB
       else
         usage
       end
@@ -95,28 +81,19 @@ def runwrite
       path = ARGV[i]
     elsif(!rnum)
       rnum = ARGV[i].to_i
-    elsif(!lmemb)
-      lmemb = ARGV[i].to_i
-    elsif(!nmemb)
-      nmemb = ARGV[i].to_i
-    elsif(!bnum)
-      bnum = ARGV[i].to_i
-    elsif(!apow)
-      apow = ARGV[i].to_i
-    elsif(!fpow)
-      fpow = ARGV[i].to_i
+    elsif(!width)
+      width = ARGV[i].to_i
+    elsif(!limsiz)
+      limsiz = ARGV[i].to_i
     else
       usage
     end
     i += 1
   end
   usage if(!path || !rnum || rnum < 1)
-  lmemb = lmemb ? lmemb : -1
-  nmemb = nmemb ? nmemb : -1
-  bnum = bnum ? bnum : -1
-  apow = apow ? apow : -1
-  fpow = fpow ? fpow : -1
-  rv = procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
+  width = width ? width : -1
+  limsiz = limsiz ? limsiz : -1
+  rv = procwrite(path, rnum, width, limsiz, omode)
   return rv
 end
 
@@ -129,9 +106,9 @@ def runread
   while(i < ARGV.length)
     if(!path && ARGV[i] =~ /^-/)
       if(ARGV[i] == "-nl")
-        omode |= BDB::ONOLCK
+        omode |= FDB::ONOLCK
       elsif(ARGV[i] == "-nb")
-        omode |= BDB::OLCKNB
+        omode |= FDB::OLCKNB
       else
         usage
       end
@@ -156,9 +133,9 @@ def runremove
   while(i < ARGV.length)
     if(!path && ARGV[i] =~ /^-/)
       if(ARGV[i] == "-nl")
-        omode |= BDB::ONOLCK
+        omode |= FDB::ONOLCK
       elsif(ARGV[i] == "-nb")
-        omode |= BDB::OLCKNB
+        omode |= FDB::OLCKNB
       else
         usage
       end
@@ -179,21 +156,14 @@ end
 def runmisc
   path = nil
   rnum = nil
-  opts = 0
   omode = 0
   i = 1
   while(i < ARGV.length)
     if(!path && ARGV[i] =~ /^-/)
-      if(ARGV[i] == "-tl")
-        opts |= BDB::TLARGE
-      elsif(ARGV[i] == "-td")
-        opts |= BDB::TDEFLATE
-      elsif(ARGV[i] == "-tb")
-        opts |= BDB::TTCBS
-      elsif(ARGV[i] == "-nl")
-        omode |= BDB::ONOLCK
+      if(ARGV[i] == "-nl")
+        omode |= FDB::ONOLCK
       elsif(ARGV[i] == "-nb")
-        omode |= BDB::OLCKNB
+        omode |= FDB::OLCKNB
       else
         usage
       end
@@ -207,44 +177,33 @@ def runmisc
     i += 1
   end
   usage if(!path || !rnum || rnum < 1)
-  rv = procmisc(path, rnum, opts, omode)
+  rv = procmisc(path, rnum, omode)
   return rv
 end
 
 
-
-
 # perform write command
-def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
-  printf("<Writing Test>\n  path=%s  rnum=%d  lmemb=%d  nmemb=%d  bnum=%d  apow=%d  fpow=%d" +
-         "  opts=%d  omode=%d  as=%s\n\n",
-         path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
+def procwrite(path, rnum, width, limsiz, omode)
+  printf("<Writing Test>\n  path=%s  rnum=%d  width=%d  limsiz=%d  omode=%d\n\n",
+         path, rnum, width, limsiz, omode)
   err = false
   stime = Time.now
-  bdb = BDB::new
-  if(!bdb.tune(lmemb, nmemb, bnum, apow, fpow, opts))
-    eprint(bdb, "tune")
+  fdb = FDB::new
+  if(!fdb.tune(width, limsiz))
+    eprint(fdb, "tune")
     err = true
   end
-  if(!bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode))
-    eprint(bdb, "open")
+  if(!fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode))
+    eprint(fdb, "open")
     err = true
   end
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(as)
-      if(!bdb.putasync(buf, buf))
-        eprint(bdb, "putasync")
-        err = true
-        break
-      end
-    else
-      if(!bdb.put(buf, buf))
-        eprint(bdb, "put")
-        err = true
-        break
-      end
+    if(!fdb.put(buf, buf))
+      eprint(fdb, "put")
+      err = true
+      break
     end
     if(rnum > 250 && i % (rnum / 250) == 0)
       print('.')
@@ -254,10 +213,10 @@ def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
     end
     i += 1
   end
-  printf("record number: %d\n", bdb.rnum)
-  printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
-    eprint(bdb, "close")
+  printf("record number: %d\n", fdb.rnum)
+  printf("size: %d\n", fdb.fsiz)
+  if(!fdb.close)
+    eprint(fdb, "close")
     err = true
   end
   printf("time: %.3f\n", Time.now - stime)
@@ -271,17 +230,17 @@ def procread(path, omode)
   printf("<Reading Test>\n  path=%s  omode=%d\n\n", path, omode)
   err = false
   stime = Time.now
-  bdb = BDB::new
-  if(!bdb.open(path, BDB::OREADER | omode))
-    eprint(bdb, "open")
+  fdb = FDB::new
+  if(!fdb.open(path, FDB::OREADER | omode))
+    eprint(fdb, "open")
     err = true
   end
-  rnum = bdb.rnum
+  rnum = fdb.rnum
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(!bdb.get(buf))
-      eprint(bdb, "get")
+    if(!fdb.get(buf))
+      eprint(fdb, "get")
       err = true
       break
     end
@@ -293,10 +252,10 @@ def procread(path, omode)
     end
     i += 1
   end
-  printf("record number: %d\n", bdb.rnum)
-  printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
-    eprint(bdb, "close")
+  printf("record number: %d\n", fdb.rnum)
+  printf("size: %d\n", fdb.fsiz)
+  if(!fdb.close)
+    eprint(fdb, "close")
     err = true
   end
   printf("time: %.3f\n", Time.now - stime)
@@ -310,17 +269,17 @@ def procremove(path, omode)
   printf("<Removing Test>\n  path=%s  omode=%d\n\n", path, omode)
   err = false
   stime = Time.now
-  bdb = BDB::new
-  if(!bdb.open(path, BDB::OWRITER | omode))
-    eprint(bdb, "open")
+  fdb = FDB::new
+  if(!fdb.open(path, FDB::OWRITER | omode))
+    eprint(fdb, "open")
     err = true
   end
-  rnum = bdb.rnum
+  rnum = fdb.rnum
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(!bdb.out(buf))
-      eprint(bdb, "out")
+    if(!fdb.out(buf))
+      eprint(fdb, "out")
       err = true
       break
     end
@@ -332,10 +291,10 @@ def procremove(path, omode)
     end
     i += 1
   end
-  printf("record number: %d\n", bdb.rnum)
-  printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
-    eprint(bdb, "close")
+  printf("record number: %d\n", fdb.rnum)
+  printf("size: %d\n", fdb.fsiz)
+  if(!fdb.close)
+    eprint(fdb, "close")
     err = true
   end
   printf("time: %.3f\n", Time.now - stime)
@@ -345,30 +304,25 @@ end
 
 
 # perform misc command
-def procmisc(path, rnum, opts, omode)
-  printf("<Miscellaneous Test>\n  path=%s  rnum=%d  opts=%d  omode=%d\n\n",
-         path, rnum, opts, omode)
+def procmisc(path, rnum, omode)
+  printf("<Miscellaneous Test>\n  path=%s  rnum=%d  omode=%d\n\n", path, rnum, omode)
   err = false
   stime = Time.now
-  bdb = BDB::new
-  if(!bdb.tune(rnum / 50, 2, -1, opts))
-    eprint(bdb, "tune")
+  fdb = FDB::new
+  if(!fdb.tune(10, 1024 + 32 * rnum))
+    eprint(fdb, "tune")
     err = true
   end
-  if(!bdb.setcache(128, 256))
-    eprint(bdb, "setcache")
-    err = true
-  end
-  if(!bdb.open(path, BDB::OWRITER | BDB::OCREAT | BDB::OTRUNC | omode))
-    eprint(bdb, "open")
+  if(!fdb.open(path, FDB::OWRITER | FDB::OCREAT | FDB::OTRUNC | omode))
+    eprint(fdb, "open")
     err = true
   end
   printf("writing:\n")
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(!bdb.put(buf, buf))
-      eprint(bdb, "put")
+    if(!fdb.put(buf, buf))
+      eprint(fdb, "put")
       err = true
       break
     end
@@ -384,8 +338,8 @@ def procmisc(path, rnum, opts, omode)
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(!bdb.get(buf))
-      eprint(bdb, "get")
+    if(!fdb.get(buf))
+      eprint(fdb, "get")
       err = true
       break
     end
@@ -401,8 +355,8 @@ def procmisc(path, rnum, opts, omode)
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(rand(2) == 0 && !bdb.out(buf))
-      eprint(bdb, "out")
+    if(rand(2) == 0 && !fdb.out(buf))
+      eprint(fdb, "out")
       err = true
       break
     end
@@ -414,20 +368,18 @@ def procmisc(path, rnum, opts, omode)
     end
     i += 1
   end
-  printf("cursor checking:\n")
-  cur = BDBCUR::new(bdb)
-  if(!cur.first && bdb.ecode != BDB::ENOREC)
-    eprint(bdb, "cur::first")
+  printf("iterator checking:\n")
+  if(!fdb.iterinit)
+    eprint(fdb, "iterinit")
     err = true
   end
   inum = 0
-  while(key = cur.key)
-    value = cur.val
+  while(key = fdb.iternext)
+    value = fdb.get(key)
     if(!value)
-      eprint(bdb, "cur::val")
+      eprint(fdb, "get")
       err = true
     end
-    cur.next
     if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
@@ -437,111 +389,26 @@ def procmisc(path, rnum, opts, omode)
     inum += 1
   end
   printf(" (%08d)\n", inum) if(rnum > 250)
-  if(bdb.ecode != BDB::ENOREC || inum != bdb.rnum)
-    eprint(bdb, "(validation)")
+  if(fdb.ecode != FDB::ENOREC || inum != fdb.rnum)
+    eprint(fdb, "(validation)")
     err = true
   end
-  if(!bdb.sync)
-    eprint(bdb, "sync")
+  if(!fdb.sync)
+    eprint(fdb, "sync")
     err = true
   end
-  if(!bdb.optimize)
-    eprint(bdb, "optimize")
+  if(!fdb.optimize)
+    eprint(fdb, "optimize")
     err = true
   end
   npath = path + "-tmp"
-  if(!bdb.copy(npath))
-    eprint(bdb, "copy")
+  if(!fdb.copy(npath))
+    eprint(fdb, "copy")
     err = true
   end
   File::unlink(npath)
-  if(!bdb.vanish)
-    eprint(bdb, "vanish")
-    err = true
-  end
-  printf("random writing:\n")
-  i = 1
-  while(i <= rnum)
-    buf = sprintf("%08d", rand(i))
-    if(!bdb.putdup(buf, buf))
-      eprint(bdb, "putdup")
-      err = true
-      break
-    end
-    if(rnum > 250 && i % (rnum / 250) == 0)
-      print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
-        printf(" (%08d)\n", i)
-      end
-    end
-    i += 1
-  end
-  printf("cursor updating:\n")
-  i = 1
-  while(i <= rnum)
-    if(rand(10) == 0)
-      buf = sprintf("%08d", rand(rnum))
-      cur.jump(buf)
-      j = 1
-      while(j <= 10)
-        key = cur.key
-        break if(!key)
-        if(rand(3) == 0)
-          cur.out
-        else
-          cpmode = BDBCUR::CPCURRENT + rand(3)
-          cur.put(buf, cpmode)
-        end
-        cur.next
-        j += 1
-      end
-    end
-    if(rnum > 250 && i % (rnum / 250) == 0)
-      print('.')
-      if(i == rnum || i % (rnum / 10) == 0)
-        printf(" (%08d)\n", i)
-      end
-    end
-    i += 1
-  end
-  if(!bdb.tranbegin)
-    eprint(bdb, "tranbegin")
-    err = true
-  end
-  bdb.putdup("::1", "1")
-  bdb.putdup("::2", "2a")
-  bdb.putdup("::2", "2b")
-  bdb.putdup("::3", "3")
-  cur.jump("::2")
-  cur.put("2A")
-  cur.put("2-", BDBCUR::CPBEFORE)
-  cur.put("2+")
-  cur.next()
-  cur.next()
-  cur.put("mid", BDBCUR::CPBEFORE)
-  cur.put("2C", BDBCUR::CPAFTER)
-  cur.prev()
-  cur.out
-  vals = bdb.getlist("::2")
-  if(!vals || vals.size != 4)
-    eprint(bdb, "getlist")
-    err = true
-  end
-  pvals = [ "hop", "step", "jump" ]
-  if(!bdb.putlist("::1", pvals))
-    eprint(bdb, "putlist")
-    err = true
-  end
-  if(!bdb.outlist("::1"))
-    eprint(bdb, "outlist")
-    err = true
-  end
-  if(!bdb.trancommit)
-    eprint(bdb, "trancommit")
-    err = true
-  end
-  if(!bdb.tranbegin || !bdb.tranabort)
-    eprint(bdb, "tranbegin")
+  if(!fdb.vanish)
+    eprint(fdb, "vanish")
     err = true
   end
   printf("checking hash-like updating:\n")
@@ -550,13 +417,13 @@ def procmisc(path, rnum, opts, omode)
     buf = sprintf("[%d]", rand(rnum))
     rnd = rand(4)
     if(rnd == 0)
-      bdb[buf] = buf + "hoge"
+      fdb[buf] = buf
     elsif(rnd == 1)
-      value = bdb[buf]
+      value = fdb[buf]
     elsif(rnd == 2)
-      res = bdb.key?(buf)
+      res = fdb.key?(buf)
     elsif(rnd == 3)
-      bdb.delete(buf)
+      fdb.delete(buf)
     end
     if(rnum > 250 && i % (rnum / 250) == 0)
       print('.')
@@ -568,7 +435,7 @@ def procmisc(path, rnum, opts, omode)
   end
   printf("checking iterator:\n")
   inum = 0
-  bdb.each do |key, value|
+  fdb.each do |key, value|
     if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
@@ -578,11 +445,11 @@ def procmisc(path, rnum, opts, omode)
     inum += 1
   end
   printf(" (%08d)\n", inum) if(rnum > 250)
-  bdb.clear
-  printf("record number: %d\n", bdb.rnum)
-  printf("size: %d\n", bdb.fsiz)
-  if(!bdb.close)
-    eprint(bdb, "close")
+  fdb.clear
+  printf("record number: %d\n", fdb.rnum)
+  printf("size: %d\n", fdb.fsiz)
+  if(!fdb.close)
+    eprint(fdb, "close")
     err = true
   end
   printf("time: %.3f\n", Time.now - stime)
@@ -594,6 +461,7 @@ end
 # execute main
 STDOUT.sync = true
 $0.gsub!(/.*\//, "")
+srand
 exit(main)
 
 

@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Tue Apr 22 14:08:28 JST 2008</td>
+      <td>Sat Jun 21 01:32:10 +0900 2008</td>
     </tr>
     </table>
   </div>
@@ -80,7 +80,7 @@ database is a simple data file containing records, each is a pair of a key
 and a value. Every key and value is serial bytes with variable length. Both
 binary data and character string can be used as a key and a value. There is
 neither concept of data tables nor data types. Records are organized in
-hash table or B+ tree.
+hash table, B+ tree, or fixed-length array.
 </p>
 <p>
 As for database of hash table, each key must be unique within a database,
@@ -101,6 +101,12 @@ record with the cursor in ascending or descending order. According to this
 mechanism, forward matching search for strings and range search for
 integers are realized. Moreover, transaction is available in database of B+
 tree.
+</p>
+<p>
+As for database of fixed-length array, records are stored with unique
+natural numbers. It is impossible to store two or more records with a key
+overlaps. Moreover, the length of each record is limited by the specified
+length. Provided operations are the same as ones of hash database.
 </p>
 <h2>Setting</h2>
 <p>
@@ -244,9 +250,64 @@ The following code is an example to use a B+ tree database.
    STDERR.printf(&quot;close error: %s\n&quot;, bdb.errmsg(ecode))
  end
 </pre>
-<h1>LICENSE</h1>
+<p>
+The following code is an example to use a fixed-length database.
+</p>
 <pre>
- Copyright (C) 2006-2007 Mikio Hirabayashi
+ require 'tokyocabinet'
+ include TokyoCabinet
+
+ # create the object
+ fdb = FDB::new
+
+ # open the database
+ if(!fdb.open(&quot;casket.fdb&quot;, FDB::OWRITER | FDB::OCREAT))
+   ecode = fdb.ecode
+   STDERR.printf(&quot;open error: %s\n&quot;, fdb.errmsg(ecode))
+ end
+
+ # store records
+ if(!fdb.put(1, &quot;one&quot;) ||
+    !fdb.put(12, &quot;twelve&quot;) ||
+    !fdb.put(144, &quot;one forty four&quot;))
+   ecode = fdb.ecode
+   STDERR.printf(&quot;put error: %s\n&quot;, fdb.errmsg(ecode))
+ end
+
+ # retrieve records
+ value = fdb.get(1)
+ if(value)
+   printf(&quot;%s\n&quot;, value)
+ else
+   ecode = fdb.ecode
+   STDERR.printf(&quot;get error: %s\n&quot;, fdb.errmsg(ecode))
+ end
+
+ # traverse records
+ fdb.iterinit
+ while(key = fdb.iternext)
+   value = fdb.get(key)
+   if(value)
+     printf(&quot;%s:%s\n&quot;, key, value)
+   end
+ end
+
+ # hash-like usage
+ fdb[1728] = &quot;seventeen twenty eight&quot;
+ printf(&quot;%s\n&quot;, fdb[1728])
+ fdb.each do |key, value|
+   printf(&quot;%s:%s\n&quot;, key, value)
+ end
+
+ # close the database
+ if(!fdb.close)
+   ecode = fdb.ecode
+   STDERR.printf(&quot;close error: %s\n&quot;, fdb.errmsg(ecode))
+ end
+</pre>
+<h2>LICENSE</h2>
+<pre>
+ Copyright (C) 2006-2008 Mikio Hirabayashi
  All rights reserved.
 </pre>
 <p>

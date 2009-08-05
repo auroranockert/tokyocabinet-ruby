@@ -1,6 +1,6 @@
 #--
 # Ruby binding of Tokyo Cabinet
-#                                                       Copyright (C) 2006-2007 Mikio Hirabayashi
+#                                                       Copyright (C) 2006-2008 Mikio Hirabayashi
 #  This file is part of Tokyo Cabinet.
 #  Tokyo Cabinet is free software; you can redistribute it and/or modify it under the terms of
 #  the GNU Lesser General Public License as published by the Free Software Foundation; either
@@ -507,7 +507,7 @@ module TokyoCabinet
     end
     # Begin the transaction.
     # If successful, the return value is true, else, it is false.
-    # The database is locked by the thread while the transaction so that only one transaction can be activated with a database object at the same time.  Thus, the serializable isolation level is assumed if every database operation is performed in the transaction.
+    # The database is locked by the thread while the transaction so that only one transaction can be activated with a database object at the same time.  Thus, the serializable isolation level is assumed if every database operation is performed in the transaction.  Because all pages are cached on memory while the transaction, the amount of referred records is limited by the memory capacity.  If the database is closed during transaction, the transaction is aborted implicitly.
     def tranbegin()
       # (native code)
     end
@@ -603,6 +603,207 @@ module TokyoCabinet
     # Get the value of the record where the cursor is.
     # If successful, the return value is the value, else, it is `nil'.  'nil' is returned when the cursor is at invalid position.
     def val()
+      # (native code)
+    end
+  end
+  # Fixed-Length database is a file containing a fixed-length table and is handled with the fixed-length database API.  Before operations to store or retrieve records, it is necessary to open a database file and connect the fixed-length database object to it.  To avoid data missing or corruption, it is important to close every database file when it is no longer in use.
+  # Except for the interface below, methods compatible with the `Hash' class are also provided; `[]', `[]=', `store', `delete', `fetch', `has_key?', `has_value?', `key', `clear', `size', `empty?', `each', `each_key', `each_value', `keys', and `value'.
+  class FDB
+    # error code: success
+    ESUCCESS = 0
+    # error code: threading error
+    ETHREAD = 1
+    # error code: invalid operation
+    EINVALID = 2
+    # error code: file not found
+    ENOFILE = 3
+    # error code: no permission
+    ENOPERM = 4
+    # error code: invalid meta data
+    EMETA = 5
+    # error code: invalid record header
+    ERHEAD = 6
+    # error code: open error
+    EOPEN = 7
+    # error code: close error
+    ECLOSE = 8
+    # error code: trunc error
+    ETRUNC = 9
+    # error code: sync error
+    ESYNC = 10
+    # error code: stat error
+    ESTAT = 11
+    # error code: seek error
+    ESEEK = 12
+    # error code: read error
+    EREAD = 13
+    # error code: write error
+    EWRITE = 14
+    # error code: mmap error
+    EMMAP = 15
+    # error code: lock error
+    ELOCK = 16
+    # error code: unlink error
+    EUNLINK = 17
+    # error code: rename error
+    ERENAME = 18
+    # error code: mkdir error
+    EMKDIR = 19
+    # error code: rmdir error
+    ERMDIR = 20
+    # error code: existing record
+    EKEEP = 21
+    # error code: no record found
+    ENOREC = 22
+    # error code: miscellaneous error
+    EMISC = 9999
+    # open mode: open as a reader
+    OREADER = 1 << 0
+    # open mode: open as a writer
+    OWRITER = 1 << 1
+    # open mode: writer creating
+    OCREAT = 1 << 2
+    # open mode: writer truncating
+    OTRUNC = 1 << 3
+    # open mode: open without locking
+    ONOLCK = 1 << 4
+    # open mode: lock without blocking
+    OLCKNB = 1 << 5
+    # Create a fixed-length database object.
+    # The return value is the new fixed-length database object.
+    def initialize()
+      # (native code)
+    end
+    # Get the message string corresponding to an error code.
+    # `<i>ecode</i>' specifies the error code.
+    # The return value is the message string of the error code.
+    def errmsg(ecode)
+      # (native code)
+    end
+    # Get the last happened error code.
+    # The return value is the last happened error code.
+    def ecode()
+      # (native code)
+    end
+    # Set the tuning parameters.
+    # `<i>width</i>' specifies the width of the value of each record.  If it is not defined or not more than 0, the default value is specified.  The default value is 255.
+    # `<i>limsiz</i>' specifies the limit size of the database file.  If it is not defined or not more than 0, the default value is specified.  The default value is 268435456.
+    # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.
+    def tune(bnum, width, limsiz)
+      # (native code)
+    end
+    # Open a database file.
+    # `<i>path</i>' specifies the path of the database file.
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::FDB::OWRITER' as a writer, `TokyoCabinet::FDB::OREADER' as a reader.  If the mode is `TokyoCabinet::FDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::FDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::FDB::OTRUNC', which means it creates a new database regardless if one exists.  Both of `TokyoCabinet::FDB::OREADER' and `TokyoCabinet::FDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::FDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::FDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::FDB::OREADER' is specified.
+    # If successful, the return value is true, else, it is false.
+    def open(path, omode)
+      # (native code)
+    end
+    # Close the database file.
+    # If successful, the return value is true, else, it is false.
+    # Update of a database is assured to be written when the database is closed.  If a writer opens a database but does not close it appropriately, the database will be broken.
+    def close()
+      # (native code)
+    end
+    # Store a record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
+    # `<i>value</i>' specifies the value.
+    # If successful, the return value is true, else, it is false.
+    # If a record with the same key exists in the database, it is overwritten.
+    def put(key, value)
+      # (native code)
+    end
+    # Store a new record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
+    # `<i>value</i>' specifies the value.
+    # If successful, the return value is true, else, it is false.
+    # If a record with the same key exists in the database, this method has no effect.
+    def putkeep(key, value)
+      # (native code)
+    end
+    # Concatenate a value at the end of the existing record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
+    # `<i>value</i>' specifies the value.
+    # If successful, the return value is true, else, it is false.
+    # If there is no corresponding record, a new record is created.
+    def putcat(key, value)
+      # (native code)
+    end
+    # Remove a record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is `FDBIDMIN', the minimum ID number of existing records is specified.  If it is `FDBIDMAX', the maximum ID number of existing records is specified.
+    # If successful, the return value is true, else, it is false.
+    def out(key)
+      # (native code)
+    end
+    # Retrieve a record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is `FDBIDMIN', the minimum ID number of existing records is specified.  If it is `FDBIDMAX', the maximum ID number of existing records is specified.
+    # If successful, the return value is the value of the corresponding record.  `nil' is returned if no record corresponds.
+    def get(key)
+      # (native code)
+    end
+    # Get the size of the value of a record.
+    # `<i>key</i>' specifies the key.  It should be more than 0.  If it is `FDBIDMIN', the minimum ID number of existing records is specified.  If it is `FDBIDMAX', the maximum ID number of existing records is specified.
+    # If successful, the return value is the size of the value of the corresponding record, else, it is -1.
+    def vsiz(key)
+      # (native code)
+    end
+    # Initialize the iterator.
+    # If successful, the return value is true, else, it is false.
+    # The iterator is used in order to access the key of every record stored in a database.
+    def iterinit()
+      # (native code)
+    end
+    # Get the next key of the iterator.
+    # If successful, the return value is the next key, else, it is `nil'.  `nil' is returned when no record is to be get out of the iterator.
+    # It is possible to access every record by iteration of calling this function.  It is allowed to update or remove records whose keys are fetched while the iteration.  The order of this traversal access method is ascending of the ID number.
+    def iternext()
+      # (native code)
+    end
+    # Get keys with an interval notation.
+    # `<i>interval</i>' specifies the interval notation.
+    # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
+    # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
+    def range(interval, max)
+      # (native code)
+    end
+    # Synchronize updated contents with the file and the device.
+    # If successful, the return value is true, else, it is false.
+    # This method is useful when another process connects the same database file.
+    def sync()
+      # (native code)
+    end
+    # Optimize the database file.
+    # `width' specifies the width of the value of each record.  If it is not defined or not more than 0, the current setting is not changed.
+    # `limsiz' specifies the limit size of the database file.  If it is not defined or not more than 0, the current setting is not changed.
+    # If successful, the return value is true, else, it is false.
+    def optimize(bnum, width, limsiz)
+      # (native code)
+    end
+    # Remove all records.
+    # If successful, the return value is true, else, it is false.
+    def vanish()
+      # (native code)
+    end
+    # Copy the database file.
+    # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.
+    # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this method is useful to create a backup file of the database file.
+    def copy(path)
+      # (native code)
+    end
+    # Get the path of the database file.
+    # The return value is the path of the database file or `nil' if the object does not connect to any database file.
+    def path()
+      # (native code)
+    end
+    # Get the number of records.
+    # The return value is the number of records or 0 if the object does not connect to any database file.
+    def rnum()
+      # (native code)
+    end
+    # Get the size of the database file.
+    # The return value is the size of the database file or 0 if the object does not connect to any database file.
+    def fsiz()
       # (native code)
     end
   end

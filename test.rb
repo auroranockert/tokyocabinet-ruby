@@ -16,8 +16,12 @@ commands = [
             "tcbtest.rb write -tl casket 10000 10 10 100 1 1",
             "tcbtest.rb read -nl casket",
             "tcbtest.rb remove -nb casket",
-            "tcbtest.rb misc -tl -tb casket 1000"
-            ]
+            "tcbtest.rb misc -tl -tb casket 1000",
+            "tcftest.rb write casket 10000",
+            "tcftest.rb read casket",
+            "tcftest.rb remove casket",
+            "tcftest.rb misc casket 1000",
+           ]
 num = 1
 commands.each do |command|
   rv = system("/usr/bin/ruby #{command} >/dev/null")

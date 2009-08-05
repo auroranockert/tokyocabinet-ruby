@@ -4,6 +4,8 @@ tokyocabinet.c
 tokyocabinet.rd
 tchtest.rb
 tcbtest.rb
+tcftest.rb
 test.rb
 example/tchdbex.rb
 example/tcbdbex.rb
+example/tcfdbex.rb
