@@ -426,7 +426,7 @@ def procmisc(path, rnum, opts, omode)
       err = true
     end
     cur.next
-    if(rnum > 250 && inum % (rnum / 250) == 0)
+    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
         printf(" (%08d)\n", inum)
@@ -462,7 +462,7 @@ def procmisc(path, rnum, opts, omode)
   while(i <= rnum)
     buf = sprintf("%08d", rand(i))
     if(!bdb.putdup(buf, buf))
-      eprint(bdb, "put")
+      eprint(bdb, "putdup")
       err = true
       break
     end
@@ -503,7 +503,7 @@ def procmisc(path, rnum, opts, omode)
     i += 1
   end
   if(!bdb.tranbegin)
-    eprint(bdb, "put")
+    eprint(bdb, "tranbegin")
     err = true
   end
   bdb.putdup("::1", "1")
@@ -522,29 +522,38 @@ def procmisc(path, rnum, opts, omode)
   cur.out
   vals = bdb.getlist("::2")
   if(!vals || vals.size != 4)
-    eprint(bdb, "(validation)")
+    eprint(bdb, "getlist")
+    err = true
+  end
+  pvals = [ "hop", "step", "jump" ]
+  if(!bdb.putlist("::1", pvals))
+    eprint(bdb, "putlist")
+    err = true
+  end
+  if(!bdb.outlist("::1"))
+    eprint(bdb, "outlist")
     err = true
   end
   if(!bdb.trancommit)
-    eprint(bdb, "put")
+    eprint(bdb, "trancommit")
     err = true
   end
   if(!bdb.tranbegin || !bdb.tranabort)
-    eprint(bdb, "put")
+    eprint(bdb, "tranbegin")
     err = true
   end
   printf("checking hash-like updating:\n")
   i = 1
   while(i <= rnum)
     buf = sprintf("[%d]", rand(rnum))
-    rnd = rand(3)
+    rnd = rand(4)
     if(rnd == 0)
       bdb[buf] = buf + "hoge"
     elsif(rnd == 1)
       value = bdb[buf]
     elsif(rnd == 2)
       res = bdb.key?(buf)
-    elsif($rnd == 3)
+    elsif(rnd == 3)
       bdb.delete(buf)
     end
     if(rnum > 250 && i % (rnum / 250) == 0)
@@ -558,13 +567,13 @@ def procmisc(path, rnum, opts, omode)
   printf("checking iterator:\n")
   inum = 0
   bdb.each do |key, value|
-    inum += 1
-    if(rnum > 250 && inum % (rnum / 250) == 0)
+    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
         printf(" (%08d)\n", inum)
       end
     end
+    inum += 1
   end
   printf(" (%08d)\n", inum) if(rnum > 250)
   bdb.clear

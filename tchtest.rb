@@ -410,7 +410,7 @@ def procmisc(path, rnum, opts, omode)
       eprint(hdb, "get")
       err = true
     end
-    if(rnum > 250 && inum % (rnum / 250) == 0)
+    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
         printf(" (%08d)\n", inum)
@@ -445,14 +445,14 @@ def procmisc(path, rnum, opts, omode)
   i = 1
   while(i <= rnum)
     buf = sprintf("[%d]", rand(rnum))
-    rnd = rand(3)
+    rnd = rand(4)
     if(rnd == 0)
       hdb[buf] = buf
     elsif(rnd == 1)
       value = hdb[buf]
     elsif(rnd == 2)
       res = hdb.key?(buf)
-    elsif($rnd == 3)
+    elsif(rnd == 3)
       hdb.delete(buf)
     end
     if(rnum > 250 && i % (rnum / 250) == 0)
@@ -466,13 +466,13 @@ def procmisc(path, rnum, opts, omode)
   printf("checking iterator:\n")
   inum = 0
   hdb.each do |key, value|
-    inum += 1
-    if(rnum > 250 && inum % (rnum / 250) == 0)
+    if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)
         printf(" (%08d)\n", inum)
       end
     end
+    inum += 1
   end
   printf(" (%08d)\n", inum) if(rnum > 250)
   hdb.clear

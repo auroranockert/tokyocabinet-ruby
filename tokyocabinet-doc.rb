@@ -137,7 +137,7 @@ module TokyoCabinet
     # `<i>key</i>' specifies the key.
     # `<i>value</i>' specifies the value.
     # If successful, the return value is true, else, it is false.
-    # If a record with the same key exists in the database, this function has no effect.
+    # If a record with the same key exists in the database, this method has no effect.
     def putkeep(key, value)
       # (native code)
     end
@@ -153,7 +153,7 @@ module TokyoCabinet
     # `<i>key</i>' specifies the key.
     # `<i>value</i>' specifies the value.
     # If successful, the return value is true, else, it is false.
-    # If a record with the same key exists in the database, it is overwritten.  Records passed to this function are accumulated into the inner buffer and wrote into the file at a blast.
+    # If a record with the same key exists in the database, it is overwritten.  Records passed to this method are accumulated into the inner buffer and wrote into the file at a blast.
     def putasync(key, value)
       # (native code)
     end
@@ -183,13 +183,13 @@ module TokyoCabinet
     end
     # Get the next key of the iterator.
     # If successful, the return value is the next key, else, it is `nil'.  `nil' is returned when no record is to be get out of the iterator.
-    # It is possible to access every record by iteration of calling this function.  It is allowed to update or remove records whose keys are fetched while the iteration.  However, it is not assured if updating the database is occurred while the iteration.  Besides, the order of this traversal access method is arbitrary, so it is not assured that the order of storing matches the one of the traversal access.
+    # It is possible to access every record by iteration of calling this method.  It is allowed to update or remove records whose keys are fetched while the iteration.  However, it is not assured if updating the database is occurred while the iteration.  Besides, the order of this traversal access method is arbitrary, so it is not assured that the order of storing matches the one of the traversal access.
     def iternext()
       # (native code)
     end
     # Synchronize updated contents with the file and the device.
     # If successful, the return value is true, else, it is false.
-    # This function is useful when another process connects the same database file.
+    # This method is useful when another process connects the same database file.
     def sync()
       # (native code)
     end
@@ -197,9 +197,9 @@ module TokyoCabinet
     # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of records.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is 0xff, the default setting is not changed.  If it is not defined, no option is specified.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
     # If successful, the return value is true, else, it is false.
-    # This function is useful to reduce the size of the database file with data fragmentation by successive updating.
+    # This method is useful to reduce the size of the database file with data fragmentation by successive updating.
     def optimize(bnum, apow, fpow, opts)
       # (native code)
     end
@@ -211,7 +211,7 @@ module TokyoCabinet
     # Copy the database file.
     # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.
     # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.
-    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this function is useful to create a backup file of the database file.
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this method is useful to create a backup file of the database file.
     def copy(path)
       # (native code)
     end
@@ -319,8 +319,8 @@ module TokyoCabinet
     # Set the tuning parameters.
     # `<i>lmemb</i>' specifies the number of members in each leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 128.
     # `<i>nmemb</i>' specifies the number of members in each non-leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 256.
-    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.
-    # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^4=16.
+    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 1 to 4 times of the number of all pages to be stored.
+    # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^8=256.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.
     # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.
@@ -360,7 +360,7 @@ module TokyoCabinet
     # `<i>key</i>' specifies the key.
     # `<i>value</i>' specifies the value.
     # If successful, the return value is true, else, it is false.
-    # If a record with the same key exists in the database, this function has no effect.
+    # If a record with the same key exists in the database, this method has no effect.
     def putkeep(key, value)
       # (native code)
     end
@@ -380,19 +380,36 @@ module TokyoCabinet
     def putdup(key, value)
       # (native code)
     end
+    # Store records with allowing duplication of keys.
+    # `<i>key</i>' specifies the key.
+    # `<i>values</i>' specifies an array of the values.
+    # If successful, the return value is true, else, it is false.
+    # If a record with the same key exists in the database, the new records are placed after the existing one.
+    def putlist(key, values)
+      # (native code)
+    end
     # Remove a record.
     # `<i>key</i>' specifies the key.
     # If successful, the return value is true, else, it is false.
+    # If the key of duplicated records is specified, the value of the first one is selected.
     def out(key)
+      # (native code)
+    end
+    # Remove records.
+    # `<i>key</i>' specifies the key.
+    # If successful, the return value is true, else, it is false.
+    # If the key of duplicated records is specified, all of them are removed.
+    def outlist(key)
       # (native code)
     end
     # Retrieve a record.
     # `<i>key</i>' specifies the key.
     # If successful, the return value is the value of the corresponding record.  `nil' is returned if no record corresponds.
+    # If the key of duplicated records is specified, the value of the first one is selected.
     def get(key)
       # (native code)
     end
-    # Retrieve a records.
+    # Retrieve records.
     # `<i>key</i>' specifies the key.
     # If successful, the return value is a list object of the values of the corresponding records.  `nil' is returned if no record corresponds.
     def getlist(key)
@@ -407,24 +424,25 @@ module TokyoCabinet
     # Get the size of the value of a record.
     # `<i>key</i>' specifies the key.
     # If successful, the return value is the size of the value of the corresponding record, else, it is -1.
+    # If the key of duplicated records is specified, the value of the first one is selected.
     def vsiz(key)
       # (native code)
     end
     # Synchronize updated contents with the file and the device.
     # If successful, the return value is true, else, it is false.
-    # This function is useful when another process connects the same database file.
+    # This method is useful when another process connects the same database file.
     def sync()
       # (native code)
     end
     # Optimize the database file.
     # `<i>lmemb</i>' specifies the number of members in each leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 128.
     # `<i>nmemb</i>' specifies the number of members in each non-leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 256.
-    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of records.
+    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is two times of the number of pages.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the current setting is not changed.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the current setting is not changed.
-    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is 0xff, the default setting is not changed.  If it is not defined, no option is specified.
+    # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined or 0xff, the current setting is not changed.
     # If successful, the return value is true, else, it is false.
-    # This function is useful to reduce the size of the database file with data fragmentation by successive updating.
+    # This method is useful to reduce the size of the database file with data fragmentation by successive updating.
     def optimize(lmemb, nmemb, bnum, apow, fpow, opts)
       # (native code)
     end
@@ -436,7 +454,7 @@ module TokyoCabinet
     # Copy the database file.
     # `<i>path</i>' specifies the path of the destination file.  If it begins with `@', the trailing substring is executed as a command line.
     # If successful, the return value is true, else, it is false.  False is returned if the executed command returns non-zero code.
-    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this function is useful to create a backup file of the database file.
+    # The database file is assured to be kept synchronized and not modified while the copying or executing operation is in progress.  So, this method is useful to create a backup file of the database file.
     def copy(path)
       # (native code)
     end
@@ -446,13 +464,13 @@ module TokyoCabinet
     def tranbegin()
       # (native code)
     end
-    # Commit the transaction of a B+ tree database object.
+    # Commit the transaction.
     # If successful, the return value is true, else, it is false.
     # Update in the transaction is fixed when it is committed successfully.
     def trancommit()
       # (native code)
     end
-    # Abort the transaction of a B+ tree database object.
+    # Abort the transaction.
     # If successful, the return value is true, else, it is false.
     # Update in the transaction is discarded when it is aborted.  The state of the database is rollbacked to before transaction.
     def tranabort()
@@ -485,7 +503,7 @@ module TokyoCabinet
     # Create a cursor object.
     # `<i>bdb</i>' specifies the B+ tree database object.
     # The return value is the new cursor object.
-    # Note that the cursor is available only after initialization with the `first' or the `jump' functions and so on.  Moreover, the position of the cursor will be indefinite when the database is updated after the initialization of the cursor.
+    # Note that the cursor is available only after initialization with the `first' or the `jump' methods and so on.  Moreover, the position of the cursor will be indefinite when the database is updated after the initialization of the cursor.
     def initialize(bdb)
       # (native code)
     end
@@ -516,7 +534,7 @@ module TokyoCabinet
     def next()
       # (native code)
     end
-    # Insert a record around the cursor object.
+    # Insert a record around the cursor.
     # `<i>value</i>' specifies the value.
     # `<i>cpmode</i>' specifies detail adjustment: `TokyoCabinet::BDBCUR::CPCURRENT', which means that the value of the current record is overwritten, `TokyoCabinet::BDBCUR::CPBEFORE', which means that the new record is inserted before the current record, `TokyoCabinet::BDBCUR::CPAFTER', which means that the new record is inserted after the current record.
     # If successful, the return value is true, else, it is false.  False is returned when the cursor is at invalid position.

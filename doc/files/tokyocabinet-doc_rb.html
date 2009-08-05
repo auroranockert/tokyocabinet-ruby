@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Thu Nov 15 19:25:05 JST 2007</td>
+      <td>Mon Nov 19 21:03:03 JST 2007</td>
     </tr>
     </table>
   </div>
@@ -221,7 +221,7 @@ The following code is an example to use a B+ tree database.
  end
 
  # traverse records
- cur = TokyoCabinet::BDBCUR::new(bdb)
+ cur = BDBCUR::new(bdb)
  cur.first
  while(key = cur.key)
    value = cur.val
@@ -289,7 +289,6 @@ Boston, MA 02111-1307 USA.
 
 
 <div id="validator-badges">
-  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
 </div>
 
 </body>

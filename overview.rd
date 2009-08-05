@@ -117,7 +117,7 @@ The following code is an example to use a B+ tree database.
  end
  
  # traverse records
- cur = TokyoCabinet::BDBCUR::new(bdb)
+ cur = BDBCUR::new(bdb)
  cur.first
  while(key = cur.key)
    value = cur.val

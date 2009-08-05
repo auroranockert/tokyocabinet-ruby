@@ -73,7 +73,9 @@ static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval);
 static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
 static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
 static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval);
+static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals);
 static VALUE bdb_out(VALUE vself, VALUE vkey);
+static VALUE bdb_outlist(VALUE vself, VALUE vkey);
 static VALUE bdb_get(VALUE vself, VALUE vkey);
 static VALUE bdb_getlist(VALUE vself, VALUE vkey);
 static VALUE bdb_vnum(VALUE vself, VALUE vkey);
@@ -762,7 +764,9 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "putkeep", bdb_putkeep, 2);
   rb_define_method(cls_bdb, "putcat", bdb_putcat, 2);
   rb_define_method(cls_bdb, "putdup", bdb_putdup, 2);
+  rb_define_method(cls_bdb, "putlist", bdb_putlist, 2);
   rb_define_method(cls_bdb, "out", bdb_out, 1);
+  rb_define_method(cls_bdb, "outlist", bdb_outlist, 1);
   rb_define_method(cls_bdb, "get", bdb_get, 1);
   rb_define_method(cls_bdb, "getlist", bdb_getlist, 1);
   rb_define_method(cls_bdb, "vnum", bdb_vnum, 1);
@@ -959,6 +963,33 @@ static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
+static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
+  VALUE vbdb, vval;
+  TCBDB *bdb;
+  TCLIST *tvals;
+  const char *kbuf;
+  int i, num, ksiz;
+  bool err;
+  vkey = StringValue(vkey);
+  kbuf = RSTRING(vkey)->ptr;
+  ksiz = RSTRING(vkey)->len;
+  Check_Type(vvals, T_ARRAY);
+  tvals = tclistnew();
+  num = RARRAY(vvals)->len;
+  for(i = 0; i < num; i++){
+    vval = rb_ary_entry(vvals, i);
+    vval = StringValue(vval);
+    tclistpush(tvals, RSTRING(vval)->ptr, RSTRING(vval)->len);
+  }
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  err = false;
+  if(!tcbdbputdup3(bdb, kbuf, ksiz, tvals)) err = true;
+  tclistdel(tvals);
+  return err ? Qfalse : Qtrue;
+}
+
+
 static VALUE bdb_out(VALUE vself, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
@@ -970,6 +1001,20 @@ static VALUE bdb_out(VALUE vself, VALUE vkey){
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdbout(bdb, kbuf, ksiz) ? Qtrue : Qfalse;
+}
+
+
+static VALUE bdb_outlist(VALUE vself, VALUE vkey){
+  VALUE vbdb;
+  TCBDB *bdb;
+  const char *kbuf;
+  int ksiz;
+  vkey = StringValue(vkey);
+  kbuf = RSTRING(vkey)->ptr;
+  ksiz = RSTRING(vkey)->len;
+  vbdb = rb_iv_get(vself, BDBVNDATA);
+  Data_Get_Struct(vbdb, TCBDB, bdb);
+  return tcbdbout3(bdb, kbuf, ksiz) ? Qtrue : Qfalse;
 }
 
 
