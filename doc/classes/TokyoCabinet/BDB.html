@@ -535,6 +535,16 @@ href="BDB.html#M000008">open</a> without locking
 
 </td>
         </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">OTSYNC</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 6</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+<a href="BDB.html#M000008">open</a> mode: synchronize every transaction
+
+</td>
+        </tr>
         </table>
       </div>
     </div>
@@ -825,7 +835,9 @@ href="BDB.html#M000032">path</a> of the database file.<br/>
 or: `TokyoCabinet::BDB::OCREAT', which means it creates a <a
 href="BDB.html#M000001">new</a> database if not exist,
 `TokyoCabinet::BDB::OTRUNC', which means it creates a <a
-href="BDB.html#M000001">new</a> database regardless if one exists. Both of
+href="BDB.html#M000001">new</a> database regardless if one exists,
+`TokyoCabinet::BDB::OTSYNC', which means every transaction
+synchronizes updated contents with the device. Both of
 `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER'
 can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which
 means it opens the database file without file locking, or

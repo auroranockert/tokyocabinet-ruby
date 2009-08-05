@@ -89,6 +89,8 @@ module TokyoCabinet
     ONOLCK = 1 << 4
     # open mode: lock without blocking
     OLCKNB = 1 << 5
+    # open mode: synchronize every transaction
+    OTSYNC = 1 << 6
     # Create a hash database object.%%
     # The return value is the new hash database object.%%
     def initialize()
@@ -131,7 +133,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::HDB::OWRITER' as a writer, `TokyoCabinet::HDB::OREADER' as a reader.  If the mode is `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::HDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::HDB::OTRUNC', which means it creates a new database regardless if one exists.  Both of `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::HDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::HDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::HDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::HDB::OWRITER' as a writer, `TokyoCabinet::HDB::OREADER' as a reader.  If the mode is `TokyoCabinet::HDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::HDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::HDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::HDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::HDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::HDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::HDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)
@@ -256,6 +258,24 @@ module TokyoCabinet
     def copy(path)
       # (native code)
     end
+    # Begin the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # The database is locked by the thread while the transaction so that only one transaction can be activated with a database object at the same time.  Thus, the serializable isolation level is assumed if every database operation is performed in the transaction.  All updated regions are kept track of by write ahead logging while the transaction.  If the database is closed during transaction, the transaction is aborted implicitly.%%
+    def tranbegin()
+      # (native code)
+    end
+    # Commit the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is fixed when it is committed successfully.%%
+    def trancommit()
+      # (native code)
+    end
+    # Abort the transaction.%%
+    # If successful, the return value is true, else, it is false.%%
+    # Update in the transaction is discarded when it is aborted.  The state of the database is rollbacked to before transaction.%%
+    def tranabort()
+      # (native code)
+    end
     # Get the path of the database file.%%
     # The return value is the path of the database file or `nil' if the object does not connect to any database file.%%
     def path()
@@ -351,6 +371,8 @@ module TokyoCabinet
     ONOLCK = 1 << 4
     # open mode: lock without blocking
     OLCKNB = 1 << 5
+    # open mode: synchronize every transaction
+    OTSYNC = 1 << 6
     # Create a B+ tree database object.%%
     # The return value is the new B+ tree database object.%%
     def initialize()
@@ -403,7 +425,7 @@ module TokyoCabinet
     end
     # Open a database file.%%
     # `<i>path</i>' specifies the path of the database file.%%
-    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::BDB::OWRITER' as a writer, `TokyoCabinet::BDB::OREADER' as a reader.  If the mode is `TokyoCabinet::BDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::BDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::BDB::OTRUNC', which means it creates a new database regardless if one exists.  Both of `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::BDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::BDB::OREADER' is specified.%%
+    # `<i>omode</i>' specifies the connection mode: `TokyoCabinet::BDB::OWRITER' as a writer, `TokyoCabinet::BDB::OREADER' as a reader.  If the mode is `TokyoCabinet::BDB::OWRITER', the following may be added by bitwise or: `TokyoCabinet::BDB::OCREAT', which means it creates a new database if not exist, `TokyoCabinet::BDB::OTRUNC', which means it creates a new database regardless if one exists, `TokyoCabinet::BDB::OTSYNC', which means every transaction synchronizes updated contents with the device.  Both of `TokyoCabinet::BDB::OREADER' and `TokyoCabinet::BDB::OWRITER' can be added to by bitwise or: `TokyoCabinet::BDB::ONOLCK', which means it opens the database file without file locking, or `TokyoCabinet::BDB::OLCKNB', which means locking is performed without blocking.  If it is not defined, `TokyoCabinet::BDB::OREADER' is specified.%%
     # If successful, the return value is true, else, it is false.%%
     def open(path, omode)
       # (native code)

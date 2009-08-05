@@ -462,6 +462,74 @@ def procmisc(path, rnum, opts, omode)
     eprint(hdb, "vanish")
     err = true
   end
+  printf("checking transaction commit:\n")
+  if !hdb.tranbegin
+    eprint(hdb, "tranbegin")
+    err = true
+  end
+  for i in 1..rnum
+    buf = sprintf("%d", rand(rnum))
+    if rand(2) == 0
+      if !hdb.putcat(buf, buf)
+        eprint(hdb, "putcat")
+        err = true
+        break
+      end
+    else
+      if !hdb.out(buf) && hdb.ecode != HDB::ENOREC
+        eprint(hdb, "out")
+        err = true
+        break
+      end
+    end
+    if rnum > 250 && i % (rnum / 250) == 0
+      print('.')
+      if i == rnum || i % (rnum / 10) == 0
+        printf(" (%08d)\n", i)
+      end
+    end
+  end
+  if !hdb.trancommit
+    eprint(hdb, "trancommit")
+    err = true
+  end
+  printf("checking transaction abort:\n")
+  ornum = hdb.rnum
+  ofsiz = hdb.fsiz
+  if !hdb.tranbegin
+    eprint(hdb, "tranbegin")
+    err = true
+  end
+  for i in 1..rnum
+    buf = sprintf("%d", rand(rnum))
+    if rand(2) == 0
+      if !hdb.putcat(buf, buf)
+        eprint(hdb, "putcat")
+        err = true
+        break
+      end
+    else
+      if !hdb.out(buf) && hdb.ecode != HDB::ENOREC
+        eprint(hdb, "out")
+        err = true
+        break
+      end
+    end
+    if rnum > 250 && i % (rnum / 250) == 0
+      print('.')
+      if i == rnum || i % (rnum / 10) == 0
+        printf(" (%08d)\n", i)
+      end
+    end
+  end
+  if !hdb.tranabort
+    eprint(hdb, "trancommit")
+    err = true
+  end
+  if hdb.rnum != ornum || hdb.fsiz != ofsiz
+    eprint(hdb, "(validation)")
+    err = true
+  end
   printf("checking hash-like updating:\n")
   for i in 1..rnum
     buf = sprintf("[%d]", rand(rnum))

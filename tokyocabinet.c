@@ -69,6 +69,9 @@ static VALUE hdb_sync(VALUE vself);
 static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_vanish(VALUE vself);
 static VALUE hdb_copy(VALUE vself, VALUE vpath);
+static VALUE hdb_tranbegin(VALUE vself);
+static VALUE hdb_trancommit(VALUE vself);
+static VALUE hdb_tranabort(VALUE vself);
 static VALUE hdb_path(VALUE vself);
 static VALUE hdb_rnum(VALUE vself);
 static VALUE hdb_fsiz(VALUE vself);
@@ -272,6 +275,7 @@ static void hdb_init(void){
   rb_define_const(cls_hdb, "OTRUNC", INT2NUM(HDBOTRUNC));
   rb_define_const(cls_hdb, "ONOLCK", INT2NUM(HDBONOLCK));
   rb_define_const(cls_hdb, "OLCKNB", INT2NUM(HDBOLCKNB));
+  rb_define_const(cls_hdb, "OTSYNC", INT2NUM(HDBOTSYNC));
   rb_define_private_method(cls_hdb, "initialize", hdb_initialize, 0);
   rb_define_method(cls_hdb, "errmsg", hdb_errmsg, -1);
   rb_define_method(cls_hdb, "ecode", hdb_ecode, 0);
@@ -296,6 +300,9 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "optimize", hdb_optimize, -1);
   rb_define_method(cls_hdb, "vanish", hdb_vanish, 0);
   rb_define_method(cls_hdb, "copy", hdb_copy, 1);
+  rb_define_method(cls_hdb, "tranbegin", hdb_tranbegin, 0);
+  rb_define_method(cls_hdb, "trancommit", hdb_trancommit, 0);
+  rb_define_method(cls_hdb, "tranabort", hdb_tranabort, 0);
   rb_define_method(cls_hdb, "path", hdb_path, 0);
   rb_define_method(cls_hdb, "rnum", hdb_rnum, 0);
   rb_define_method(cls_hdb, "fsiz", hdb_fsiz, 0);
@@ -665,6 +672,33 @@ static VALUE hdb_copy(VALUE vself, VALUE vpath){
 }
 
 
+static VALUE hdb_tranbegin(VALUE vself){
+  VALUE vhdb;
+  TCHDB *hdb;
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbtranbegin(hdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE hdb_trancommit(VALUE vself){
+  VALUE vhdb;
+  TCHDB *hdb;
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbtrancommit(hdb) ? Qtrue : Qfalse;
+}
+
+
+static VALUE hdb_tranabort(VALUE vself){
+  VALUE vhdb;
+  TCHDB *hdb;
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  return tchdbtranabort(hdb) ? Qtrue : Qfalse;
+}
+
+
 static VALUE hdb_path(VALUE vself){
   VALUE vhdb, vpath;
   TCHDB *hdb;
@@ -938,6 +972,7 @@ static void bdb_init(void){
   rb_define_const(cls_bdb, "OTRUNC", INT2NUM(BDBOTRUNC));
   rb_define_const(cls_bdb, "ONOLCK", INT2NUM(BDBONOLCK));
   rb_define_const(cls_bdb, "OLCKNB", INT2NUM(BDBOLCKNB));
+  rb_define_const(cls_bdb, "OTSYNC", INT2NUM(BDBOTSYNC));
   rb_define_private_method(cls_bdb, "initialize", bdb_initialize, 0);
   rb_define_method(cls_bdb, "errmsg", bdb_errmsg, -1);
   rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
@@ -1043,17 +1078,17 @@ static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp){
   VALUE vbdb;
   TCBDB *bdb;
   const char *cmpname;
-  BDBCMP cmp = (BDBCMP)bdb_cmpobj;
+  TCCMP cmp = (TCCMP)bdb_cmpobj;
   if(TYPE(vcmp) == T_STRING){
     cmpname = RSTRING_PTR(vcmp);
     if(!strcmp(cmpname, "CMPLEXICAL")){
-      cmp = tcbdbcmplexical;
+      cmp = tccmplexical;
     } else if(!strcmp(cmpname, "CMPDECIMAL")){
-      cmp = tcbdbcmpdecimal;
+      cmp = tccmpdecimal;
     } else if(!strcmp(cmpname, "CMPINT32")){
-      cmp = tcbdbcmpint32;
+      cmp = tccmpint32;
     } else if(!strcmp(cmpname, "CMPINT64")){
-      cmp = tcbdbcmpint64;
+      cmp = tccmpint64;
     } else {
       rb_raise(rb_eArgError, "unknown comparison function: %s", cmpname);
     }

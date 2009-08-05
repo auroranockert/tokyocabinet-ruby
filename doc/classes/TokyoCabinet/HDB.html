@@ -108,7 +108,7 @@ below, methods compatible with the `Hash' class are also provided;
       <a href="#M000092">copy</a>&nbsp;&nbsp;
       <a href="#M000071">ecode</a>&nbsp;&nbsp;
       <a href="#M000070">errmsg</a>&nbsp;&nbsp;
-      <a href="#M000095">fsiz</a>&nbsp;&nbsp;
+      <a href="#M000098">fsiz</a>&nbsp;&nbsp;
       <a href="#M000086">fwmkeys</a>&nbsp;&nbsp;
       <a href="#M000082">get</a>&nbsp;&nbsp;
       <a href="#M000084">iterinit</a>&nbsp;&nbsp;
@@ -117,15 +117,18 @@ below, methods compatible with the `Hash' class are also provided;
       <a href="#M000075">open</a>&nbsp;&nbsp;
       <a href="#M000090">optimize</a>&nbsp;&nbsp;
       <a href="#M000081">out</a>&nbsp;&nbsp;
-      <a href="#M000093">path</a>&nbsp;&nbsp;
+      <a href="#M000096">path</a>&nbsp;&nbsp;
       <a href="#M000077">put</a>&nbsp;&nbsp;
       <a href="#M000080">putasync</a>&nbsp;&nbsp;
       <a href="#M000079">putcat</a>&nbsp;&nbsp;
       <a href="#M000078">putkeep</a>&nbsp;&nbsp;
-      <a href="#M000094">rnum</a>&nbsp;&nbsp;
+      <a href="#M000097">rnum</a>&nbsp;&nbsp;
       <a href="#M000073">setcache</a>&nbsp;&nbsp;
       <a href="#M000074">setxmsiz</a>&nbsp;&nbsp;
       <a href="#M000089">sync</a>&nbsp;&nbsp;
+      <a href="#M000095">tranabort</a>&nbsp;&nbsp;
+      <a href="#M000093">tranbegin</a>&nbsp;&nbsp;
+      <a href="#M000094">trancommit</a>&nbsp;&nbsp;
       <a href="#M000072">tune</a>&nbsp;&nbsp;
       <a href="#M000091">vanish</a>&nbsp;&nbsp;
       <a href="#M000083">vsiz</a>&nbsp;&nbsp;
@@ -488,6 +491,16 @@ href="HDB.html#M000075">open</a> without locking
 
 </td>
         </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">OTSYNC</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 6</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+<a href="HDB.html#M000075">open</a> mode: synchronize every transaction
+
+</td>
+        </tr>
         </table>
       </div>
     </div>
@@ -603,8 +616,8 @@ broken.<br/>
         <div class="method-description">
           <p>
 Copy the database file.<br/> `<em><a
-href="HDB.html#M000093">path</a></em>' specifies the <a
-href="HDB.html#M000093">path</a> of the destination file. If it begins with
+href="HDB.html#M000096">path</a></em>' specifies the <a
+href="HDB.html#M000096">path</a> of the destination file. If it begins with
 `@', the trailing substring is executed as a command line.<br/> If
 successful, the return value is true, else, it is false. False is returned
 if the executed command returns non-zero code.<br/> The database file is
@@ -677,12 +690,12 @@ The return value is the message string of the error code.<br/>
         </div>
       </div>
 
-      <div id="method-M000095" class="method-detail">
-        <a name="M000095"></a>
+      <div id="method-M000098" class="method-detail">
+        <a name="M000098"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000095.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000095.html');return false;">
+          <a href="HDB.src/M000098.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000098.html');return false;">
           <span class="method-name">fsiz</span><span class="method-args">()</span>
           </a>
         </div>
@@ -795,8 +808,8 @@ access.<br/>
         <div class="method-description">
           <p>
 Open a database file.<br/> `<em><a
-href="HDB.html#M000093">path</a></em>' specifies the <a
-href="HDB.html#M000093">path</a> of the database file.<br/>
+href="HDB.html#M000096">path</a></em>' specifies the <a
+href="HDB.html#M000096">path</a> of the database file.<br/>
 `<em>omode</em>' specifies the connection mode:
 `TokyoCabinet::HDB::OWRITER' as a writer,
 `TokyoCabinet::HDB::OREADER' as a reader. If the mode is
@@ -804,7 +817,9 @@ href="HDB.html#M000093">path</a> of the database file.<br/>
 or: `TokyoCabinet::HDB::OCREAT', which means it creates a <a
 href="HDB.html#M000069">new</a> database if not exist,
 `TokyoCabinet::HDB::OTRUNC', which means it creates a <a
-href="HDB.html#M000069">new</a> database regardless if one exists. Both of
+href="HDB.html#M000069">new</a> database regardless if one exists,
+`TokyoCabinet::HDB::OTSYNC', which means every transaction
+synchronizes updated contents with the device. Both of
 `TokyoCabinet::HDB::OREADER' and `TokyoCabinet::HDB::OWRITER'
 can be added to by bitwise or: `TokyoCabinet::HDB::ONOLCK', which
 means it opens the database file without file locking, or
@@ -867,20 +882,20 @@ the return value is true, else, it is false.<br/>
         </div>
       </div>
 
-      <div id="method-M000093" class="method-detail">
-        <a name="M000093"></a>
+      <div id="method-M000096" class="method-detail">
+        <a name="M000096"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000093.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000093.html');return false;">
+          <a href="HDB.src/M000096.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000096.html');return false;">
           <span class="method-name">path</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Get the <a href="HDB.html#M000093">path</a> of the database file.<br/> The
-return value is the <a href="HDB.html#M000093">path</a> of the database
+Get the <a href="HDB.html#M000096">path</a> of the database file.<br/> The
+return value is the <a href="HDB.html#M000096">path</a> of the database
 file or `nil' if the object does not connect to any database file.<br/>
 </p>
         </div>
@@ -968,12 +983,12 @@ the same key exists in the database, this method has no effect.<br/>
         </div>
       </div>
 
-      <div id="method-M000094" class="method-detail">
-        <a name="M000094"></a>
+      <div id="method-M000097" class="method-detail">
+        <a name="M000097"></a>
 
         <div class="method-heading">
-          <a href="HDB.src/M000094.html" target="Code" class="method-signature"
-            onclick="popupCode('HDB.src/M000094.html');return false;">
+          <a href="HDB.src/M000097.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000097.html');return false;">
           <span class="method-name">rnum</span><span class="method-args">()</span>
           </a>
         </div>
@@ -1043,6 +1058,67 @@ mapping parameters should be set before the database is opened.<br/>
 Synchronize updated contents with the file and the device.<br/> If successful,
 the return value is true, else, it is false.<br/> This method is useful when
 another process connects the same database file.<br/>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000095" class="method-detail">
+        <a name="M000095"></a>
+
+        <div class="method-heading">
+          <a href="HDB.src/M000095.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000095.html');return false;">
+          <span class="method-name">tranabort</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Abort the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> Update in the transaction is discarded when it is aborted. The
+state of the database is rollbacked to before transaction.<br/>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000093" class="method-detail">
+        <a name="M000093"></a>
+
+        <div class="method-heading">
+          <a href="HDB.src/M000093.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000093.html');return false;">
+          <span class="method-name">tranbegin</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Begin the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> The database is locked by the thread while the transaction so
+that only one transaction can be activated with a database object at the
+same time. Thus, the serializable isolation level is assumed if every
+database operation is performed in the transaction. All updated regions are
+kept track of by write ahead logging while the transaction. If the database
+is closed during transaction, the transaction is aborted implicitly.<br/>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000094" class="method-detail">
+        <a name="M000094"></a>
+
+        <div class="method-heading">
+          <a href="HDB.src/M000094.html" target="Code" class="method-signature"
+            onclick="popupCode('HDB.src/M000094.html');return false;">
+          <span class="method-name">trancommit</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Commit the transaction.<br/> If successful, the return value is true, else, it
+is false.<br/> Update in the transaction is fixed when it is committed
+successfully.<br/>
 </p>
         </div>
       </div>
