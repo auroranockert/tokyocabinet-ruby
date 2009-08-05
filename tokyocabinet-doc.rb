@@ -428,6 +428,23 @@ module TokyoCabinet
     def vsiz(key)
       # (native code)
     end
+    # Get keys of ranged records.
+    # `<i>bkey</i>' specifies the key of the beginning border.  If it is not defined, the first record is specified.
+    # `<i>binc</i>' specifies whether the beginning border is inclusive or not.  If it is not defined, false is specified.
+    # `<i>ekey</i>' specifies the key of the ending border.  If it is not defined, the last record is specified.
+    # `<i>einc</i>' specifies whether the ending border is inclusive or not.  If it is not defined, false is specified.
+    # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
+    # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
+    def range(bkey, binc, ekey, einc, max)
+      # (native code)
+    end
+    # Get forward matching keys.
+    # `<i>prefix</i>' specifies the prefix of the corresponding keys.
+    # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
+    # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
+    def rangefwm(prefix, max)
+      # (native code)
+    end
     # Synchronize updated contents with the file and the device.
     # If successful, the return value is true, else, it is false.
     # This method is useful when another process connects the same database file.
