@@ -22,53 +22,53 @@ module TokyoCabinet
   # Except for the interface below, methods compatible with the `Hash' class are also provided; `[]', `[]=', `store', `delete', `fetch', `has_key?', `has_value?', `key', `clear', `size', `empty?', `each', `each_key', `each_value', `keys', and `value'.
   class HDB
     # error code: success
-    TCESUCCESS = 0
+    ESUCCESS = 0
     # error code: threading error
-    TCETHREAD = 1
+    ETHREAD = 1
     # error code: invalid operation
-    TCEINVALID = 2
+    EINVALID = 2
     # error code: file not found
-    TCENOFILE = 3
+    ENOFILE = 3
     # error code: no permission
-    TCENOPERM = 4
+    ENOPERM = 4
     # error code: invalid meta data
-    TCEMETA = 5
+    EMETA = 5
     # error code: invalid record header
-    TCERHEAD = 6
+    ERHEAD = 6
     # error code: open error
-    TCEOPEN = 7
+    EOPEN = 7
     # error code: close error
-    TCECLOSE = 8
+    ECLOSE = 8
     # error code: trunc error
-    TCETRUNC = 9
+    ETRUNC = 9
     # error code: sync error
-    TCESYNC = 10
+    ESYNC = 10
     # error code: stat error
-    TCESTAT = 11
+    ESTAT = 11
     # error code: seek error
-    TCESEEK = 12
+    ESEEK = 12
     # error code: read error
-    TCEREAD = 13
+    EREAD = 13
     # error code: write error
-    TCEWRITE = 14
+    EWRITE = 14
     # error code: mmap error
-    TCEMMAP = 15
+    EMMAP = 15
     # error code: lock error
-    TCELOCK = 16
+    ELOCK = 16
     # error code: unlink error
-    TCEUNLINK = 17
+    EUNLINK = 17
     # error code: rename error
-    TCERENAME = 18
+    ERENAME = 18
     # error code: mkdir error
-    TCEMKDIR = 19
+    EMKDIR = 19
     # error code: rmdir error
-    TCERMDIR = 20
+    ERMDIR = 20
     # error code: existing record
-    TCEKEEP = 21
+    EKEEP = 21
     # error code: no record found
-    TCENOREC = 22
+    ENOREC = 22
     # error code: miscellaneous error
-    TCEMISC = 9999
+    EMISC = 9999
     # tuning option: use 64-bit bucket array
     TLARGE = 1 << 0
     # tuning option: compress each record with Deflate
@@ -110,6 +110,13 @@ module TokyoCabinet
     # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
     # If successful, the return value is true, else, it is false.  Note that the tuning parameters of the database should be set before the database is opened.
     def tune(bnum, apow, fpow, opts)
+      # (native code)
+    end
+    # Set the caching parameters.
+    # `<i>rcnum</i>' specifies the maximum number of records to be cached.  If it is not more than 0, the record cache is disabled. It is disabled by default.
+    # If successful, the return value is true, else, it is false.
+    # Note that the caching parameters of the database should be set before the database is opened.
+    def setcache(rcnum)
       # (native code)
     end
     # Open a database file.
@@ -235,53 +242,53 @@ module TokyoCabinet
   # Except for the interface below, methods compatible with the `Hash' class are also provided; `[]', `[]=', `store', `delete', `fetch', `has_key?', `has_value?', `key', `clear', `size', `empty?', `each', `each_key', `each_value', `keys', and `value'.
   class BDB
     # error code: success
-    TCESUCCESS = 0
+    ESUCCESS = 0
     # error code: threading error
-    TCETHREAD = 1
+    ETHREAD = 1
     # error code: invalid operation
-    TCEINVALID = 2
+    EINVALID = 2
     # error code: file not found
-    TCENOFILE = 3
+    ENOFILE = 3
     # error code: no permission
-    TCENOPERM = 4
+    ENOPERM = 4
     # error code: invalid meta data
-    TCEMETA = 5
+    EMETA = 5
     # error code: invalid record header
-    TCERHEAD = 6
+    ERHEAD = 6
     # error code: open error
-    TCEOPEN = 7
+    EOPEN = 7
     # error code: close error
-    TCECLOSE = 8
+    ECLOSE = 8
     # error code: trunc error
-    TCETRUNC = 9
+    ETRUNC = 9
     # error code: sync error
-    TCESYNC = 10
+    ESYNC = 10
     # error code: stat error
-    TCESTAT = 11
+    ESTAT = 11
     # error code: seek error
-    TCESEEK = 12
+    ESEEK = 12
     # error code: read error
-    TCEREAD = 13
+    EREAD = 13
     # error code: write error
-    TCEWRITE = 14
+    EWRITE = 14
     # error code: mmap error
-    TCEMMAP = 15
+    EMMAP = 15
     # error code: lock error
-    TCELOCK = 16
+    ELOCK = 16
     # error code: unlink error
-    TCEUNLINK = 17
+    EUNLINK = 17
     # error code: rename error
-    TCERENAME = 18
+    ERENAME = 18
     # error code: mkdir error
-    TCEMKDIR = 19
+    EMKDIR = 19
     # error code: rmdir error
-    TCERMDIR = 20
+    ERMDIR = 20
     # error code: existing record
-    TCEKEEP = 21
+    EKEEP = 21
     # error code: no record found
-    TCENOREC = 22
+    ENOREC = 22
     # error code: miscellaneous error
-    TCEMISC = 9999
+    EMISC = 9999
     # tuning option: use 64-bit bucket array
     TLARGE = 1 << 0
     # tuning option: compress each record with Deflate
