@@ -194,6 +194,14 @@ module TokyoCabinet
     def iternext()
       # (native code)
     end
+    # Get forward matching keys.
+    # `<i>prefix</i>' specifies the prefix of the corresponding keys.
+    # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
+    # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
+    # Note that this function may be very slow because every key in the database is scanned.
+    def fwmkeys(prefix, max)
+      # (native code)
+    end
     # Synchronize updated contents with the file and the device.
     # If successful, the return value is true, else, it is false.
     # This method is useful when another process connects the same database file.
@@ -449,7 +457,7 @@ module TokyoCabinet
     # `<i>prefix</i>' specifies the prefix of the corresponding keys.
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.
     # The return value is a list object of the keys of the corresponding records.  This method does never fail and return an empty list even if no record corresponds.
-    def rangefwm(prefix, max)
+    def fwmkeys(prefix, max)
       # (native code)
     end
     # Synchronize updated contents with the file and the device.

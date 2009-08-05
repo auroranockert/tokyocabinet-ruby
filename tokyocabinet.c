@@ -45,6 +45,7 @@ static VALUE hdb_get(VALUE vself, VALUE vkey);
 static VALUE hdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE hdb_iterinit(VALUE vself);
 static VALUE hdb_iternext(VALUE vself);
+static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_sync(VALUE vself);
 static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_vanish(VALUE vself);
@@ -82,7 +83,7 @@ static VALUE bdb_getlist(VALUE vself, VALUE vkey);
 static VALUE bdb_vnum(VALUE vself, VALUE vkey);
 static VALUE bdb_vsiz(VALUE vself, VALUE vkey);
 static VALUE bdb_range(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_rangefwm(int argc, VALUE *argv, VALUE vself);
+static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_sync(VALUE vself);
 static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_vanish(VALUE vself);
@@ -199,6 +200,7 @@ static void hdb_init(void){
   rb_define_method(cls_hdb, "vsiz", hdb_vsiz, 1);
   rb_define_method(cls_hdb, "iterinit", hdb_iterinit, 0);
   rb_define_method(cls_hdb, "iternext", hdb_iternext, 0);
+  rb_define_method(cls_hdb, "fwmkeys", hdb_fwmkeys, -1);
   rb_define_method(cls_hdb, "sync", hdb_sync, 0);
   rb_define_method(cls_hdb, "optimize", hdb_optimize, -1);
   rb_define_method(cls_hdb, "vanish", hdb_vanish, 0);
@@ -451,6 +453,32 @@ static VALUE hdb_iternext(VALUE vself){
   vval = rb_str_new(vbuf, vsiz);
   free(vbuf);
   return vval;
+}
+
+
+static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+  VALUE vhdb, vprefix, vmax, vary, vkey;
+  TCHDB *hdb;
+  TCLIST *keys;
+  const char *pbuf, *kbuf;
+  int i, psiz, max, knum, ksiz;
+  rb_scan_args(argc, argv, "11", &vprefix, &vmax);
+  vhdb = rb_iv_get(vself, HDBVNDATA);
+  Data_Get_Struct(vhdb, TCHDB, hdb);
+  vprefix = StringValue(vprefix);
+  pbuf = RSTRING(vprefix)->ptr;
+  psiz = RSTRING(vprefix)->len;
+  max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
+  keys = tchdbfwmkeys(hdb, pbuf, psiz, max);
+  knum = tclistnum(keys);
+  vary = rb_ary_new2(knum);
+  for(i = 0; i < knum; i++){
+    kbuf = tclistval(keys, i, &ksiz);
+    vkey = rb_str_new(kbuf, ksiz);
+    rb_ary_push(vary, vkey);
+  }
+  tclistdel(keys);
+  return vary;
 }
 
 
@@ -788,7 +816,7 @@ static void bdb_init(void){
   rb_define_method(cls_bdb, "vnum", bdb_vnum, 1);
   rb_define_method(cls_bdb, "vsiz", bdb_vsiz, 1);
   rb_define_method(cls_bdb, "range", bdb_range, -1);
-  rb_define_method(cls_bdb, "rangefwm", bdb_rangefwm, -1);
+  rb_define_method(cls_bdb, "fwmkeys", bdb_fwmkeys, -1);
   rb_define_method(cls_bdb, "sync", bdb_sync, 0);
   rb_define_method(cls_bdb, "optimize", bdb_optimize, -1);
   rb_define_method(cls_bdb, "vanish", bdb_vanish, 0);
@@ -1146,19 +1174,20 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_rangefwm(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
   VALUE vbdb, vprefix, vmax, vary, vkey;
   TCBDB *bdb;
   TCLIST *keys;
-  const char *prefix, *kbuf;
-  int i, max, knum, ksiz;
+  const char *pbuf, *kbuf;
+  int i, psiz, max, knum, ksiz;
   rb_scan_args(argc, argv, "11", &vprefix, &vmax);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   vprefix = StringValue(vprefix);
-  prefix = RSTRING(vprefix)->ptr;
+  pbuf = RSTRING(vprefix)->ptr;
+  psiz = RSTRING(vprefix)->len;
   max = (vmax == Qnil) ? -1 : NUM2INT(vmax);
-  keys = tcbdbrange3(bdb, prefix, max);
+  keys = tcbdbfwmkeys(bdb, pbuf, psiz, max);
   knum = tclistnum(keys);
   vary = rb_ary_new2(knum);
   for(i = 0; i < knum; i++){
