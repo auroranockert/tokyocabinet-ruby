@@ -1365,7 +1365,7 @@ module TokyoCabinet
     # Generate a keyword-in-context string.%%
     # `<i>cols</i>' specifies a hash containing columns.%%
     # `<i>name</i>' specifies the name of a column.  If it is not defined, the first column of the query is specified.%%
-    # `<i>width</i>' specifies the width of strings picked up around each keyword.  If it is not defined, all text is picked up.%%
+    # `<i>width</i>' specifies the width of strings picked up around each keyword.  If it is not defined or negative, the whole text is picked up.%%
     # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL' specifies that each keyword is marked up by the STX (0x02) code and the ETX (0x03) code, `TokyoCabinet::TDBQRY::KWMUBRCT' specifies that each keyword is marked up by the two square brackets, `TokyoCabinet::TDBQRY::KWNOOVER' specifies that each context does not overlap, `TokyoCabinet::TDBQRY::KWPULEAD' specifies that the lead string is picked up forcibly.%%
     # The return value is an array of strings around keywords.%%
     def kwic(cols, name, width, opts)

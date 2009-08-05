@@ -585,7 +585,7 @@ def procmisc(path, rnum, opts, omode)
       end
     end
   end
-  qry = TDBQRY.new(tdb)
+  qry = TDBQRY::new(tdb)
   qry.addcond("", TDBQRY::QCSTRBW, "i:")
   qry.setorder("_num", TDBQRY::QONUMDESC)
   ires = qry.search
@@ -624,6 +624,32 @@ def procmisc(path, rnum, opts, omode)
   if tdb.rnum != itnum - irnum
     eprint(tdb, "(validation)")
     err = true
+  end
+  qry = TDBQRY::new(tdb)
+  qry.addcond("text", TDBQRY::QCSTRBW, "1")
+  qry.setlimit(100, 1)
+  qry.search().each do |pkey|
+    cols = tdb.get(pkey)
+    if cols
+      texts = qry.kwic(cols, "text", -1, TDBQRY::KWMUBRCT)
+      if texts.length > 0
+        texts.each do |text|
+          if !text.index("1")
+            eprint(tdb, "(validation)")
+            err = true
+            break
+          end
+        end
+      else
+        eprint(tdb, "(validation)")
+        err = true
+        break
+      end
+    else
+      eprint(tdb, "get")
+      err = true
+      break
+    end
   end
   if !tdb.vanish
     eprint(tdb, "vanish")

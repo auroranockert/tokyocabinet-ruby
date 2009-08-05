@@ -603,7 +603,7 @@ Generate a keyword-in-context string.<br/> `<em>cols</em>' specifies a
 hash containing columns.<br/> `<em>name</em>' specifies the name of a
 column. If it is not defined, the first column of the query is specified.<br/>
 `<em>width</em>' specifies the width of strings picked up around each
-keyword. If it is not defined, all text is picked up.<br/>
+keyword. If it is not defined or negative, the whole text is picked up.<br/>
 `<em>opts</em>' specifies options by bitwise-or:
 `TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked
 up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL'
