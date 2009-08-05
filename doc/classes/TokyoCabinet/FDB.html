@@ -491,7 +491,7 @@ href="FDB.html#M000035">new</a> fixed-length database object.
       
         <div class="method-description">
           <p>
-Add a real number to a record `<em>key</em>' specifies the key. It
+Add a real number to a record. `<em>key</em>' specifies the key. It
 should be more than 0. If it is &quot;min&quot;, the minimum ID number of
 existing records is specified. If it is &quot;prev&quot;, the number less
 by one than the minimum ID number of existing records is specified. If it
@@ -520,7 +520,7 @@ the `unpack' method with the `d' operator after retrieval.
       
         <div class="method-description">
           <p>
-Add an integer to a record `<em>key</em>' specifies the key. It
+Add an integer to a record. `<em>key</em>' specifies the key. It
 should be more than 0. If it is &quot;min&quot;, the minimum ID number of
 existing records is specified. If it is &quot;prev&quot;, the number less
 by one than the minimum ID number of existing records is specified. If it
@@ -614,8 +614,9 @@ error code.
         <div class="method-description">
           <p>
 Get the message string corresponding to an error code. `<em><a
-href="FDB.html#M000037">ecode</a></em>' specifies the error code. The
-return value is the message string of the error code.
+href="FDB.html#M000037">ecode</a></em>' specifies the error code. If
+it is not defined or negative, the last happened error code is specified.
+The return value is the message string of the error code.
 </p>
         </div>
       </div>

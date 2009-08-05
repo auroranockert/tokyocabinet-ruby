@@ -95,7 +95,7 @@ module TokyoCabinet
       # (native code)
     end
     # Get the message string corresponding to an error code.
-    # `<i>ecode</i>' specifies the error code.
+    # `<i>ecode</i>' specifies the error code.  If it is not defined or negative, the last happened error code is specified.
     # The return value is the message string of the error code.
     def errmsg(ecode)
       # (native code)
@@ -106,7 +106,7 @@ module TokyoCabinet
       # (native code)
     end
     # Set the tuning parameters.
-    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.
+    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 131071.  Suggested size of the bucket array is about from 0.5 to 4 times of the number of all records to be stored.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^4=16.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.
     # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::HDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::HDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::HDB::TDBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::HDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
@@ -211,7 +211,7 @@ module TokyoCabinet
     def fwmkeys(prefix, max)
       # (native code)
     end
-    # Add an integer to a record
+    # Add an integer to a record.
     # `<i>key</i>' specifies the key.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.
@@ -219,7 +219,7 @@ module TokyoCabinet
     def addint(key, num)
       # (native code)
     end
-    # Add a real number to a record
+    # Add a real number to a record.
     # `<i>key</i>' specifies the key.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.
@@ -356,7 +356,7 @@ module TokyoCabinet
       # (native code)
     end
     # Get the message string corresponding to an error code.
-    # `<i>ecode</i>' specifies the error code.
+    # `<i>ecode</i>' specifies the error code.  If it is not defined or negative, the last happened error code is specified.
     # The return value is the message string of the error code.
     def errmsg(ecode)
       # (native code)
@@ -376,7 +376,7 @@ module TokyoCabinet
     # Set the tuning parameters.
     # `<i>lmemb</i>' specifies the number of members in each leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 128.
     # `<i>nmemb</i>' specifies the number of members in each non-leaf page.  If it is not defined or not more than 0, the default value is specified.  The default value is 256.
-    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 16381.  Suggested size of the bucket array is about from 1 to 4 times of the number of all pages to be stored.
+    # `<i>bnum</i>' specifies the number of elements of the bucket array.  If it is not defined or not more than 0, the default value is specified.  The default value is 32749.  Suggested size of the bucket array is about from 1 to 4 times of the number of all pages to be stored.
     # `<i>apow</i>' specifies the size of record alignment by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 4 standing for 2^8=256.
     # `<i>fpow</i>' specifies the maximum number of elements of the free block pool by power of 2.  If it is not defined or negative, the default value is specified.  The default value is 10 standing for 2^10=1024.
     # `<i>opts</i>' specifies options by bitwise or: `TokyoCabinet::BDB::TLARGE' specifies that the size of the database can be larger than 2GB by using 64-bit bucket array, `TokyoCabinet::BDB::TDEFLATE' specifies that each record is compressed with Deflate encoding, `TokyoCabinet::BDB::TBZIP' specifies that each record is compressed with BZIP2 encoding, `TokyoCabinet::BDB::TTCBS' specifies that each record is compressed with TCBS encoding.  If it is not defined, no option is specified.
@@ -509,7 +509,7 @@ module TokyoCabinet
     def fwmkeys(prefix, max)
       # (native code)
     end
-    # Add an integer to a record
+    # Add an integer to a record.
     # `<i>key</i>' specifies the key.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.
@@ -517,7 +517,7 @@ module TokyoCabinet
     def addint(key, num)
       # (native code)
     end
-    # Add a real number to a record
+    # Add a real number to a record.
     # `<i>key</i>' specifies the key.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.
@@ -725,7 +725,7 @@ module TokyoCabinet
       # (native code)
     end
     # Get the message string corresponding to an error code.
-    # `<i>ecode</i>' specifies the error code.
+    # `<i>ecode</i>' specifies the error code.  If it is not defined or negative, the last happened error code is specified.
     # The return value is the message string of the error code.
     def errmsg(ecode)
       # (native code)
@@ -816,7 +816,7 @@ module TokyoCabinet
     def range(interval, max)
       # (native code)
     end
-    # Add an integer to a record
+    # Add an integer to a record.
     # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.
@@ -824,7 +824,7 @@ module TokyoCabinet
     def addint(key, num)
       # (native code)
     end
-    # Add a real number to a record
+    # Add a real number to a record.
     # `<i>key</i>' specifies the key.  It should be more than 0.  If it is "min", the minimum ID number of existing records is specified.  If it is "prev", the number less by one than the minimum ID number of existing records is specified.  If it is "max", the maximum ID number of existing records is specified.  If it is "next", the number greater by one than the maximum ID number of existing records is specified.
     # `<i>num</i>' specifies the additional value.
     # If successful, the return value is the summation value, else, it is `nil'.

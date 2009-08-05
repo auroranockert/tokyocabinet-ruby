@@ -34,6 +34,7 @@ def main
   else
     usage
   end
+  GC.start
   return rv
 end
 
@@ -56,8 +57,7 @@ end
 # print error message of hash database
 def eprint(hdb, func)
   path = hdb.path
-  ecode = hdb.ecode
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, hdb.errmsg(ecode))
+  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, hdb.errmsg)
 end
 
 
@@ -403,7 +403,7 @@ def procmisc(path, rnum, opts, omode)
     end
     i += 1
   end
-  printf("iterator checking:\n")
+  printf("checking iterator:\n")
   if(!hdb.iterinit)
     eprint(hdb, "iterinit")
     err = true
@@ -427,6 +427,36 @@ def procmisc(path, rnum, opts, omode)
   if(hdb.ecode != HDB::ENOREC || inum != hdb.rnum)
     eprint(hdb, "(validation)")
     err = true
+  end
+  keys = hdb.fwmkeys("0", 10)
+  if(hdb.rnum >= 10 && keys.size != 10)
+    eprint(hdb, "fwmkeys")
+    err = true
+  end
+  printf("checking counting:\n")
+  i = 0
+  while(i <= rnum)
+    buf = sprintf("[%d]", rand(rnum))
+    if(rand(2) == 0)
+      if(!hdb.addint(buf, 1) && hdb.ecode() != HDB::EKEEP)
+        eprint(hdb, "addint")
+        err = true
+        break
+      end
+    else
+      if(!hdb.adddouble(buf, 1) && hdb.ecode() != HDB::EKEEP)
+        eprint(hdb, "adddouble")
+        err = true
+        break
+      end
+    end
+    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+      print('.')
+      if(i == rnum || i % (rnum / 10) == 0)
+        printf(" (%08d)\n", i)
+      end
+    end
+    i += 1
   end
   if(!hdb.sync)
     eprint(hdb, "sync")
@@ -470,7 +500,7 @@ def procmisc(path, rnum, opts, omode)
   end
   printf("checking iterator:\n")
   inum = 0
-  hdb.each do |key, value|
+  hdb.each do |tkey, tvalue|
     if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)

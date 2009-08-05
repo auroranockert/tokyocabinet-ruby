@@ -12,7 +12,7 @@ As for database of B+ tree, records whose keys are duplicated can be stored.  Ac
 
 As for database of fixed-length array, records are stored with unique natural numbers.  It is impossible to store two or more records with a key overlaps.  Moreover, the length of each record is limited by the specified length.  Provided operations are the same as ones of hash database.
 
-== Setting
+=== Setting
 
 Install the latest version of Tokyo Cabinet beforehand and get the package of the Ruby binding of Tokyo Cabinet.
 

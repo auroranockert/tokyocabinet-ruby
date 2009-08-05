@@ -34,6 +34,7 @@ def main
   else
     usage
   end
+  GC.start
   return rv
 end
 
@@ -43,7 +44,7 @@ def usage
   STDERR.printf("%s: test cases of the B+ tree database API\n", $0)
   STDERR.printf("\n")
   STDERR.printf("usage:\n")
-  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] [-as] path rnum" +
+  STDERR.printf("  %s write [-tl] [-td|-tb|-tt] [-nl|-nb] path rnum" +
                 " [lmemb [nmemb [bnum [apow [fpow]]]]]\n", $0)
   STDERR.printf("  %s read [-nl|-nb] path\n", $0)
   STDERR.printf("  %s remove [-nl|-nb] path\n", $0)
@@ -56,8 +57,7 @@ end
 # print error message of B+ tree database
 def eprint(bdb, func)
   path = bdb.path
-  ecode = bdb.ecode
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, bdb.errmsg(ecode))
+  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, bdb.errmsg)
 end
 
 
@@ -72,7 +72,6 @@ def runwrite
   fpow = nil
   opts = 0
   omode = 0
-  as = false
   i = 1
   while(i < ARGV.length)
     if(!path && ARGV[i] =~ /^-/)
@@ -88,8 +87,6 @@ def runwrite
         omode |= BDB::ONOLCK
       elsif(ARGV[i] == "-nb")
         omode |= BDB::OLCKNB
-      elsif(ARGV[i] == "-as")
-        as = true
       else
         usage
       end
@@ -118,7 +115,7 @@ def runwrite
   bnum = bnum ? bnum : -1
   apow = apow ? apow : -1
   fpow = fpow ? fpow : -1
-  rv = procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
+  rv = procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode)
   return rv
 end
 
@@ -216,13 +213,11 @@ def runmisc
 end
 
 
-
-
 # perform write command
-def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
+def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode)
   printf("<Writing Test>\n  path=%s  rnum=%d  lmemb=%d  nmemb=%d  bnum=%d  apow=%d  fpow=%d" +
-         "  opts=%d  omode=%d  as=%s\n\n",
-         path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
+         "  opts=%d  omode=%d\n\n",
+         path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
@@ -237,18 +232,10 @@ def procwrite(path, rnum, lmemb, nmemb, bnum, apow, fpow, opts, omode, as)
   i = 1
   while(i <= rnum)
     buf = sprintf("%08d", i)
-    if(as)
-      if(!bdb.putasync(buf, buf))
-        eprint(bdb, "putasync")
-        err = true
-        break
-      end
-    else
-      if(!bdb.put(buf, buf))
-        eprint(bdb, "put")
-        err = true
-        break
-      end
+    if(!bdb.put(buf, buf))
+      eprint(bdb, "put")
+      err = true
+      break
     end
     if(rnum > 250 && i % (rnum / 250) == 0)
       print('.')
@@ -355,7 +342,7 @@ def procmisc(path, rnum, opts, omode)
   err = false
   stime = Time.now
   bdb = BDB::new
-  if(!bdb.tune(rnum / 50, 2, -1, -1, -1, opts))
+  if(!bdb.tune(10, 10, rnum / 50, 2, -1, opts))
     eprint(bdb, "tune")
     err = true
   end
@@ -418,7 +405,7 @@ def procmisc(path, rnum, opts, omode)
     end
     i += 1
   end
-  printf("cursor checking:\n")
+  printf("checking cursor:\n")
   cur = BDBCUR::new(bdb)
   if(!cur.first && bdb.ecode != BDB::ENOREC)
     eprint(bdb, "cur::first")
@@ -444,6 +431,36 @@ def procmisc(path, rnum, opts, omode)
   if(bdb.ecode != BDB::ENOREC || inum != bdb.rnum)
     eprint(bdb, "(validation)")
     err = true
+  end
+  keys = bdb.fwmkeys("0", 10)
+  if(bdb.rnum >= 10 && keys.size != 10)
+    eprint(bdb, "fwmkeys")
+    err = true
+  end
+  printf("checking counting:\n")
+  i = 0
+  while(i <= rnum)
+    buf = sprintf("[%d]", rand(rnum))
+    if(rand(2) == 0)
+      if(!bdb.addint(buf, 1) && bdb.ecode() != BDB::EKEEP)
+        eprint(bdb, "addint")
+        err = true
+        break
+      end
+    else
+      if(!bdb.adddouble(buf, 1) && bdb.ecode() != BDB::EKEEP)
+        eprint(bdb, "adddouble")
+        err = true
+        break
+      end
+    end
+    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+      print('.')
+      if(i == rnum || i % (rnum / 10) == 0)
+        printf(" (%08d)\n", i)
+      end
+    end
+    i += 1
   end
   if(!bdb.sync)
     eprint(bdb, "sync")
@@ -520,11 +537,11 @@ def procmisc(path, rnum, opts, omode)
   cur.put("2A")
   cur.put("2-", BDBCUR::CPBEFORE)
   cur.put("2+")
-  cur.next()
-  cur.next()
+  cur.next
+  cur.next
   cur.put("mid", BDBCUR::CPBEFORE)
   cur.put("2C", BDBCUR::CPAFTER)
-  cur.prev()
+  cur.prev
   cur.out
   vals = bdb.getlist("::2")
   if(!vals || vals.size != 4)
@@ -572,7 +589,7 @@ def procmisc(path, rnum, opts, omode)
   end
   printf("checking iterator:\n")
   inum = 0
-  bdb.each do |key, value|
+  bdb.each do |tkey, tvalue|
     if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)

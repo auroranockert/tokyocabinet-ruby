@@ -34,6 +34,7 @@ def main
   else
     usage
   end
+  GC.start
   return rv
 end
 
@@ -55,8 +56,7 @@ end
 # print error message of fixed-length database
 def eprint(fdb, func)
   path = fdb.path
-  ecode = fdb.ecode
-  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, fdb.errmsg(ecode))
+  STDERR.printf("%s: %s: %s: %s\n", $0, path ? path : "-", func, fdb.errmsg)
 end
 
 
@@ -368,7 +368,7 @@ def procmisc(path, rnum, omode)
     end
     i += 1
   end
-  printf("iterator checking:\n")
+  printf("checking iterator:\n")
   if(!fdb.iterinit)
     eprint(fdb, "iterinit")
     err = true
@@ -392,6 +392,36 @@ def procmisc(path, rnum, omode)
   if(fdb.ecode != FDB::ENOREC || inum != fdb.rnum)
     eprint(fdb, "(validation)")
     err = true
+  end
+  keys = fdb.range("[min,max]", 10)
+  if(fdb.rnum >= 10 && keys.size != 10)
+    eprint(fdb, "range")
+    err = true
+  end
+  printf("checking counting:\n")
+  i = 0
+  while(i <= rnum)
+    buf = sprintf("[%d]", rand(rnum) + 1)
+    if(rand(2) == 0)
+      if(!fdb.addint(buf, 1) && fdb.ecode() != FDB::EKEEP)
+        eprint(fdb, "addint")
+        err = true
+        break
+      end
+    else
+      if(!fdb.adddouble(buf, 1) && fdb.ecode() != FDB::EKEEP)
+        eprint(fdb, "adddouble")
+        err = true
+        break
+      end
+    end
+    if(i > 0 && rnum > 250 && i % (rnum / 250) == 0)
+      print('.')
+      if(i == rnum || i % (rnum / 10) == 0)
+        printf(" (%08d)\n", i)
+      end
+    end
+    i += 1
   end
   if(!fdb.sync)
     eprint(fdb, "sync")
@@ -435,7 +465,7 @@ def procmisc(path, rnum, omode)
   end
   printf("checking iterator:\n")
   inum = 0
-  fdb.each do |key, value|
+  fdb.each do |tkey, tvalue|
     if(inum > 0 && rnum > 250 && inum % (rnum / 250) == 0)
       print('.')
       if(inum == rnum || inum % (rnum / 10) == 0)

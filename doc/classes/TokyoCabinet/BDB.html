@@ -580,7 +580,7 @@ href="BDB.html#M000001">new</a> B+ tree database object.
       
         <div class="method-description">
           <p>
-Add a real number to a record `<em>key</em>' specifies the key.
+Add a real number to a record. `<em>key</em>' specifies the key.
 `<em>num</em>' specifies the additional value. If successful, the
 return value is the summation value, else, it is `nil'. If the
 corresponding record exists, the value is treated as a real number and is
@@ -604,7 +604,7 @@ the `d' operator after retrieval.
       
         <div class="method-description">
           <p>
-Add an integer to a record `<em>key</em>' specifies the key.
+Add an integer to a record. `<em>key</em>' specifies the key.
 `<em>num</em>' specifies the additional value. If successful, the
 return value is the summation value, else, it is `nil'. If the
 corresponding record exists, the value is treated as an integer and is
@@ -693,8 +693,9 @@ error code.
         <div class="method-description">
           <p>
 Get the message string corresponding to an error code. `<em><a
-href="BDB.html#M000003">ecode</a></em>' specifies the error code. The
-return value is the message string of the error code.
+href="BDB.html#M000003">ecode</a></em>' specifies the error code. If
+it is not defined or negative, the last happened error code is specified.
+The return value is the message string of the error code.
 </p>
         </div>
       </div>
@@ -1225,7 +1226,7 @@ default value is specified. The default value is 128.
 page. If it is not defined or not more than 0, the default value is
 specified. The default value is 256. `<em>bnum</em>' specifies the
 number of elements of the bucket array. If it is not defined or not more
-than 0, the default value is specified. The default value is 16381.
+than 0, the default value is specified. The default value is 32749.
 Suggested size of the bucket array is about from 1 to 4 times of the number
 of all pages to be stored. `<em>apow</em>' specifies the size of
 record alignment by power of 2. If it is not defined or negative, the

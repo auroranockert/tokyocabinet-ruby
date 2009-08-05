@@ -22,11 +22,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <limits.h>
+#include <math.h>
 
-#define HDBVNDATA      "hdb"
-#define BDBVNDATA      "bdb"
-#define BDBCURVNDATA   "bdbcur"
-#define FDBVNDATA      "fdb"
+#define HDBVNDATA      "@hdb"
+#define BDBVNDATA      "@bdb"
+#define BDBCURVNDATA   "@bdbcur"
+#define FDBVNDATA      "@fdb"
 #define NUMBUFSIZ      32
 
 #if !defined(RSTRING_PTR)
@@ -44,7 +46,7 @@
 static VALUE StringValueEx(VALUE vobj);
 static void hdb_init(void);
 static VALUE hdb_initialize(VALUE vself);
-static VALUE hdb_errmsg(VALUE vself, VALUE vecode);
+static VALUE hdb_errmsg(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_ecode(VALUE vself);
 static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself);
@@ -83,7 +85,7 @@ static VALUE hdb_values(VALUE vself);
 static void bdb_init(void);
 static int bdb_cmpobj(const char *aptr, int asiz, const char *bptr, int bsiz, VALUE vcmp);
 static VALUE bdb_initialize(VALUE vself);
-static VALUE bdb_errmsg(VALUE vself, VALUE vecode);
+static VALUE bdb_errmsg(int argc, VALUE *argv, VALUE vself);
 static VALUE bdb_ecode(VALUE vself);
 static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp);
 static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself);
@@ -139,7 +141,7 @@ static VALUE bdbcur_key(VALUE vself);
 static VALUE bdbcur_val(VALUE vself);
 static void fdb_init(void);
 static VALUE fdb_initialize(VALUE vself);
-static VALUE fdb_errmsg(VALUE vself, VALUE vecode);
+static VALUE fdb_errmsg(int argc, VALUE *argv, VALUE vself);
 static VALUE fdb_ecode(VALUE vself);
 static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself);
 static VALUE fdb_open(int argc, VALUE *argv, VALUE vself);
@@ -219,6 +221,15 @@ static VALUE StringValueEx(VALUE vobj){
   case T_BIGNUM:
     ksiz = sprintf(kbuf, "%lld", (long long)NUM2LL(vobj));
     return rb_str_new(kbuf, ksiz);
+  case T_TRUE:
+    ksiz = sprintf(kbuf, "true");
+    return rb_str_new(kbuf, ksiz);
+  case T_FALSE:
+    ksiz = sprintf(kbuf, "false");
+    return rb_str_new(kbuf, ksiz);
+  case T_NIL:
+    ksiz = sprintf(kbuf, "nil");
+    return rb_str_new(kbuf, ksiz);
   }
   return StringValue(vobj);
 }
@@ -262,7 +273,7 @@ static void hdb_init(void){
   rb_define_const(cls_hdb, "ONOLCK", INT2NUM(HDBONOLCK));
   rb_define_const(cls_hdb, "OLCKNB", INT2NUM(HDBOLCKNB));
   rb_define_private_method(cls_hdb, "initialize", hdb_initialize, 0);
-  rb_define_method(cls_hdb, "errmsg", hdb_errmsg, 1);
+  rb_define_method(cls_hdb, "errmsg", hdb_errmsg, -1);
   rb_define_method(cls_hdb, "ecode", hdb_ecode, 0);
   rb_define_method(cls_hdb, "tune", hdb_tune, -1);
   rb_define_method(cls_hdb, "setcache", hdb_setcache, -1);
@@ -324,14 +335,15 @@ static VALUE hdb_initialize(VALUE vself){
 }
 
 
-static VALUE hdb_errmsg(VALUE vself, VALUE vecode){
-  VALUE vhdb, vmsg;
+static VALUE hdb_errmsg(int argc, VALUE *argv, VALUE vself){
+  VALUE vhdb, vecode, vmsg;
   TCHDB *hdb;
   const char *msg;
   int ecode;
-  ecode = NUM2INT(vecode);
+  rb_scan_args(argc, argv, "01", &vecode);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
+  ecode = (vecode == Qnil) ? tchdbecode(hdb) : NUM2INT(vecode);
   msg = tchdberrmsg(ecode);
   vmsg = rb_str_new2(msg);
   return vmsg;
@@ -625,7 +637,7 @@ static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself){
   bnum = (vbnum == Qnil) ? -1 : NUM2LL(vbnum);
   apow = (vapow == Qnil) ? -1 : NUM2INT(vapow);
   fpow = (vfpow == Qnil) ? -1 : NUM2INT(vfpow);
-  opts = (vopts == Qnil) ? 0xff : NUM2INT(vopts);
+  opts = (vopts == Qnil) ? UINT8_MAX : NUM2INT(vopts);
   vhdb = rb_iv_get(vself, HDBVNDATA);
   Data_Get_Struct(vhdb, TCHDB, hdb);
   return tchdboptimize(hdb, bnum, apow, fpow, opts) ? Qtrue : Qfalse;
@@ -927,7 +939,7 @@ static void bdb_init(void){
   rb_define_const(cls_bdb, "ONOLCK", INT2NUM(BDBONOLCK));
   rb_define_const(cls_bdb, "OLCKNB", INT2NUM(BDBOLCKNB));
   rb_define_private_method(cls_bdb, "initialize", bdb_initialize, 0);
-  rb_define_method(cls_bdb, "errmsg", bdb_errmsg, 1);
+  rb_define_method(cls_bdb, "errmsg", bdb_errmsg, -1);
   rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
   rb_define_method(cls_bdb, "setcmpfunc", bdb_setcmpfunc, 1);
   rb_define_method(cls_bdb, "tune", bdb_tune, -1);
@@ -1003,14 +1015,15 @@ static VALUE bdb_initialize(VALUE vself){
 }
 
 
-static VALUE bdb_errmsg(VALUE vself, VALUE vecode){
-  VALUE vbdb, vmsg;
+static VALUE bdb_errmsg(int argc, VALUE *argv, VALUE vself){
+  VALUE vbdb, vecode, vmsg;
   TCBDB *bdb;
   const char *msg;
   int ecode;
-  ecode = NUM2INT(vecode);
+  rb_scan_args(argc, argv, "01", &vecode);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
+  ecode = (vecode == Qnil) ? tcbdbecode(bdb) : NUM2INT(vecode);
   msg = tcbdberrmsg(ecode);
   vmsg = rb_str_new2(msg);
   return vmsg;
@@ -1432,7 +1445,7 @@ static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself){
   bnum = (vbnum == Qnil) ? -1 : NUM2LL(vbnum);
   apow = (vapow == Qnil) ? -1 : NUM2INT(vapow);
   fpow = (vfpow == Qnil) ? -1 : NUM2INT(vfpow);
-  opts = (vopts == Qnil) ? 0xff : NUM2INT(vopts);
+  opts = (vopts == Qnil) ? UINT8_MAX : NUM2INT(vopts);
   vbdb = rb_iv_get(vself, BDBVNDATA);
   Data_Get_Struct(vbdb, TCBDB, bdb);
   return tcbdboptimize(bdb, lmemb, nmemb, bnum, apow, fpow, opts) ? Qtrue : Qfalse;
@@ -1754,6 +1767,7 @@ static VALUE bdbcur_initialize(VALUE vself, VALUE vbdb){
   cur = tcbdbcurnew(bdb);
   vcur = Data_Wrap_Struct(cls_bdbcur_data, 0, tcbdbcurdel, cur);
   rb_iv_set(vself, BDBCURVNDATA, vcur);
+  rb_iv_set(vself, BDBVNDATA, vbdb);
   return Qnil;
 }
 
@@ -1895,7 +1909,7 @@ static void fdb_init(void){
   rb_define_const(cls_fdb, "ONOLCK", INT2NUM(FDBONOLCK));
   rb_define_const(cls_fdb, "OLCKNB", INT2NUM(FDBOLCKNB));
   rb_define_private_method(cls_fdb, "initialize", fdb_initialize, 0);
-  rb_define_method(cls_fdb, "errmsg", fdb_errmsg, 1);
+  rb_define_method(cls_fdb, "errmsg", fdb_errmsg, -1);
   rb_define_method(cls_fdb, "ecode", fdb_ecode, 0);
   rb_define_method(cls_fdb, "tune", fdb_tune, -1);
   rb_define_method(cls_fdb, "open", fdb_open, -1);
@@ -1954,14 +1968,15 @@ static VALUE fdb_initialize(VALUE vself){
 }
 
 
-static VALUE fdb_errmsg(VALUE vself, VALUE vecode){
-  VALUE vfdb, vmsg;
+static VALUE fdb_errmsg(int argc, VALUE *argv, VALUE vself){
+  VALUE vfdb, vecode, vmsg;
   TCFDB *fdb;
   const char *msg;
   int ecode;
-  ecode = NUM2INT(vecode);
+  rb_scan_args(argc, argv, "01", &vecode);
   vfdb = rb_iv_get(vself, FDBVNDATA);
   Data_Get_Struct(vfdb, TCFDB, fdb);
+  ecode = (vecode == Qnil) ? tcfdbecode(fdb) : NUM2INT(vecode);
   msg = tcfdberrmsg(ecode);
   vmsg = rb_str_new2(msg);
   return vmsg;
