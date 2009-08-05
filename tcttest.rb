@@ -602,6 +602,21 @@ def procmisc(path, rnum, opts, omode)
     err = true
   end
   qry.addcond("icnt", TDBQRY::QCNUMGT, 0)
+  mures = qry.metasearch([ qry, qry ], TDBQRY::MSUNION)
+  if mures.length != irnum
+    eprint(tdb, "qry::metasearch")
+    err = true
+  end
+  mires = qry.metasearch([ qry, qry ], TDBQRY::MSISECT)
+  if mires.length != irnum
+    eprint(tdb, "qry::metasearch")
+    err = true
+  end
+  mdres = qry.metasearch([ qry, qry ], TDBQRY::MSDIFF)
+  if mdres.length != 0
+    eprint(tdb, "qry::metasearch")
+    err = true
+  end
   if !qry.searchout
     eprint(tdb, "qry::searchout")
     err = true

@@ -80,7 +80,7 @@
 
     <div id="description">
       <p>
-Query is a mechanism to <a href="TDBQRY.html#M000077">search</a> for and
+Query is a mechanism to <a href="TDBQRY.html#M000140">search</a> for and
 retrieve records corresponding conditions from table database.<br/>
 </p>
 
@@ -93,14 +93,16 @@ retrieve records corresponding conditions from table database.<br/>
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000074">addcond</a>&nbsp;&nbsp;
-      <a href="#M000080">hint</a>&nbsp;&nbsp;
-      <a href="#M000073">new</a>&nbsp;&nbsp;
-      <a href="#M000079">proc</a>&nbsp;&nbsp;
-      <a href="#M000077">search</a>&nbsp;&nbsp;
-      <a href="#M000078">searchout</a>&nbsp;&nbsp;
-      <a href="#M000076">setlimit</a>&nbsp;&nbsp;
-      <a href="#M000075">setorder</a>&nbsp;&nbsp;
+      <a href="#M000137">addcond</a>&nbsp;&nbsp;
+      <a href="#M000143">hint</a>&nbsp;&nbsp;
+      <a href="#M000145">kwic</a>&nbsp;&nbsp;
+      <a href="#M000144">metasearch</a>&nbsp;&nbsp;
+      <a href="#M000136">new</a>&nbsp;&nbsp;
+      <a href="#M000142">proc</a>&nbsp;&nbsp;
+      <a href="#M000140">search</a>&nbsp;&nbsp;
+      <a href="#M000141">searchout</a>&nbsp;&nbsp;
+      <a href="#M000139">setlimit</a>&nbsp;&nbsp;
+      <a href="#M000138">setorder</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -273,7 +275,7 @@ query condition: number is equal to at least one token in
           <td class="context-item-value">15</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-query condition: full-text <a href="TDBQRY.html#M000077">search</a> with
+query condition: full-text <a href="TDBQRY.html#M000140">search</a> with
 the phrase of
 
 </td>
@@ -284,7 +286,7 @@ the phrase of
           <td class="context-item-value">16</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-query condition: full-text <a href="TDBQRY.html#M000077">search</a> with
+query condition: full-text <a href="TDBQRY.html#M000140">search</a> with
 all tokens in
 
 </td>
@@ -295,7 +297,7 @@ all tokens in
           <td class="context-item-value">17</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-query condition: full-text <a href="TDBQRY.html#M000077">search</a> with at
+query condition: full-text <a href="TDBQRY.html#M000140">search</a> with at
 least one token in
 
 </td>
@@ -306,7 +308,7 @@ least one token in
           <td class="context-item-value">18</td>
           <td width="3em">&nbsp;</td>
           <td class="context-item-desc">
-query condition: full-text <a href="TDBQRY.html#M000077">search</a> with
+query condition: full-text <a href="TDBQRY.html#M000140">search</a> with
 the compound expression of
 
 </td>
@@ -401,6 +403,86 @@ post treatment: stop the iteration
 
 </td>
         </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">MSUNION</td>
+          <td>=</td>
+          <td class="context-item-value">0</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+set operation type: union
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">MSISECT</td>
+          <td>=</td>
+          <td class="context-item-value">1</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+set operation type: intersection
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">MSDIFF</td>
+          <td>=</td>
+          <td class="context-item-value">2</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+set operation type: difference
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KWMUTAB</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 0</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+KWIC option: mark up by tabs
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KWMUCTRL</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 1</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+KWIC option: mark up by control characters
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KWMUBRCT</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 2</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+KWIC option: mark up by square brackets
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KWNOOVER</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 24</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+KWIC option: do not overlap
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KWPULEAD</td>
+          <td>=</td>
+          <td class="context-item-value">1 &lt;&lt; 25</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+KWIC option: pick up the lead string
+
+</td>
+        </tr>
         </table>
       </div>
     </div>
@@ -414,12 +496,12 @@ post treatment: stop the iteration
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000073" class="method-detail">
-        <a name="M000073"></a>
+      <div id="method-M000136" class="method-detail">
+        <a name="M000136"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000073.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000073.html');return false;">
+          <a href="TDBQRY.src/M000136.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000136.html');return false;">
           <span class="method-name">new</span><span class="method-args">(tdb)</span>
           </a>
         </div>
@@ -427,7 +509,7 @@ post treatment: stop the iteration
         <div class="method-description">
           <p>
 Create a query object.<br/> `<em>tdb</em>' specifies the table database
-object.<br/> The return value is the <a href="TDBQRY.html#M000073">new</a>
+object.<br/> The return value is the <a href="TDBQRY.html#M000136">new</a>
 query object.<br/>
 </p>
         </div>
@@ -435,12 +517,12 @@ query object.<br/>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000074" class="method-detail">
-        <a name="M000074"></a>
+      <div id="method-M000137" class="method-detail">
+        <a name="M000137"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000074.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000074.html');return false;">
+          <a href="TDBQRY.src/M000137.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000137.html');return false;">
           <span class="method-name">addcond</span><span class="method-args">(name, op, expr)</span>
           </a>
         </div>
@@ -471,13 +553,13 @@ than or equal to the expression, `TokyoCabinet::TDBQRY::QCNUMBT' for
 number which is between two tokens of the expression,
 `TokyoCabinet::TDBQRY::QCNUMOREQ' for number which is equal to at
 least one token in the expression, `TokyoCabinet::TDBQRY::QCFTSPH'
-for full-text <a href="TDBQRY.html#M000077">search</a> with the phrase of
+for full-text <a href="TDBQRY.html#M000140">search</a> with the phrase of
 the expression, `TokyoCabinet::TDBQRY::QCFTSAND' for full-text <a
-href="TDBQRY.html#M000077">search</a> with all tokens in the expression,
+href="TDBQRY.html#M000140">search</a> with all tokens in the expression,
 `TokyoCabinet::TDBQRY::QCFTSOR' for full-text <a
-href="TDBQRY.html#M000077">search</a> with at least one token in the
+href="TDBQRY.html#M000140">search</a> with at least one token in the
 expression, `TokyoCabinet::TDBQRY::QCFTSEX' for full-text <a
-href="TDBQRY.html#M000077">search</a> with the compound expression. All
+href="TDBQRY.html#M000140">search</a> with the compound expression. All
 operations can be flagged by bitwise-or:
 `TokyoCabinet::TDBQRY::QCNEGATE' for negation,
 `TokyoCabinet::TDBQRY::QCNOIDX' for using no index.<br/>
@@ -487,39 +569,97 @@ always `nil'.<br/>
         </div>
       </div>
 
-      <div id="method-M000080" class="method-detail">
-        <a name="M000080"></a>
+      <div id="method-M000143" class="method-detail">
+        <a name="M000143"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000080.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000080.html');return false;">
+          <a href="TDBQRY.src/M000143.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000143.html');return false;">
           <span class="method-name">hint</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Get the <a href="TDBQRY.html#M000080">hint</a> of a query object.<br/> The
-return value is the <a href="TDBQRY.html#M000080">hint</a> string.<br/>
+Get the <a href="TDBQRY.html#M000143">hint</a> of a query object.<br/> The
+return value is the <a href="TDBQRY.html#M000143">hint</a> string.<br/>
 </p>
         </div>
       </div>
 
-      <div id="method-M000079" class="method-detail">
-        <a name="M000079"></a>
+      <div id="method-M000145" class="method-detail">
+        <a name="M000145"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000079.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000079.html');return false;">
+          <a href="TDBQRY.src/M000145.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000145.html');return false;">
+          <span class="method-name">kwic</span><span class="method-args">(cols, name, width, opts)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Generate a keyword-in-context string.<br/> `<em>cols</em>' specifies a
+hash containing columns.<br/> `<em>name</em>' specifies the name of a
+column. If it is not defined, the first column of the query is specified.<br/>
+`<em>width</em>' specifies the width of strings picked up around each
+keyword. If it is not defined, all text is picked up.<br/>
+`<em>opts</em>' specifies options by bitwise-or:
+`TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked
+up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL'
+specifies that each keyword is marked up by the STX (0x02) code and the ETX
+(0x03) code, `TokyoCabinet::TDBQRY::KWMUBRCT' specifies that each
+keyword is marked up by the two square brackets,
+`TokyoCabinet::TDBQRY::KWNOOVER' specifies that each context does not
+overlap, `TokyoCabinet::TDBQRY::KWPULEAD' specifies that the lead
+string is picked up forcibly.<br/> The return value is an array of strings
+around keywords.<br/>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000144" class="method-detail">
+        <a name="M000144"></a>
+
+        <div class="method-heading">
+          <a href="TDBQRY.src/M000144.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000144.html');return false;">
+          <span class="method-name">metasearch</span><span class="method-args">(others, type)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Retrieve records with multiple query objects and get the set of the
+result.<br/> `<em>others</em>' specifies an array of the query objects
+except for the self object.<br/> `<em>type</em>' specifies a set
+operation type: `TokyoCabinet::TDBQRY::MSUNION' for the union set,
+`TokyoCabinet::TDBQRY::MSISECT' for the intersection set,
+`TokyoCabinet::TDBQRY::MSDIFF' for the difference set. If it is not
+defined, `TokyoCabinet::TDBQRY::MSUNION' is specified.<br/> The return
+value is an array of the primary keys of the corresponding records. This
+method does never fail. It returns an empty array even if no record
+corresponds.<br/> If the first query object has the order setting, the result
+array is sorted by the order.<br/>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000142" class="method-detail">
+        <a name="M000142"></a>
+
+        <div class="method-heading">
+          <a href="TDBQRY.src/M000142.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000142.html');return false;">
           <span class="method-name">proc</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Process each corresponding record.<br/> This function needs a block parameter
-of the iterator called for each record. The block receives two parameters.
-The first parameter is the primary key. The second parameter is a hash
+Process each corresponding record.<br/> this method needs a block parameter of
+the iterator called for each record. The block receives two parameters. The
+first parameter is the primary key. The second parameter is a hash
 containing columns. It returns flags of the post treatment by bitwise-or:
 `TokyoCabinet::TDBQRY::QPPUT' to modify the record,
 `TokyoCabinet::TDBQRY::QPOUT' to remove the record,
@@ -529,31 +669,31 @@ successful, the return value is true, else, it is false.<br/>
         </div>
       </div>
 
-      <div id="method-M000077" class="method-detail">
-        <a name="M000077"></a>
+      <div id="method-M000140" class="method-detail">
+        <a name="M000140"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000077.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000077.html');return false;">
+          <a href="TDBQRY.src/M000140.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000140.html');return false;">
           <span class="method-name">search</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Execute the <a href="TDBQRY.html#M000077">search</a>.<br/> The return value is
+Execute the <a href="TDBQRY.html#M000140">search</a>.<br/> The return value is
 an array of the primary keys of the corresponding records. This method does
 never fail. It returns an empty array even if no record corresponds.<br/>
 </p>
         </div>
       </div>
 
-      <div id="method-M000078" class="method-detail">
-        <a name="M000078"></a>
+      <div id="method-M000141" class="method-detail">
+        <a name="M000141"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000078.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000078.html');return false;">
+          <a href="TDBQRY.src/M000141.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000141.html');return false;">
           <span class="method-name">searchout</span><span class="method-args">()</span>
           </a>
         </div>
@@ -566,12 +706,12 @@ true, else, it is false.<br/>
         </div>
       </div>
 
-      <div id="method-M000076" class="method-detail">
-        <a name="M000076"></a>
+      <div id="method-M000139" class="method-detail">
+        <a name="M000139"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000076.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000076.html');return false;">
+          <a href="TDBQRY.src/M000139.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000139.html');return false;">
           <span class="method-name">setlimit</span><span class="method-args">(max, skip)</span>
           </a>
         </div>
@@ -587,12 +727,12 @@ than 0, no record is skipped.<br/> The return value is always `nil'.<br/>
         </div>
       </div>
 
-      <div id="method-M000075" class="method-detail">
-        <a name="M000075"></a>
+      <div id="method-M000138" class="method-detail">
+        <a name="M000138"></a>
 
         <div class="method-heading">
-          <a href="TDBQRY.src/M000075.html" target="Code" class="method-signature"
-            onclick="popupCode('TDBQRY.src/M000075.html');return false;">
+          <a href="TDBQRY.src/M000138.html" target="Code" class="method-signature"
+            onclick="popupCode('TDBQRY.src/M000138.html');return false;">
           <span class="method-name">setorder</span><span class="method-args">(name, type)</span>
           </a>
         </div>
@@ -604,7 +744,8 @@ a column. An empty string means the primary key.<br/> `<em>type</em>'
 specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string
 ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending,
 `TokyoCabinet::TDBQRY::QONUMASC' for number ascending,
-`TokyoCabinet::TDBQRY::QONUMDESC' for number descending.<br/> The return
+`TokyoCabinet::TDBQRY::QONUMDESC' for number descending. If it is not
+defined, `TokyoCabinet::TDBQRY::QOSTRASC' is specified.<br/> The return
 value is always `nil'.<br/>
 </p>
         </div>

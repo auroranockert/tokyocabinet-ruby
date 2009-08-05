@@ -236,12 +236,14 @@ static void tdbqry_init(void);
 static int tdbqry_procrec(const void *pkbuf, int pksiz, TCMAP *cols, void *opq);
 static VALUE tdbqry_initialize(VALUE vself, VALUE vtdb);
 static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr);
-static VALUE tdbqry_setorder(VALUE vself, VALUE vname, VALUE vtype);
+static VALUE tdbqry_setorder(int argc, VALUE *argv, VALUE vself);
 static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself);
 static VALUE tdbqry_search(VALUE vself);
 static VALUE tdbqry_searchout(VALUE vself);
 static VALUE tdbqry_proc(VALUE vself, VALUE vproc);
 static VALUE tdbqry_hint(VALUE vself);
+static VALUE tdbqry_metasearch(int argc, VALUE *argv, VALUE vself);
+static VALUE tdbqry_kwic(int argc, VALUE *argv, VALUE vself);
 static void adb_init(void);
 static VALUE adb_initialize(VALUE vself);
 static VALUE adb_open(VALUE vself, VALUE vname);
@@ -3147,15 +3149,25 @@ static void tdbqry_init(void){
   rb_define_const(cls_tdbqry, "QPPUT", INT2NUM(TDBQPPUT));
   rb_define_const(cls_tdbqry, "QPOUT", INT2NUM(TDBQPOUT));
   rb_define_const(cls_tdbqry, "QPSTOP", INT2NUM(TDBQPSTOP));
+  rb_define_const(cls_tdbqry, "MSUNION", INT2NUM(TDBMSUNION));
+  rb_define_const(cls_tdbqry, "MSISECT", INT2NUM(TDBMSISECT));
+  rb_define_const(cls_tdbqry, "MSDIFF", INT2NUM(TDBMSDIFF));
+  rb_define_const(cls_tdbqry, "KWMUTAB", INT2NUM(TCKWMUTAB));
+  rb_define_const(cls_tdbqry, "KWMUCTRL", INT2NUM(TCKWMUCTRL));
+  rb_define_const(cls_tdbqry, "KWMUBRCT", INT2NUM(TCKWMUBRCT));
+  rb_define_const(cls_tdbqry, "KWNOOVER", INT2NUM(TCKWNOOVER));
+  rb_define_const(cls_tdbqry, "KWPULEAD", INT2NUM(TCKWPULEAD));
   rb_define_private_method(cls_tdbqry, "initialize", tdbqry_initialize, 1);
   rb_define_method(cls_tdbqry, "addcond", tdbqry_addcond, 3);
-  rb_define_method(cls_tdbqry, "setorder", tdbqry_setorder, 2);
+  rb_define_method(cls_tdbqry, "setorder", tdbqry_setorder, -1);
   rb_define_method(cls_tdbqry, "setlimit", tdbqry_setlimit, -1);
   rb_define_method(cls_tdbqry, "setmax", tdbqry_setlimit, -1);
   rb_define_method(cls_tdbqry, "search", tdbqry_search, 0);
   rb_define_method(cls_tdbqry, "searchout", tdbqry_searchout, 0);
   rb_define_method(cls_tdbqry, "proc", tdbqry_proc, 0);
   rb_define_method(cls_tdbqry, "hint", tdbqry_hint, 0);
+  rb_define_method(cls_tdbqry, "metasearch", tdbqry_metasearch, -1);
+  rb_define_method(cls_tdbqry, "kwic", tdbqry_kwic, -1);
 }
 
 
@@ -3209,13 +3221,16 @@ static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr){
 }
 
 
-static VALUE tdbqry_setorder(VALUE vself, VALUE vname, VALUE vtype){
-  VALUE vqry;
+static VALUE tdbqry_setorder(int argc, VALUE *argv, VALUE vself){
+  VALUE vqry, vname, vtype;
   TDBQRY *qry;
+  int type;
+  rb_scan_args(argc, argv, "11", &vname, &vtype);
   vname = StringValueEx(vname);
+  type = (vtype == Qnil) ? TDBQOSTRASC : NUM2INT(vtype);
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
   Data_Get_Struct(vqry, TDBQRY, qry);
-  tctdbqrysetorder(qry, RSTRING_PTR(vname), NUM2INT(vtype));
+  tctdbqrysetorder(qry, RSTRING_PTR(vname), type);
   return Qnil;
 }
 
@@ -3272,6 +3287,70 @@ static VALUE tdbqry_hint(VALUE vself){
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
   Data_Get_Struct(vqry, TDBQRY, qry);
   return rb_str_new2(tctdbqryhint(qry));
+}
+
+
+static VALUE tdbqry_metasearch(int argc, VALUE *argv, VALUE vself){
+  VALUE vqry, vothers, vtype, voqry, vary;
+  TDBQRY *qry, **qrys;
+  TCLIST *res;
+  int i, type, num, qnum;
+  rb_scan_args(argc, argv, "11", &vothers, &vtype);
+  Check_Type(vothers, T_ARRAY);
+  type = (vtype == Qnil) ? TDBMSUNION : NUM2INT(vtype);
+  vqry = rb_iv_get(vself, TDBQRYVNDATA);
+  Data_Get_Struct(vqry, TDBQRY, qry);
+  num = RARRAY_LEN(vothers);
+  qrys = tcmalloc(sizeof(*qrys) * (num + 1));
+  qnum = 0;
+  qrys[qnum++] = qry;
+  for(i = 0; i < num; i++){
+    voqry = rb_ary_entry(vothers, i);
+    if(rb_obj_is_instance_of(voqry, cls_tdbqry) == Qtrue){
+      voqry = rb_iv_get(voqry, TDBQRYVNDATA);
+      Data_Get_Struct(voqry, TDBQRY, qrys[qnum++]);
+    }
+  }
+  res = tctdbmetasearch(qrys, qnum, type);
+  vary = listtovary(res);
+  tcfree(qrys);
+  tclistdel(res);
+  return vary;
+}
+
+
+static VALUE tdbqry_kwic(int argc, VALUE *argv, VALUE vself){
+  VALUE vqry, vcols, vname, vwidth, vopts, vval, vary;
+  TDBQRY *qry;
+  TCMAP *cols;
+  const char *name;
+  int width, opts;
+  rb_scan_args(argc, argv, "13", &vcols, &vname, &vwidth, &vopts);
+  Check_Type(vcols, T_HASH);
+  width = (vwidth == Qnil) ? -1 : NUM2INT(vwidth);
+  opts = (vopts == Qnil) ? 0 : NUM2INT(vopts);
+  if(vname == Qnil){
+    cols = vhashtomap(vcols);
+    name = NULL;
+  } else {
+    vname = StringValueEx(vname);
+    cols = tcmapnew2(1);
+    vval = rb_hash_aref(vcols, vname);
+    if(vval != Qnil) tcmapput(cols, RSTRING_PTR(vname), RSTRING_LEN(vname),
+                              RSTRING_PTR(vval), RSTRING_LEN(vval));
+    name = RSTRING_PTR(vname);
+  }
+  if(width < 0){
+    width = 1 << 30;
+    opts |= TCKWNOOVER | TCKWPULEAD;
+  }
+  vqry = rb_iv_get(vself, TDBQRYVNDATA);
+  Data_Get_Struct(vqry, TDBQRY, qry);
+  TCLIST *texts = tctdbqrykwic(qry, cols, name, width, opts);
+  vary = listtovary(texts);
+  tclistdel(texts);
+  tcmapdel(cols);
+  return vary;
 }
 
 

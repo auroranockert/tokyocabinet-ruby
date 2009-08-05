@@ -217,7 +217,7 @@ module TokyoCabinet
     # `<i>prefix</i>' specifies the prefix of the corresponding keys.%%
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.%%
     # The return value is a list object of the keys of the corresponding records.  This method does never fail.  It returns an empty list even if no record corresponds.%%
-    # Note that this function may be very slow because every key in the database is scanned.%%
+    # Note that this method may be very slow because every key in the database is scanned.%%
     def fwmkeys(prefix, max)
       # (native code)
     end
@@ -844,7 +844,7 @@ module TokyoCabinet
     end
     # Get the next key of the iterator.%%
     # If successful, the return value is the next key, else, it is `nil'.  `nil' is returned when no record is to be get out of the iterator.%%
-    # It is possible to access every record by iteration of calling this function.  It is allowed to update or remove records whose keys are fetched while the iteration.  The order of this traversal access method is ascending of the ID number.%%
+    # It is possible to access every record by iteration of calling this method.  It is allowed to update or remove records whose keys are fetched while the iteration.  The order of this traversal access method is ascending of the ID number.%%
     def iternext()
       # (native code)
     end
@@ -1137,7 +1137,7 @@ module TokyoCabinet
     # `<i>prefix</i>' specifies the prefix of the corresponding keys.%%
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.%%
     # The return value is a list object of the keys of the corresponding records.  This method does never fail.  It returns an empty list even if no record corresponds.%%
-    # Note that this function may be very slow because every key in the database is scanned.%%
+    # Note that this method may be very slow because every key in the database is scanned.%%
     def fwmkeys(prefix, max)
       # (native code)
     end
@@ -1289,6 +1289,22 @@ module TokyoCabinet
     QPOUT = 1 << 1
     # post treatment: stop the iteration
     QPSTOP = 1 << 24
+    # set operation type: union
+    MSUNION = 0
+    # set operation type: intersection
+    MSISECT = 1
+    # set operation type: difference
+    MSDIFF = 2
+    # KWIC option: mark up by tabs
+    KWMUTAB = 1 << 0
+    # KWIC option: mark up by control characters
+    KWMUCTRL = 1 << 1
+    # KWIC option: mark up by square brackets
+    KWMUBRCT = 1 << 2
+    # KWIC option: do not overlap
+    KWNOOVER = 1 << 24
+    # KWIC option: pick up the lead string
+    KWPULEAD = 1 << 25
     # Create a query object.%%
     # `<i>tdb</i>' specifies the table database object.%%
     # The return value is the new query object.%%
@@ -1305,7 +1321,7 @@ module TokyoCabinet
     end
     # Set the order of the result.%%
     # `<i>name</i>' specifies the name of a column.  An empty string means the primary key.%%
-    # `<i>type</i>' specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending, `TokyoCabinet::TDBQRY::QONUMASC' for number ascending, `TokyoCabinet::TDBQRY::QONUMDESC' for number descending.%%
+    # `<i>type</i>' specifies the order type: `TokyoCabinet::TDBQRY::QOSTRASC' for string ascending, `TokyoCabinet::TDBQRY::QOSTRDESC' for string descending, `TokyoCabinet::TDBQRY::QONUMASC' for number ascending, `TokyoCabinet::TDBQRY::QONUMDESC' for number descending.  If it is not defined, `TokyoCabinet::TDBQRY::QOSTRASC' is specified.%%
     # The return value is always `nil'.%%
     def setorder(name, type)
       # (native code)
@@ -1328,7 +1344,7 @@ module TokyoCabinet
       # (native code)
     end
     # Process each corresponding record.%%
-    # This function needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise-or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
+    # this method needs a block parameter of the iterator called for each record.  The block receives two parameters.  The first parameter is the primary key.  The second parameter is a hash containing columns.  It returns flags of the post treatment by bitwise-or: `TokyoCabinet::TDBQRY::QPPUT' to modify the record, `TokyoCabinet::TDBQRY::QPOUT' to remove the record, `TokyoCabinet::TDBQRY::QPSTOP' to stop the iteration.%%
     # If successful, the return value is true, else, it is false.%%
     def proc()
       # (native code)
@@ -1336,6 +1352,23 @@ module TokyoCabinet
     # Get the hint of a query object.%%
     # The return value is the hint string.%%
     def hint()
+      # (native code)
+    end
+    # Retrieve records with multiple query objects and get the set of the result.%%
+    # `<i>others</i>' specifies an array of the query objects except for the self object.%%
+    # `<i>type</i>' specifies a set operation type: `TokyoCabinet::TDBQRY::MSUNION' for the union set, `TokyoCabinet::TDBQRY::MSISECT' for the intersection set, `TokyoCabinet::TDBQRY::MSDIFF' for the difference set.  If it is not defined, `TokyoCabinet::TDBQRY::MSUNION' is specified.%%
+    # The return value is an array of the primary keys of the corresponding records.  This method does never fail.  It returns an empty array even if no record corresponds.%%
+    # If the first query object has the order setting, the result array is sorted by the order.%%
+    def metasearch(others, type)
+      # (native code)
+    end
+    # Generate a keyword-in-context string.%%
+    # `<i>cols</i>' specifies a hash containing columns.%%
+    # `<i>name</i>' specifies the name of a column.  If it is not defined, the first column of the query is specified.%%
+    # `<i>width</i>' specifies the width of strings picked up around each keyword.  If it is not defined, all text is picked up.%%
+    # `<i>opts</i>' specifies options by bitwise-or: `TokyoCabinet::TDBQRY::KWMUTAB' specifies that each keyword is marked up between two tab characters, `TokyoCabinet::TDBQRY::KWMUCTRL' specifies that each keyword is marked up by the STX (0x02) code and the ETX (0x03) code, `TokyoCabinet::TDBQRY::KWMUBRCT' specifies that each keyword is marked up by the two square brackets, `TokyoCabinet::TDBQRY::KWNOOVER' specifies that each context does not overlap, `TokyoCabinet::TDBQRY::KWPULEAD' specifies that the lead string is picked up forcibly.%%
+    # The return value is an array of strings around keywords.%%
+    def kwic(cols, name, width, opts)
       # (native code)
     end
   end
@@ -1348,7 +1381,7 @@ module TokyoCabinet
       # (native code)
     end
     # Open a database.%%
-    # `<i>name</i>' specifies the name of the database.  If it is "*", the database will be an on-memory hash database.  If it is "+", the database will be an on-memory tree database.  If its suffix is ".tch", the database will be a hash database.  If its suffix is ".tcb", the database will be a B+ tree database.  If its suffix is ".tcf", the database will be a fixed-length database.  If its suffix is ".tct", the database will be a table database.  Otherwise, this function fails.  Tuning parameters can trail the name, separated by "#".  Each parameter is composed of the name and the value, separated by "=".  On-memory hash database supports "bnum", "capnum", and "capsiz".  On-memory tree database supports "capnum" and "capsiz".  Hash database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", and "xmsiz".  B+ tree database supports "mode", "lmemb", "nmemb", "bnum", "apow", "fpow", "opts", "lcnum", "ncnum", and "xmsiz".  Fixed-length database supports "mode", "width", and "limsiz".  Table database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", "lcnum", "ncnum", "xmsiz", and "idx".%%
+    # `<i>name</i>' specifies the name of the database.  If it is "*", the database will be an on-memory hash database.  If it is "+", the database will be an on-memory tree database.  If its suffix is ".tch", the database will be a hash database.  If its suffix is ".tcb", the database will be a B+ tree database.  If its suffix is ".tcf", the database will be a fixed-length database.  If its suffix is ".tct", the database will be a table database.  Otherwise, this method fails.  Tuning parameters can trail the name, separated by "#".  Each parameter is composed of the name and the value, separated by "=".  On-memory hash database supports "bnum", "capnum", and "capsiz".  On-memory tree database supports "capnum" and "capsiz".  Hash database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", and "xmsiz".  B+ tree database supports "mode", "lmemb", "nmemb", "bnum", "apow", "fpow", "opts", "lcnum", "ncnum", and "xmsiz".  Fixed-length database supports "mode", "width", and "limsiz".  Table database supports "mode", "bnum", "apow", "fpow", "opts", "rcnum", "lcnum", "ncnum", "xmsiz", and "idx".%%
     # If successful, the return value is true, else, it is false.%%
     # The tuning parameter "capnum" specifies the capacity number of records.  "capsiz" specifies the capacity size of using memory.  Records spilled the capacity are removed by the storing order.  "mode" can contain "w" of writer, "r" of reader, "c" of creating, "t" of truncating, "e" of no locking, and "f" of non-blocking lock.  The default mode is relevant to "wc".  "opts" can contains "l" of large option, "d" of Deflate option, "b" of BZIP2 option, and "t" of TCBS option.  "idx" specifies the column name of an index and its type separated by ":".  For example, "casket.tch#bnum=1000000#opts=ld" means that the name of the database file is "casket.tch", and the bucket number is 1000000, and the options are large and Deflate.%%
     def open(name)
@@ -1418,7 +1451,7 @@ module TokyoCabinet
     # `<i>prefix</i>' specifies the prefix of the corresponding keys.%%
     # `<i>max</i>' specifies the maximum number of keys to be fetched.  If it is not defined or negative, no limit is specified.%%
     # The return value is a list object of the keys of the corresponding records.  This method does never fail.  It returns an empty list even if no record corresponds.%%
-    # Note that this function may be very slow because every key in the database is scanned.%%
+    # Note that this method may be very slow because every key in the database is scanned.%%
     def fwmkeys(prefix, max)
       # (native code)
     end
@@ -1445,7 +1478,7 @@ module TokyoCabinet
       # (native code)
     end
     # Optimize the storage.%%
-    # `<i>params</i>' specifies the string of the tuning parameters, which works as with the tuning of parameters the function `tcadbopen'.  If it is not defined, it is not used.%%
+    # `<i>params</i>' specifies the string of the tuning parameters, which works as with the tuning of parameters the method `open'.  If it is not defined, it is not used.%%
     # If successful, the return value is true, else, it is false.%%
     def optimize(params)
       # (native code)
