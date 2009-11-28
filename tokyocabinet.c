@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Ruby binding of Tokyo Cabinet
+ * MacRuby binding of Tokyo Cabinet
  *                                                      Copyright (C) 2006-2009 Mikio Hirabayashi
  * This file is part of Tokyo Cabinet.
  * Tokyo Cabinet is free software; you can redistribute it and/or modify it under the terms of
@@ -54,232 +54,232 @@ static VALUE listtovary(TCLIST *list);
 static TCMAP *vhashtomap(VALUE vhash);
 static VALUE maptovhash(TCMAP *map);
 static void hdb_init(void);
-static VALUE hdb_initialize(VALUE vself);
-static VALUE hdb_errmsg(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_ecode(VALUE vself);
-static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_setdfunit(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_open(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_close(VALUE vself);
-static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE hdb_out(VALUE vself, VALUE vkey);
-static VALUE hdb_get(VALUE vself, VALUE vkey);
-static VALUE hdb_vsiz(VALUE vself, VALUE vkey);
-static VALUE hdb_iterinit(VALUE vself);
-static VALUE hdb_iternext(VALUE vself);
-static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE hdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE hdb_sync(VALUE vself);
-static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_vanish(VALUE vself);
-static VALUE hdb_copy(VALUE vself, VALUE vpath);
-static VALUE hdb_tranbegin(VALUE vself);
-static VALUE hdb_trancommit(VALUE vself);
-static VALUE hdb_tranabort(VALUE vself);
-static VALUE hdb_path(VALUE vself);
-static VALUE hdb_rnum(VALUE vself);
-static VALUE hdb_fsiz(VALUE vself);
-static VALUE hdb_fetch(int argc, VALUE *argv, VALUE vself);
-static VALUE hdb_check(VALUE vself, VALUE vkey);
-static VALUE hdb_check_value(VALUE vself, VALUE vval);
-static VALUE hdb_get_reverse(VALUE vself, VALUE vval);
-static VALUE hdb_empty(VALUE vself);
-static VALUE hdb_each(VALUE vself);
-static VALUE hdb_each_key(VALUE vself);
-static VALUE hdb_each_value(VALUE vself);
-static VALUE hdb_keys(VALUE vself);
-static VALUE hdb_values(VALUE vself);
+static VALUE hdb_initialize(VALUE vself, SEL sel);
+static VALUE hdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_ecode(VALUE vself, SEL sel);
+static VALUE hdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_open(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_close(VALUE vself, SEL sel);
+static VALUE hdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE hdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE hdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE hdb_putasync(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE hdb_out(VALUE vself, SEL sel, VALUE vkey);
+static VALUE hdb_get(VALUE vself, SEL sel, VALUE vkey);
+static VALUE hdb_vsiz(VALUE vself, SEL sel, VALUE vkey);
+static VALUE hdb_iterinit(VALUE vself, SEL sel);
+static VALUE hdb_iternext(VALUE vself, SEL sel);
+static VALUE hdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE hdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE hdb_sync(VALUE vself, SEL sel);
+static VALUE hdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_vanish(VALUE vself, SEL sel);
+static VALUE hdb_copy(VALUE vself, SEL sel, VALUE vpath);
+static VALUE hdb_tranbegin(VALUE vself, SEL sel);
+static VALUE hdb_trancommit(VALUE vself, SEL sel);
+static VALUE hdb_tranabort(VALUE vself, SEL sel);
+static VALUE hdb_path(VALUE vself, SEL sel);
+static VALUE hdb_rnum(VALUE vself, SEL sel);
+static VALUE hdb_fsiz(VALUE vself, SEL sel);
+static VALUE hdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE hdb_check(VALUE vself, SEL sel, VALUE vkey);
+static VALUE hdb_check_value(VALUE vself, SEL sel, VALUE vval);
+static VALUE hdb_get_reverse(VALUE vself, SEL sel, VALUE vval);
+static VALUE hdb_empty(VALUE vself, SEL sel);
+static VALUE hdb_each(VALUE vself, SEL sel);
+static VALUE hdb_each_key(VALUE vself, SEL sel);
+static VALUE hdb_each_value(VALUE vself, SEL sel);
+static VALUE hdb_keys(VALUE vself, SEL sel);
+static VALUE hdb_values(VALUE vself, SEL sel);
 static void bdb_init(void);
 static int bdb_cmpobj(const char *aptr, int asiz, const char *bptr, int bsiz, VALUE vcmp);
-static VALUE bdb_initialize(VALUE vself);
-static VALUE bdb_errmsg(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_ecode(VALUE vself);
-static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp);
-static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_setdfunit(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_open(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_close(VALUE vself);
-static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals);
-static VALUE bdb_out(VALUE vself, VALUE vkey);
-static VALUE bdb_outlist(VALUE vself, VALUE vkey);
-static VALUE bdb_get(VALUE vself, VALUE vkey);
-static VALUE bdb_getlist(VALUE vself, VALUE vkey);
-static VALUE bdb_vnum(VALUE vself, VALUE vkey);
-static VALUE bdb_vsiz(VALUE vself, VALUE vkey);
-static VALUE bdb_range(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE bdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE bdb_sync(VALUE vself);
-static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_vanish(VALUE vself);
-static VALUE bdb_copy(VALUE vself, VALUE vpath);
-static VALUE bdb_tranbegin(VALUE vself);
-static VALUE bdb_trancommit(VALUE vself);
-static VALUE bdb_tranabort(VALUE vself);
-static VALUE bdb_path(VALUE vself);
-static VALUE bdb_rnum(VALUE vself);
-static VALUE bdb_fsiz(VALUE vself);
-static VALUE bdb_fetch(int argc, VALUE *argv, VALUE vself);
-static VALUE bdb_check(VALUE vself, VALUE vkey);
-static VALUE bdb_check_value(VALUE vself, VALUE vval);
-static VALUE bdb_get_reverse(VALUE vself, VALUE vval);
-static VALUE bdb_empty(VALUE vself);
-static VALUE bdb_each(VALUE vself);
-static VALUE bdb_each_key(VALUE vself);
-static VALUE bdb_each_value(VALUE vself);
-static VALUE bdb_keys(VALUE vself);
-static VALUE bdb_values(VALUE vself);
+static VALUE bdb_initialize(VALUE vself, SEL sel);
+static VALUE bdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_ecode(VALUE vself, SEL sel);
+static VALUE bdb_setcmpfunc(VALUE vself, SEL sel, VALUE vcmp);
+static VALUE bdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_open(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_close(VALUE vself, SEL sel);
+static VALUE bdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE bdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE bdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE bdb_putdup(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE bdb_putlist(VALUE vself, SEL sel, VALUE vkey, VALUE vvals);
+static VALUE bdb_out(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_outlist(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_get(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_getlist(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_vnum(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_vsiz(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_range(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE bdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE bdb_sync(VALUE vself, SEL sel);
+static VALUE bdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_vanish(VALUE vself, SEL sel);
+static VALUE bdb_copy(VALUE vself, SEL sel, VALUE vpath);
+static VALUE bdb_tranbegin(VALUE vself, SEL sel);
+static VALUE bdb_trancommit(VALUE vself, SEL sel);
+static VALUE bdb_tranabort(VALUE vself, SEL sel);
+static VALUE bdb_path(VALUE vself, SEL sel);
+static VALUE bdb_rnum(VALUE vself, SEL sel);
+static VALUE bdb_fsiz(VALUE vself, SEL sel);
+static VALUE bdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdb_check(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdb_check_value(VALUE vself, SEL sel, VALUE vval);
+static VALUE bdb_get_reverse(VALUE vself, SEL sel, VALUE vval);
+static VALUE bdb_empty(VALUE vself, SEL sel);
+static VALUE bdb_each(VALUE vself, SEL sel);
+static VALUE bdb_each_key(VALUE vself, SEL sel);
+static VALUE bdb_each_value(VALUE vself, SEL sel);
+static VALUE bdb_keys(VALUE vself, SEL sel);
+static VALUE bdb_values(VALUE vself, SEL sel);
 static void bdbcur_init(void);
-static VALUE bdbcur_initialize(VALUE vself, VALUE vbdb);
-static VALUE bdbcur_first(VALUE vself);
-static VALUE bdbcur_last(VALUE vself);
-static VALUE bdbcur_jump(VALUE vself, VALUE vkey);
-static VALUE bdbcur_prev(VALUE vself);
-static VALUE bdbcur_next(VALUE vself);
-static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself);
-static VALUE bdbcur_out(VALUE vself);
-static VALUE bdbcur_key(VALUE vself);
-static VALUE bdbcur_val(VALUE vself);
+static VALUE bdbcur_initialize(VALUE vself, SEL sel, VALUE vbdb);
+static VALUE bdbcur_first(VALUE vself, SEL sel);
+static VALUE bdbcur_last(VALUE vself, SEL sel);
+static VALUE bdbcur_jump(VALUE vself, SEL sel, VALUE vkey);
+static VALUE bdbcur_prev(VALUE vself, SEL sel);
+static VALUE bdbcur_next(VALUE vself, SEL sel);
+static VALUE bdbcur_put(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE bdbcur_out(VALUE vself, SEL sel);
+static VALUE bdbcur_key(VALUE vself, SEL sel);
+static VALUE bdbcur_val(VALUE vself, SEL sel);
 static void fdb_init(void);
-static VALUE fdb_initialize(VALUE vself);
-static VALUE fdb_errmsg(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_ecode(VALUE vself);
-static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_open(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_close(VALUE vself);
-static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE fdb_out(VALUE vself, VALUE vkey);
-static VALUE fdb_get(VALUE vself, VALUE vkey);
-static VALUE fdb_vsiz(VALUE vself, VALUE vkey);
-static VALUE fdb_iterinit(VALUE vself);
-static VALUE fdb_iternext(VALUE vself);
-static VALUE fdb_range(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE fdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE fdb_sync(VALUE vself);
-static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_vanish(VALUE vself);
-static VALUE fdb_copy(VALUE vself, VALUE vpath);
-static VALUE fdb_tranbegin(VALUE vself);
-static VALUE fdb_trancommit(VALUE vself);
-static VALUE fdb_tranabort(VALUE vself);
-static VALUE fdb_path(VALUE vself);
-static VALUE fdb_rnum(VALUE vself);
-static VALUE fdb_fsiz(VALUE vself);
-static VALUE fdb_fetch(int argc, VALUE *argv, VALUE vself);
-static VALUE fdb_check(VALUE vself, VALUE vkey);
-static VALUE fdb_check_value(VALUE vself, VALUE vval);
-static VALUE fdb_get_reverse(VALUE vself, VALUE vval);
-static VALUE fdb_empty(VALUE vself);
-static VALUE fdb_each(VALUE vself);
-static VALUE fdb_each_key(VALUE vself);
-static VALUE fdb_each_value(VALUE vself);
-static VALUE fdb_keys(VALUE vself);
-static VALUE fdb_values(VALUE vself);
+static VALUE fdb_initialize(VALUE vself, SEL sel);
+static VALUE fdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_ecode(VALUE vself, SEL sel);
+static VALUE fdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_open(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_close(VALUE vself, SEL sel);
+static VALUE fdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE fdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE fdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE fdb_out(VALUE vself, SEL sel, VALUE vkey);
+static VALUE fdb_get(VALUE vself, SEL sel, VALUE vkey);
+static VALUE fdb_vsiz(VALUE vself, SEL sel, VALUE vkey);
+static VALUE fdb_iterinit(VALUE vself, SEL sel);
+static VALUE fdb_iternext(VALUE vself, SEL sel);
+static VALUE fdb_range(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE fdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE fdb_sync(VALUE vself, SEL sel);
+static VALUE fdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_vanish(VALUE vself, SEL sel);
+static VALUE fdb_copy(VALUE vself, SEL sel, VALUE vpath);
+static VALUE fdb_tranbegin(VALUE vself, SEL sel);
+static VALUE fdb_trancommit(VALUE vself, SEL sel);
+static VALUE fdb_tranabort(VALUE vself, SEL sel);
+static VALUE fdb_path(VALUE vself, SEL sel);
+static VALUE fdb_rnum(VALUE vself, SEL sel);
+static VALUE fdb_fsiz(VALUE vself, SEL sel);
+static VALUE fdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE fdb_check(VALUE vself, SEL sel, VALUE vkey);
+static VALUE fdb_check_value(VALUE vself, SEL sel, VALUE vval);
+static VALUE fdb_get_reverse(VALUE vself, SEL sel, VALUE vval);
+static VALUE fdb_empty(VALUE vself, SEL sel);
+static VALUE fdb_each(VALUE vself, SEL sel);
+static VALUE fdb_each_key(VALUE vself, SEL sel);
+static VALUE fdb_each_value(VALUE vself, SEL sel);
+static VALUE fdb_keys(VALUE vself, SEL sel);
+static VALUE fdb_values(VALUE vself, SEL sel);
 static void tdb_init(void);
-static VALUE tdb_initialize(VALUE vself);
-static VALUE tdb_errmsg(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_ecode(VALUE vself);
-static VALUE tdb_tune(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_setcache(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_setxmsiz(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_setdfunit(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_open(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_close(VALUE vself);
-static VALUE tdb_put(VALUE vself, VALUE vkey, VALUE vcols);
-static VALUE tdb_putkeep(VALUE vself, VALUE vkey, VALUE vcols);
-static VALUE tdb_putcat(VALUE vself, VALUE vkey, VALUE vcols);
-static VALUE tdb_out(VALUE vself, VALUE vkey);
-static VALUE tdb_get(VALUE vself, VALUE vkey);
-static VALUE tdb_vsiz(VALUE vself, VALUE vkey);
-static VALUE tdb_iterinit(VALUE vself);
-static VALUE tdb_iternext(VALUE vself);
-static VALUE tdb_fwmkeys(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_addint(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE tdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE tdb_sync(VALUE vself);
-static VALUE tdb_optimize(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_vanish(VALUE vself);
-static VALUE tdb_copy(VALUE vself, VALUE vpath);
-static VALUE tdb_tranbegin(VALUE vself);
-static VALUE tdb_trancommit(VALUE vself);
-static VALUE tdb_tranabort(VALUE vself);
-static VALUE tdb_path(VALUE vself);
-static VALUE tdb_rnum(VALUE vself);
-static VALUE tdb_fsiz(VALUE vself);
-static VALUE tdb_setindex(VALUE vself, VALUE vname, VALUE vtype);
-static VALUE tdb_genuid(VALUE vself);
-static VALUE tdb_fetch(int argc, VALUE *argv, VALUE vself);
-static VALUE tdb_check(VALUE vself, VALUE vkey);
-static VALUE tdb_empty(VALUE vself);
-static VALUE tdb_each(VALUE vself);
-static VALUE tdb_each_key(VALUE vself);
-static VALUE tdb_each_value(VALUE vself);
-static VALUE tdb_keys(VALUE vself);
-static VALUE tdb_values(VALUE vself);
+static VALUE tdb_initialize(VALUE vself, SEL sel);
+static VALUE tdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_ecode(VALUE vself, SEL sel);
+static VALUE tdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_open(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_close(VALUE vself, SEL sel);
+static VALUE tdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vcols);
+static VALUE tdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vcols);
+static VALUE tdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vcols);
+static VALUE tdb_out(VALUE vself, SEL sel, VALUE vkey);
+static VALUE tdb_get(VALUE vself, SEL sel, VALUE vkey);
+static VALUE tdb_vsiz(VALUE vself, SEL sel, VALUE vkey);
+static VALUE tdb_iterinit(VALUE vself, SEL sel);
+static VALUE tdb_iternext(VALUE vself, SEL sel);
+static VALUE tdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE tdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE tdb_sync(VALUE vself, SEL sel);
+static VALUE tdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_vanish(VALUE vself, SEL sel);
+static VALUE tdb_copy(VALUE vself, SEL sel, VALUE vpath);
+static VALUE tdb_tranbegin(VALUE vself, SEL sel);
+static VALUE tdb_trancommit(VALUE vself, SEL sel);
+static VALUE tdb_tranabort(VALUE vself, SEL sel);
+static VALUE tdb_path(VALUE vself, SEL sel);
+static VALUE tdb_rnum(VALUE vself, SEL sel);
+static VALUE tdb_fsiz(VALUE vself, SEL sel);
+static VALUE tdb_setindex(VALUE vself, SEL sel, VALUE vname, VALUE vtype);
+static VALUE tdb_genuid(VALUE vself, SEL sel);
+static VALUE tdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdb_check(VALUE vself, SEL sel, VALUE vkey);
+static VALUE tdb_empty(VALUE vself, SEL sel);
+static VALUE tdb_each(VALUE vself, SEL sel);
+static VALUE tdb_each_key(VALUE vself, SEL sel);
+static VALUE tdb_each_value(VALUE vself, SEL sel);
+static VALUE tdb_keys(VALUE vself, SEL sel);
+static VALUE tdb_values(VALUE vself, SEL sel);
 static void tdbqry_init(void);
 static int tdbqry_procrec(const void *pkbuf, int pksiz, TCMAP *cols, void *opq);
-static VALUE tdbqry_initialize(VALUE vself, VALUE vtdb);
-static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr);
-static VALUE tdbqry_setorder(int argc, VALUE *argv, VALUE vself);
-static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself);
-static VALUE tdbqry_search(VALUE vself);
-static VALUE tdbqry_searchout(VALUE vself);
-static VALUE tdbqry_proc(VALUE vself, VALUE vproc);
-static VALUE tdbqry_hint(VALUE vself);
-static VALUE tdbqry_metasearch(int argc, VALUE *argv, VALUE vself);
-static VALUE tdbqry_kwic(int argc, VALUE *argv, VALUE vself);
+static VALUE tdbqry_initialize(VALUE vself, SEL sel, VALUE vtdb);
+static VALUE tdbqry_addcond(VALUE vself, SEL sel, VALUE vname, VALUE vop, VALUE vexpr);
+static VALUE tdbqry_setorder(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdbqry_setlimit(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdbqry_search(VALUE vself, SEL sel);
+static VALUE tdbqry_searchout(VALUE vself, SEL sel);
+static VALUE tdbqry_proc(VALUE vself, SEL sel, VALUE vproc);
+static VALUE tdbqry_hint(VALUE vself, SEL sel);
+static VALUE tdbqry_metasearch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE tdbqry_kwic(VALUE vself, SEL sel, int argc, VALUE *argv);
 static void adb_init(void);
-static VALUE adb_initialize(VALUE vself);
-static VALUE adb_open(VALUE vself, VALUE vname);
-static VALUE adb_close(VALUE vself);
-static VALUE adb_put(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE adb_putkeep(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE adb_putcat(VALUE vself, VALUE vkey, VALUE vval);
-static VALUE adb_out(VALUE vself, VALUE vkey);
-static VALUE adb_get(VALUE vself, VALUE vkey);
-static VALUE adb_vsiz(VALUE vself, VALUE vkey);
-static VALUE adb_iterinit(VALUE vself);
-static VALUE adb_iternext(VALUE vself);
-static VALUE adb_fwmkeys(int argc, VALUE *argv, VALUE vself);
-static VALUE adb_addint(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE adb_adddouble(VALUE vself, VALUE vkey, VALUE vnum);
-static VALUE adb_sync(VALUE vself);
-static VALUE adb_optimize(int argc, VALUE *argv, VALUE vself);
-static VALUE adb_vanish(VALUE vself);
-static VALUE adb_copy(VALUE vself, VALUE vpath);
-static VALUE adb_tranbegin(VALUE vself);
-static VALUE adb_trancommit(VALUE vself);
-static VALUE adb_tranabort(VALUE vself);
-static VALUE adb_path(VALUE vself);
-static VALUE adb_rnum(VALUE vself);
-static VALUE adb_size(VALUE vself);
-static VALUE adb_misc(int argc, VALUE *argv, VALUE vself);
-static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself);
-static VALUE adb_check(VALUE vself, VALUE vkey);
-static VALUE adb_check_value(VALUE vself, VALUE vval);
-static VALUE adb_get_reverse(VALUE vself, VALUE vval);
-static VALUE adb_empty(VALUE vself);
-static VALUE adb_each(VALUE vself);
-static VALUE adb_each_key(VALUE vself);
-static VALUE adb_each_value(VALUE vself);
-static VALUE adb_keys(VALUE vself);
-static VALUE adb_values(VALUE vself);
+static VALUE adb_initialize(VALUE vself, SEL sel);
+static VALUE adb_open(VALUE vself, SEL sel, VALUE vname);
+static VALUE adb_close(VALUE vself, SEL sel);
+static VALUE adb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE adb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE adb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval);
+static VALUE adb_out(VALUE vself, SEL sel, VALUE vkey);
+static VALUE adb_get(VALUE vself, SEL sel, VALUE vkey);
+static VALUE adb_vsiz(VALUE vself, SEL sel, VALUE vkey);
+static VALUE adb_iterinit(VALUE vself, SEL sel);
+static VALUE adb_iternext(VALUE vself, SEL sel);
+static VALUE adb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE adb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE adb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum);
+static VALUE adb_sync(VALUE vself, SEL sel);
+static VALUE adb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE adb_vanish(VALUE vself, SEL sel);
+static VALUE adb_copy(VALUE vself, SEL sel, VALUE vpath);
+static VALUE adb_tranbegin(VALUE vself, SEL sel);
+static VALUE adb_trancommit(VALUE vself, SEL sel);
+static VALUE adb_tranabort(VALUE vself, SEL sel);
+static VALUE adb_path(VALUE vself, SEL sel);
+static VALUE adb_rnum(VALUE vself, SEL sel);
+static VALUE adb_size(VALUE vself, SEL sel);
+static VALUE adb_misc(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE adb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv);
+static VALUE adb_check(VALUE vself, SEL sel, VALUE vkey);
+static VALUE adb_check_value(VALUE vself, SEL sel, VALUE vval);
+static VALUE adb_get_reverse(VALUE vself, SEL sel, VALUE vval);
+static VALUE adb_empty(VALUE vself, SEL sel);
+static VALUE adb_each(VALUE vself, SEL sel);
+static VALUE adb_each_key(VALUE vself, SEL sel);
+static VALUE adb_each_value(VALUE vself, SEL sel);
+static VALUE adb_keys(VALUE vself, SEL sel);
+static VALUE adb_values(VALUE vself, SEL sel);
 
 
 
@@ -449,63 +449,63 @@ static void hdb_init(void){
   rb_define_const(cls_hdb, "ONOLCK", INT2NUM(HDBONOLCK));
   rb_define_const(cls_hdb, "OLCKNB", INT2NUM(HDBOLCKNB));
   rb_define_const(cls_hdb, "OTSYNC", INT2NUM(HDBOTSYNC));
-  rb_define_private_method(cls_hdb, "initialize", hdb_initialize, 0);
-  rb_define_method(cls_hdb, "errmsg", hdb_errmsg, -1);
-  rb_define_method(cls_hdb, "ecode", hdb_ecode, 0);
-  rb_define_method(cls_hdb, "tune", hdb_tune, -1);
-  rb_define_method(cls_hdb, "setcache", hdb_setcache, -1);
-  rb_define_method(cls_hdb, "setxmsiz", hdb_setxmsiz, -1);
-  rb_define_method(cls_hdb, "setdfunit", hdb_setdfunit, -1);
-  rb_define_method(cls_hdb, "open", hdb_open, -1);
-  rb_define_method(cls_hdb, "close", hdb_close, 0);
-  rb_define_method(cls_hdb, "put", hdb_put, 2);
-  rb_define_method(cls_hdb, "putkeep", hdb_putkeep, 2);
-  rb_define_method(cls_hdb, "putcat", hdb_putcat, 2);
-  rb_define_method(cls_hdb, "putasync", hdb_putasync, 2);
-  rb_define_method(cls_hdb, "out", hdb_out, 1);
-  rb_define_method(cls_hdb, "get", hdb_get, 1);
-  rb_define_method(cls_hdb, "vsiz", hdb_vsiz, 1);
-  rb_define_method(cls_hdb, "iterinit", hdb_iterinit, 0);
-  rb_define_method(cls_hdb, "iternext", hdb_iternext, 0);
-  rb_define_method(cls_hdb, "fwmkeys", hdb_fwmkeys, -1);
-  rb_define_method(cls_hdb, "addint", hdb_addint, 2);
-  rb_define_method(cls_hdb, "adddouble", hdb_adddouble, 2);
-  rb_define_method(cls_hdb, "sync", hdb_sync, 0);
-  rb_define_method(cls_hdb, "optimize", hdb_optimize, -1);
-  rb_define_method(cls_hdb, "vanish", hdb_vanish, 0);
-  rb_define_method(cls_hdb, "copy", hdb_copy, 1);
-  rb_define_method(cls_hdb, "tranbegin", hdb_tranbegin, 0);
-  rb_define_method(cls_hdb, "trancommit", hdb_trancommit, 0);
-  rb_define_method(cls_hdb, "tranabort", hdb_tranabort, 0);
-  rb_define_method(cls_hdb, "path", hdb_path, 0);
-  rb_define_method(cls_hdb, "rnum", hdb_rnum, 0);
-  rb_define_method(cls_hdb, "fsiz", hdb_fsiz, 0);
-  rb_define_method(cls_hdb, "[]", hdb_get, 1);
-  rb_define_method(cls_hdb, "[]=", hdb_put, 2);
-  rb_define_method(cls_hdb, "store", hdb_put, 2);
-  rb_define_method(cls_hdb, "delete", hdb_out, 1);
-  rb_define_method(cls_hdb, "fetch", hdb_fetch, -1);
-  rb_define_method(cls_hdb, "has_key?", hdb_check, 1);
-  rb_define_method(cls_hdb, "key?", hdb_check, 1);
-  rb_define_method(cls_hdb, "include?", hdb_check, 1);
-  rb_define_method(cls_hdb, "member?", hdb_check, 1);
-  rb_define_method(cls_hdb, "has_value?", hdb_check_value, 1);
-  rb_define_method(cls_hdb, "value?", hdb_check_value, 1);
-  rb_define_method(cls_hdb, "key", hdb_get_reverse, 1);
-  rb_define_method(cls_hdb, "clear", hdb_vanish, 0);
-  rb_define_method(cls_hdb, "size", hdb_rnum, 0);
-  rb_define_method(cls_hdb, "length", hdb_rnum, 0);
-  rb_define_method(cls_hdb, "empty?", hdb_empty, 0);
-  rb_define_method(cls_hdb, "each", hdb_each, 0);
-  rb_define_method(cls_hdb, "each_pair", hdb_each, 0);
-  rb_define_method(cls_hdb, "each_key", hdb_each_key, 0);
-  rb_define_method(cls_hdb, "each_value", hdb_each_value, 0);
-  rb_define_method(cls_hdb, "keys", hdb_keys, 0);
-  rb_define_method(cls_hdb, "values", hdb_values, 0);
+  rb_objc_define_method(cls_hdb, "initialize", hdb_initialize, 0);
+  rb_objc_define_method(cls_hdb, "errmsg", hdb_errmsg, -1);
+  rb_objc_define_method(cls_hdb, "ecode", hdb_ecode, 0);
+  rb_objc_define_method(cls_hdb, "tune", hdb_tune, -1);
+  rb_objc_define_method(cls_hdb, "setcache", hdb_setcache, -1);
+  rb_objc_define_method(cls_hdb, "setxmsiz", hdb_setxmsiz, -1);
+  rb_objc_define_method(cls_hdb, "setdfunit", hdb_setdfunit, -1);
+  rb_objc_define_method(cls_hdb, "open", hdb_open, -1);
+  rb_objc_define_method(cls_hdb, "close", hdb_close, 0);
+  rb_objc_define_method(cls_hdb, "put", hdb_put, 2);
+  rb_objc_define_method(cls_hdb, "putkeep", hdb_putkeep, 2);
+  rb_objc_define_method(cls_hdb, "putcat", hdb_putcat, 2);
+  rb_objc_define_method(cls_hdb, "putasync", hdb_putasync, 2);
+  rb_objc_define_method(cls_hdb, "out", hdb_out, 1);
+  rb_objc_define_method(cls_hdb, "get", hdb_get, 1);
+  rb_objc_define_method(cls_hdb, "vsiz", hdb_vsiz, 1);
+  rb_objc_define_method(cls_hdb, "iterinit", hdb_iterinit, 0);
+  rb_objc_define_method(cls_hdb, "iternext", hdb_iternext, 0);
+  rb_objc_define_method(cls_hdb, "fwmkeys", hdb_fwmkeys, -1);
+  rb_objc_define_method(cls_hdb, "addint", hdb_addint, 2);
+  rb_objc_define_method(cls_hdb, "adddouble", hdb_adddouble, 2);
+  rb_objc_define_method(cls_hdb, "sync", hdb_sync, 0);
+  rb_objc_define_method(cls_hdb, "optimize", hdb_optimize, -1);
+  rb_objc_define_method(cls_hdb, "vanish", hdb_vanish, 0);
+  rb_objc_define_method(cls_hdb, "copy", hdb_copy, 1);
+  rb_objc_define_method(cls_hdb, "tranbegin", hdb_tranbegin, 0);
+  rb_objc_define_method(cls_hdb, "trancommit", hdb_trancommit, 0);
+  rb_objc_define_method(cls_hdb, "tranabort", hdb_tranabort, 0);
+  rb_objc_define_method(cls_hdb, "path", hdb_path, 0);
+  rb_objc_define_method(cls_hdb, "rnum", hdb_rnum, 0);
+  rb_objc_define_method(cls_hdb, "fsiz", hdb_fsiz, 0);
+  rb_objc_define_method(cls_hdb, "[]", hdb_get, 1);
+  rb_objc_define_method(cls_hdb, "[]=", hdb_put, 2);
+  rb_objc_define_method(cls_hdb, "store", hdb_put, 2);
+  rb_objc_define_method(cls_hdb, "delete", hdb_out, 1);
+  rb_objc_define_method(cls_hdb, "fetch", hdb_fetch, -1);
+  rb_objc_define_method(cls_hdb, "has_key?", hdb_check, 1);
+  rb_objc_define_method(cls_hdb, "key?", hdb_check, 1);
+  rb_objc_define_method(cls_hdb, "include?", hdb_check, 1);
+  rb_objc_define_method(cls_hdb, "member?", hdb_check, 1);
+  rb_objc_define_method(cls_hdb, "has_value?", hdb_check_value, 1);
+  rb_objc_define_method(cls_hdb, "value?", hdb_check_value, 1);
+  rb_objc_define_method(cls_hdb, "key", hdb_get_reverse, 1);
+  rb_objc_define_method(cls_hdb, "clear", hdb_vanish, 0);
+  rb_objc_define_method(cls_hdb, "size", hdb_rnum, 0);
+  rb_objc_define_method(cls_hdb, "length", hdb_rnum, 0);
+  rb_objc_define_method(cls_hdb, "empty?", hdb_empty, 0);
+  rb_objc_define_method(cls_hdb, "each", hdb_each, 0);
+  rb_objc_define_method(cls_hdb, "each_pair", hdb_each, 0);
+  rb_objc_define_method(cls_hdb, "each_key", hdb_each_key, 0);
+  rb_objc_define_method(cls_hdb, "each_value", hdb_each_value, 0);
+  rb_objc_define_method(cls_hdb, "keys", hdb_keys, 0);
+  rb_objc_define_method(cls_hdb, "values", hdb_values, 0);
 }
 
 
-static VALUE hdb_initialize(VALUE vself){
+static VALUE hdb_initialize(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   hdb = tchdbnew();
@@ -516,7 +516,7 @@ static VALUE hdb_initialize(VALUE vself){
 }
 
 
-static VALUE hdb_errmsg(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vecode;
   TCHDB *hdb;
   const char *msg;
@@ -530,7 +530,7 @@ static VALUE hdb_errmsg(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_ecode(VALUE vself){
+static VALUE hdb_ecode(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -539,7 +539,7 @@ static VALUE hdb_ecode(VALUE vself){
 }
 
 
-static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vbnum, vapow, vfpow, vopts;
   TCHDB *hdb;
   int apow, fpow, opts;
@@ -555,7 +555,7 @@ static VALUE hdb_tune(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vrcnum;
   TCHDB *hdb;
   int rcnum;
@@ -567,7 +567,7 @@ static VALUE hdb_setcache(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vxmsiz;
   TCHDB *hdb;
   int64_t xmsiz;
@@ -579,7 +579,7 @@ static VALUE hdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vdfunit;
   TCHDB *hdb;
   int32_t dfunit;
@@ -591,7 +591,7 @@ static VALUE hdb_setdfunit(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_open(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_open(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vpath, vomode;
   TCHDB *hdb;
   int omode;
@@ -604,7 +604,7 @@ static VALUE hdb_open(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_close(VALUE vself){
+static VALUE hdb_close(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -613,7 +613,7 @@ static VALUE hdb_close(VALUE vself){
 }
 
 
-static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE hdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -625,7 +625,7 @@ static VALUE hdb_put(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE hdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -637,7 +637,7 @@ static VALUE hdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE hdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -649,7 +649,7 @@ static VALUE hdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE hdb_putasync(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -661,7 +661,7 @@ static VALUE hdb_putasync(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE hdb_out(VALUE vself, VALUE vkey){
+static VALUE hdb_out(VALUE vself, SEL sel, VALUE vkey){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -671,7 +671,7 @@ static VALUE hdb_out(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE hdb_get(VALUE vself, VALUE vkey){
+static VALUE hdb_get(VALUE vself, SEL sel, VALUE vkey){
   VALUE vhdb, vval;
   TCHDB *hdb;
   char *vbuf;
@@ -686,7 +686,7 @@ static VALUE hdb_get(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE hdb_vsiz(VALUE vself, VALUE vkey){
+static VALUE hdb_vsiz(VALUE vself, SEL sel, VALUE vkey){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -696,7 +696,7 @@ static VALUE hdb_vsiz(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE hdb_iterinit(VALUE vself){
+static VALUE hdb_iterinit(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -705,7 +705,7 @@ static VALUE hdb_iterinit(VALUE vself){
 }
 
 
-static VALUE hdb_iternext(VALUE vself){
+static VALUE hdb_iternext(VALUE vself, SEL sel){
   VALUE vhdb, vval;
   TCHDB *hdb;
   char *vbuf;
@@ -719,7 +719,7 @@ static VALUE hdb_iternext(VALUE vself){
 }
 
 
-static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vprefix, vmax, vary;
   TCHDB *hdb;
   TCLIST *keys;
@@ -736,7 +736,7 @@ static VALUE hdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE hdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vhdb;
   TCHDB *hdb;
   int num;
@@ -748,7 +748,7 @@ static VALUE hdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE hdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE hdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vhdb;
   TCHDB *hdb;
   double num;
@@ -760,7 +760,7 @@ static VALUE hdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE hdb_sync(VALUE vself){
+static VALUE hdb_sync(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -769,7 +769,7 @@ static VALUE hdb_sync(VALUE vself){
 }
 
 
-static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vbnum, vapow, vfpow, vopts;
   TCHDB *hdb;
   int apow, fpow, opts;
@@ -785,7 +785,7 @@ static VALUE hdb_optimize(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_vanish(VALUE vself){
+static VALUE hdb_vanish(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -794,7 +794,7 @@ static VALUE hdb_vanish(VALUE vself){
 }
 
 
-static VALUE hdb_copy(VALUE vself, VALUE vpath){
+static VALUE hdb_copy(VALUE vself, SEL sel, VALUE vpath){
   VALUE vhdb;
   TCHDB *hdb;
   Check_Type(vpath, T_STRING);
@@ -804,7 +804,7 @@ static VALUE hdb_copy(VALUE vself, VALUE vpath){
 }
 
 
-static VALUE hdb_tranbegin(VALUE vself){
+static VALUE hdb_tranbegin(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -813,7 +813,7 @@ static VALUE hdb_tranbegin(VALUE vself){
 }
 
 
-static VALUE hdb_trancommit(VALUE vself){
+static VALUE hdb_trancommit(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -822,7 +822,7 @@ static VALUE hdb_trancommit(VALUE vself){
 }
 
 
-static VALUE hdb_tranabort(VALUE vself){
+static VALUE hdb_tranabort(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -831,7 +831,7 @@ static VALUE hdb_tranabort(VALUE vself){
 }
 
 
-static VALUE hdb_path(VALUE vself){
+static VALUE hdb_path(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   const char *path;
@@ -842,7 +842,7 @@ static VALUE hdb_path(VALUE vself){
 }
 
 
-static VALUE hdb_rnum(VALUE vself){
+static VALUE hdb_rnum(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -851,7 +851,7 @@ static VALUE hdb_rnum(VALUE vself){
 }
 
 
-static VALUE hdb_fsiz(VALUE vself){
+static VALUE hdb_fsiz(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -860,7 +860,7 @@ static VALUE hdb_fsiz(VALUE vself){
 }
 
 
-static VALUE hdb_fetch(int argc, VALUE *argv, VALUE vself){
+static VALUE hdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vhdb, vkey, vdef, vval;
   TCHDB *hdb;
   char *vbuf;
@@ -879,7 +879,7 @@ static VALUE hdb_fetch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE hdb_check(VALUE vself, VALUE vkey){
+static VALUE hdb_check(VALUE vself, SEL sel, VALUE vkey){
   VALUE vhdb;
   TCHDB *hdb;
   vkey = StringValueEx(vkey);
@@ -889,7 +889,7 @@ static VALUE hdb_check(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE hdb_check_value(VALUE vself, VALUE vval){
+static VALUE hdb_check_value(VALUE vself, SEL sel, VALUE vval){
   VALUE vhdb;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -914,7 +914,7 @@ static VALUE hdb_check_value(VALUE vself, VALUE vval){
 }
 
 
-static VALUE hdb_get_reverse(VALUE vself, VALUE vval){
+static VALUE hdb_get_reverse(VALUE vself, SEL sel, VALUE vval){
   VALUE vhdb, vrv;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -938,7 +938,7 @@ static VALUE hdb_get_reverse(VALUE vself, VALUE vval){
 }
 
 
-static VALUE hdb_empty(VALUE vself){
+static VALUE hdb_empty(VALUE vself, SEL sel){
   VALUE vhdb;
   TCHDB *hdb;
   vhdb = rb_iv_get(vself, HDBVNDATA);
@@ -947,7 +947,7 @@ static VALUE hdb_empty(VALUE vself){
 }
 
 
-static VALUE hdb_each(VALUE vself){
+static VALUE hdb_each(VALUE vself, SEL sel){
   VALUE vhdb, vrv;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -968,7 +968,7 @@ static VALUE hdb_each(VALUE vself){
 }
 
 
-static VALUE hdb_each_key(VALUE vself){
+static VALUE hdb_each_key(VALUE vself, SEL sel){
   VALUE vhdb, vrv;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -988,7 +988,7 @@ static VALUE hdb_each_key(VALUE vself){
 }
 
 
-static VALUE hdb_each_value(VALUE vself){
+static VALUE hdb_each_value(VALUE vself, SEL sel){
   VALUE vhdb, vrv;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -1008,7 +1008,7 @@ static VALUE hdb_each_value(VALUE vself){
 }
 
 
-static VALUE hdb_keys(VALUE vself){
+static VALUE hdb_keys(VALUE vself, SEL sel){
   VALUE vhdb, vary;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -1027,7 +1027,7 @@ static VALUE hdb_keys(VALUE vself){
 }
 
 
-static VALUE hdb_values(VALUE vself){
+static VALUE hdb_values(VALUE vself, SEL sel){
   VALUE vhdb, vary;
   TCHDB *hdb;
   TCXSTR *kxstr, *vxstr;
@@ -1089,63 +1089,63 @@ static void bdb_init(void){
   rb_define_const(cls_bdb, "ONOLCK", INT2NUM(BDBONOLCK));
   rb_define_const(cls_bdb, "OLCKNB", INT2NUM(BDBOLCKNB));
   rb_define_const(cls_bdb, "OTSYNC", INT2NUM(BDBOTSYNC));
-  rb_define_private_method(cls_bdb, "initialize", bdb_initialize, 0);
-  rb_define_method(cls_bdb, "errmsg", bdb_errmsg, -1);
-  rb_define_method(cls_bdb, "ecode", bdb_ecode, 0);
-  rb_define_method(cls_bdb, "setcmpfunc", bdb_setcmpfunc, 1);
-  rb_define_method(cls_bdb, "tune", bdb_tune, -1);
-  rb_define_method(cls_bdb, "setcache", bdb_setcache, -1);
-  rb_define_method(cls_bdb, "setxmsiz", bdb_setxmsiz, -1);
-  rb_define_method(cls_bdb, "setdfunit", bdb_setdfunit, -1);
-  rb_define_method(cls_bdb, "open", bdb_open, -1);
-  rb_define_method(cls_bdb, "close", bdb_close, 0);
-  rb_define_method(cls_bdb, "put", bdb_put, 2);
-  rb_define_method(cls_bdb, "putkeep", bdb_putkeep, 2);
-  rb_define_method(cls_bdb, "putcat", bdb_putcat, 2);
-  rb_define_method(cls_bdb, "putdup", bdb_putdup, 2);
-  rb_define_method(cls_bdb, "putlist", bdb_putlist, 2);
-  rb_define_method(cls_bdb, "out", bdb_out, 1);
-  rb_define_method(cls_bdb, "outlist", bdb_outlist, 1);
-  rb_define_method(cls_bdb, "get", bdb_get, 1);
-  rb_define_method(cls_bdb, "getlist", bdb_getlist, 1);
-  rb_define_method(cls_bdb, "vnum", bdb_vnum, 1);
-  rb_define_method(cls_bdb, "vsiz", bdb_vsiz, 1);
-  rb_define_method(cls_bdb, "range", bdb_range, -1);
-  rb_define_method(cls_bdb, "fwmkeys", bdb_fwmkeys, -1);
-  rb_define_method(cls_bdb, "addint", bdb_addint, 2);
-  rb_define_method(cls_bdb, "adddouble", bdb_adddouble, 2);
-  rb_define_method(cls_bdb, "sync", bdb_sync, 0);
-  rb_define_method(cls_bdb, "optimize", bdb_optimize, -1);
-  rb_define_method(cls_bdb, "vanish", bdb_vanish, 0);
-  rb_define_method(cls_bdb, "copy", bdb_copy, 1);
-  rb_define_method(cls_bdb, "tranbegin", bdb_tranbegin, 0);
-  rb_define_method(cls_bdb, "trancommit", bdb_trancommit, 0);
-  rb_define_method(cls_bdb, "tranabort", bdb_tranabort, 0);
-  rb_define_method(cls_bdb, "path", bdb_path, 0);
-  rb_define_method(cls_bdb, "rnum", bdb_rnum, 0);
-  rb_define_method(cls_bdb, "fsiz", bdb_fsiz, 0);
-  rb_define_method(cls_bdb, "[]", bdb_get, 1);
-  rb_define_method(cls_bdb, "[]=", bdb_put, 2);
-  rb_define_method(cls_bdb, "store", bdb_put, 2);
-  rb_define_method(cls_bdb, "delete", bdb_out, 1);
-  rb_define_method(cls_bdb, "fetch", bdb_fetch, -1);
-  rb_define_method(cls_bdb, "has_key?", bdb_check, 1);
-  rb_define_method(cls_bdb, "key?", bdb_check, 1);
-  rb_define_method(cls_bdb, "include?", bdb_check, 1);
-  rb_define_method(cls_bdb, "member?", bdb_check, 1);
-  rb_define_method(cls_bdb, "has_value?", bdb_check_value, 1);
-  rb_define_method(cls_bdb, "value?", bdb_check_value, 1);
-  rb_define_method(cls_bdb, "key", bdb_get_reverse, 1);
-  rb_define_method(cls_bdb, "clear", bdb_vanish, 0);
-  rb_define_method(cls_bdb, "size", bdb_rnum, 0);
-  rb_define_method(cls_bdb, "length", bdb_rnum, 0);
-  rb_define_method(cls_bdb, "empty?", bdb_empty, 0);
-  rb_define_method(cls_bdb, "each", bdb_each, 0);
-  rb_define_method(cls_bdb, "each_pair", bdb_each, 0);
-  rb_define_method(cls_bdb, "each_key", bdb_each_key, 0);
-  rb_define_method(cls_bdb, "each_value", bdb_each_value, 0);
-  rb_define_method(cls_bdb, "keys", bdb_keys, 0);
-  rb_define_method(cls_bdb, "values", bdb_values, 0);
+  rb_objc_define_method(cls_bdb, "initialize", bdb_initialize, 0);
+  rb_objc_define_method(cls_bdb, "errmsg", bdb_errmsg, -1);
+  rb_objc_define_method(cls_bdb, "ecode", bdb_ecode, 0);
+  rb_objc_define_method(cls_bdb, "setcmpfunc", bdb_setcmpfunc, 1);
+  rb_objc_define_method(cls_bdb, "tune", bdb_tune, -1);
+  rb_objc_define_method(cls_bdb, "setcache", bdb_setcache, -1);
+  rb_objc_define_method(cls_bdb, "setxmsiz", bdb_setxmsiz, -1);
+  rb_objc_define_method(cls_bdb, "setdfunit", bdb_setdfunit, -1);
+  rb_objc_define_method(cls_bdb, "open", bdb_open, -1);
+  rb_objc_define_method(cls_bdb, "close", bdb_close, 0);
+  rb_objc_define_method(cls_bdb, "put", bdb_put, 2);
+  rb_objc_define_method(cls_bdb, "putkeep", bdb_putkeep, 2);
+  rb_objc_define_method(cls_bdb, "putcat", bdb_putcat, 2);
+  rb_objc_define_method(cls_bdb, "putdup", bdb_putdup, 2);
+  rb_objc_define_method(cls_bdb, "putlist", bdb_putlist, 2);
+  rb_objc_define_method(cls_bdb, "out", bdb_out, 1);
+  rb_objc_define_method(cls_bdb, "outlist", bdb_outlist, 1);
+  rb_objc_define_method(cls_bdb, "get", bdb_get, 1);
+  rb_objc_define_method(cls_bdb, "getlist", bdb_getlist, 1);
+  rb_objc_define_method(cls_bdb, "vnum", bdb_vnum, 1);
+  rb_objc_define_method(cls_bdb, "vsiz", bdb_vsiz, 1);
+  rb_objc_define_method(cls_bdb, "range", bdb_range, -1);
+  rb_objc_define_method(cls_bdb, "fwmkeys", bdb_fwmkeys, -1);
+  rb_objc_define_method(cls_bdb, "addint", bdb_addint, 2);
+  rb_objc_define_method(cls_bdb, "adddouble", bdb_adddouble, 2);
+  rb_objc_define_method(cls_bdb, "sync", bdb_sync, 0);
+  rb_objc_define_method(cls_bdb, "optimize", bdb_optimize, -1);
+  rb_objc_define_method(cls_bdb, "vanish", bdb_vanish, 0);
+  rb_objc_define_method(cls_bdb, "copy", bdb_copy, 1);
+  rb_objc_define_method(cls_bdb, "tranbegin", bdb_tranbegin, 0);
+  rb_objc_define_method(cls_bdb, "trancommit", bdb_trancommit, 0);
+  rb_objc_define_method(cls_bdb, "tranabort", bdb_tranabort, 0);
+  rb_objc_define_method(cls_bdb, "path", bdb_path, 0);
+  rb_objc_define_method(cls_bdb, "rnum", bdb_rnum, 0);
+  rb_objc_define_method(cls_bdb, "fsiz", bdb_fsiz, 0);
+  rb_objc_define_method(cls_bdb, "[]", bdb_get, 1);
+  rb_objc_define_method(cls_bdb, "[]=", bdb_put, 2);
+  rb_objc_define_method(cls_bdb, "store", bdb_put, 2);
+  rb_objc_define_method(cls_bdb, "delete", bdb_out, 1);
+  rb_objc_define_method(cls_bdb, "fetch", bdb_fetch, -1);
+  rb_objc_define_method(cls_bdb, "has_key?", bdb_check, 1);
+  rb_objc_define_method(cls_bdb, "key?", bdb_check, 1);
+  rb_objc_define_method(cls_bdb, "include?", bdb_check, 1);
+  rb_objc_define_method(cls_bdb, "member?", bdb_check, 1);
+  rb_objc_define_method(cls_bdb, "has_value?", bdb_check_value, 1);
+  rb_objc_define_method(cls_bdb, "value?", bdb_check_value, 1);
+  rb_objc_define_method(cls_bdb, "key", bdb_get_reverse, 1);
+  rb_objc_define_method(cls_bdb, "clear", bdb_vanish, 0);
+  rb_objc_define_method(cls_bdb, "size", bdb_rnum, 0);
+  rb_objc_define_method(cls_bdb, "length", bdb_rnum, 0);
+  rb_objc_define_method(cls_bdb, "empty?", bdb_empty, 0);
+  rb_objc_define_method(cls_bdb, "each", bdb_each, 0);
+  rb_objc_define_method(cls_bdb, "each_pair", bdb_each, 0);
+  rb_objc_define_method(cls_bdb, "each_key", bdb_each_key, 0);
+  rb_objc_define_method(cls_bdb, "each_value", bdb_each_value, 0);
+  rb_objc_define_method(cls_bdb, "keys", bdb_keys, 0);
+  rb_objc_define_method(cls_bdb, "values", bdb_values, 0);
 }
 
 
@@ -1156,7 +1156,7 @@ static int bdb_cmpobj(const char *aptr, int asiz, const char *bptr, int bsiz, VA
 }
 
 
-static VALUE bdb_initialize(VALUE vself){
+static VALUE bdb_initialize(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   bdb = tcbdbnew();
@@ -1167,7 +1167,7 @@ static VALUE bdb_initialize(VALUE vself){
 }
 
 
-static VALUE bdb_errmsg(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vecode;
   TCBDB *bdb;
   const char *msg;
@@ -1181,7 +1181,7 @@ static VALUE bdb_errmsg(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_ecode(VALUE vself){
+static VALUE bdb_ecode(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1190,7 +1190,7 @@ static VALUE bdb_ecode(VALUE vself){
 }
 
 
-static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp){
+static VALUE bdb_setcmpfunc(VALUE vself, SEL sel, VALUE vcmp){
   VALUE vbdb;
   TCBDB *bdb;
   TCCMP cmp;
@@ -1216,7 +1216,7 @@ static VALUE bdb_setcmpfunc(VALUE vself, VALUE vcmp){
 }
 
 
-static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vlmemb, vnmemb, vbnum, vapow, vfpow, vopts;
   TCBDB *bdb;
   int lmemb, nmemb, apow, fpow, opts;
@@ -1234,7 +1234,7 @@ static VALUE bdb_tune(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vlcnum, vncnum;
   TCBDB *bdb;
   int lcnum, ncnum;
@@ -1247,7 +1247,7 @@ static VALUE bdb_setcache(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vxmsiz;
   TCBDB *bdb;
   int64_t xmsiz;
@@ -1259,7 +1259,7 @@ static VALUE bdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vdfunit;
   TCBDB *bdb;
   int32_t dfunit;
@@ -1271,7 +1271,7 @@ static VALUE bdb_setdfunit(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_open(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_open(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vpath, vomode;
   TCBDB *bdb;
   int omode;
@@ -1284,7 +1284,7 @@ static VALUE bdb_open(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_close(VALUE vself){
+static VALUE bdb_close(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1293,7 +1293,7 @@ static VALUE bdb_close(VALUE vself){
 }
 
 
-static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE bdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1305,7 +1305,7 @@ static VALUE bdb_put(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE bdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1317,7 +1317,7 @@ static VALUE bdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE bdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1329,7 +1329,7 @@ static VALUE bdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE bdb_putdup(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1341,7 +1341,7 @@ static VALUE bdb_putdup(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
+static VALUE bdb_putlist(VALUE vself, SEL sel, VALUE vkey, VALUE vvals){
   VALUE vbdb;
   TCBDB *bdb;
   TCLIST *tvals;
@@ -1358,7 +1358,7 @@ static VALUE bdb_putlist(VALUE vself, VALUE vkey, VALUE vvals){
 }
 
 
-static VALUE bdb_out(VALUE vself, VALUE vkey){
+static VALUE bdb_out(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1368,7 +1368,7 @@ static VALUE bdb_out(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_outlist(VALUE vself, VALUE vkey){
+static VALUE bdb_outlist(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1378,7 +1378,7 @@ static VALUE bdb_outlist(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_get(VALUE vself, VALUE vkey){
+static VALUE bdb_get(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   const char *vbuf;
@@ -1391,7 +1391,7 @@ static VALUE bdb_get(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_getlist(VALUE vself, VALUE vkey){
+static VALUE bdb_getlist(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb, vary;
   TCBDB *bdb;
   TCLIST *vals;
@@ -1405,7 +1405,7 @@ static VALUE bdb_getlist(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_vnum(VALUE vself, VALUE vkey){
+static VALUE bdb_vnum(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1415,7 +1415,7 @@ static VALUE bdb_vnum(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_vsiz(VALUE vself, VALUE vkey){
+static VALUE bdb_vsiz(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1425,7 +1425,7 @@ static VALUE bdb_vsiz(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_range(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vbkey, vbinc, vekey, veinc, vmax, vary;
   TCBDB *bdb;
   TCLIST *keys;
@@ -1461,7 +1461,7 @@ static VALUE bdb_range(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vprefix, vmax, vary;
   TCBDB *bdb;
   TCLIST *keys;
@@ -1478,7 +1478,7 @@ static VALUE bdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE bdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vbdb;
   TCBDB *bdb;
   int num;
@@ -1490,7 +1490,7 @@ static VALUE bdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE bdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE bdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vbdb;
   TCBDB *bdb;
   double num;
@@ -1502,7 +1502,7 @@ static VALUE bdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE bdb_sync(VALUE vself){
+static VALUE bdb_sync(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1511,7 +1511,7 @@ static VALUE bdb_sync(VALUE vself){
 }
 
 
-static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vlmemb, vnmemb, vbnum, vapow, vfpow, vopts;
   TCBDB *bdb;
   int lmemb, nmemb, apow, fpow, opts;
@@ -1529,7 +1529,7 @@ static VALUE bdb_optimize(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_vanish(VALUE vself){
+static VALUE bdb_vanish(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1538,7 +1538,7 @@ static VALUE bdb_vanish(VALUE vself){
 }
 
 
-static VALUE bdb_copy(VALUE vself, VALUE vpath){
+static VALUE bdb_copy(VALUE vself, SEL sel, VALUE vpath){
   VALUE vbdb;
   TCBDB *bdb;
   Check_Type(vpath, T_STRING);
@@ -1548,7 +1548,7 @@ static VALUE bdb_copy(VALUE vself, VALUE vpath){
 }
 
 
-static VALUE bdb_tranbegin(VALUE vself){
+static VALUE bdb_tranbegin(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1557,7 +1557,7 @@ static VALUE bdb_tranbegin(VALUE vself){
 }
 
 
-static VALUE bdb_trancommit(VALUE vself){
+static VALUE bdb_trancommit(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1566,7 +1566,7 @@ static VALUE bdb_trancommit(VALUE vself){
 }
 
 
-static VALUE bdb_tranabort(VALUE vself){
+static VALUE bdb_tranabort(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1575,7 +1575,7 @@ static VALUE bdb_tranabort(VALUE vself){
 }
 
 
-static VALUE bdb_path(VALUE vself){
+static VALUE bdb_path(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   const char *path;
@@ -1586,7 +1586,7 @@ static VALUE bdb_path(VALUE vself){
 }
 
 
-static VALUE bdb_rnum(VALUE vself){
+static VALUE bdb_rnum(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1595,7 +1595,7 @@ static VALUE bdb_rnum(VALUE vself){
 }
 
 
-static VALUE bdb_fsiz(VALUE vself){
+static VALUE bdb_fsiz(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1604,7 +1604,7 @@ static VALUE bdb_fsiz(VALUE vself){
 }
 
 
-static VALUE bdb_fetch(int argc, VALUE *argv, VALUE vself){
+static VALUE bdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vbdb, vkey, vdef, vval;
   TCBDB *bdb;
   char *vbuf;
@@ -1623,7 +1623,7 @@ static VALUE bdb_fetch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdb_check(VALUE vself, VALUE vkey){
+static VALUE bdb_check(VALUE vself, SEL sel, VALUE vkey){
   VALUE vbdb;
   TCBDB *bdb;
   vkey = StringValueEx(vkey);
@@ -1633,7 +1633,7 @@ static VALUE bdb_check(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdb_check_value(VALUE vself, VALUE vval){
+static VALUE bdb_check_value(VALUE vself, SEL sel, VALUE vval){
   VALUE vbdb;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1658,7 +1658,7 @@ static VALUE bdb_check_value(VALUE vself, VALUE vval){
 }
 
 
-static VALUE bdb_get_reverse(VALUE vself, VALUE vval){
+static VALUE bdb_get_reverse(VALUE vself, SEL sel, VALUE vval){
   VALUE vbdb, vrv;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1683,7 +1683,7 @@ static VALUE bdb_get_reverse(VALUE vself, VALUE vval){
 }
 
 
-static VALUE bdb_empty(VALUE vself){
+static VALUE bdb_empty(VALUE vself, SEL sel){
   VALUE vbdb;
   TCBDB *bdb;
   vbdb = rb_iv_get(vself, BDBVNDATA);
@@ -1692,7 +1692,7 @@ static VALUE bdb_empty(VALUE vself){
 }
 
 
-static VALUE bdb_each(VALUE vself){
+static VALUE bdb_each(VALUE vself, SEL sel){
   VALUE vbdb, vrv;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1717,7 +1717,7 @@ static VALUE bdb_each(VALUE vself){
 }
 
 
-static VALUE bdb_each_key(VALUE vself){
+static VALUE bdb_each_key(VALUE vself, SEL sel){
   VALUE vbdb, vrv;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1738,7 +1738,7 @@ static VALUE bdb_each_key(VALUE vself){
 }
 
 
-static VALUE bdb_each_value(VALUE vself){
+static VALUE bdb_each_value(VALUE vself, SEL sel){
   VALUE vbdb, vrv;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1759,7 +1759,7 @@ static VALUE bdb_each_value(VALUE vself){
 }
 
 
-static VALUE bdb_keys(VALUE vself){
+static VALUE bdb_keys(VALUE vself, SEL sel){
   VALUE vbdb, vary;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1779,7 +1779,7 @@ static VALUE bdb_keys(VALUE vself){
 }
 
 
-static VALUE bdb_values(VALUE vself){
+static VALUE bdb_values(VALUE vself, SEL sel){
   VALUE vbdb, vary;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1818,7 +1818,7 @@ static void bdbcur_init(void){
 }
 
 
-static VALUE bdbcur_initialize(VALUE vself, VALUE vbdb){
+static VALUE bdbcur_initialize(VALUE vself, SEL sel, VALUE vbdb){
   VALUE vcur;
   TCBDB *bdb;
   BDBCUR *cur;
@@ -1833,7 +1833,7 @@ static VALUE bdbcur_initialize(VALUE vself, VALUE vbdb){
 }
 
 
-static VALUE bdbcur_first(VALUE vself){
+static VALUE bdbcur_first(VALUE vself, SEL sel){
   VALUE vcur;
   BDBCUR *cur;
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1842,7 +1842,7 @@ static VALUE bdbcur_first(VALUE vself){
 }
 
 
-static VALUE bdbcur_last(VALUE vself){
+static VALUE bdbcur_last(VALUE vself, SEL sel){
   VALUE vcur;
   BDBCUR *cur;
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1851,7 +1851,7 @@ static VALUE bdbcur_last(VALUE vself){
 }
 
 
-static VALUE bdbcur_jump(VALUE vself, VALUE vkey){
+static VALUE bdbcur_jump(VALUE vself, SEL sel, VALUE vkey){
   VALUE vcur;
   BDBCUR *cur;
   vkey = StringValueEx(vkey);
@@ -1861,7 +1861,7 @@ static VALUE bdbcur_jump(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE bdbcur_prev(VALUE vself){
+static VALUE bdbcur_prev(VALUE vself, SEL sel){
   VALUE vcur;
   BDBCUR *cur;
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1870,7 +1870,7 @@ static VALUE bdbcur_prev(VALUE vself){
 }
 
 
-static VALUE bdbcur_next(VALUE vself){
+static VALUE bdbcur_next(VALUE vself, SEL sel){
   VALUE vcur;
   BDBCUR *cur;
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1879,7 +1879,7 @@ static VALUE bdbcur_next(VALUE vself){
 }
 
 
-static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself){
+static VALUE bdbcur_put(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vcur, vval, vcpmode;
   BDBCUR *cur;
   int cpmode;
@@ -1892,7 +1892,7 @@ static VALUE bdbcur_put(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE bdbcur_out(VALUE vself){
+static VALUE bdbcur_out(VALUE vself, SEL sel){
   VALUE vcur;
   BDBCUR *cur;
   vcur = rb_iv_get(vself, BDBCURVNDATA);
@@ -1901,7 +1901,7 @@ static VALUE bdbcur_out(VALUE vself){
 }
 
 
-static VALUE bdbcur_key(VALUE vself){
+static VALUE bdbcur_key(VALUE vself, SEL sel){
   VALUE vcur, vkey;
   BDBCUR *cur;
   char *kbuf;
@@ -1915,7 +1915,7 @@ static VALUE bdbcur_key(VALUE vself){
 }
 
 
-static VALUE bdbcur_val(VALUE vself){
+static VALUE bdbcur_val(VALUE vself, SEL sel){
   VALUE vcur, vval;
   BDBCUR *cur;
   char *vbuf;
@@ -1962,59 +1962,59 @@ static void fdb_init(void){
   rb_define_const(cls_fdb, "OTRUNC", INT2NUM(FDBOTRUNC));
   rb_define_const(cls_fdb, "ONOLCK", INT2NUM(FDBONOLCK));
   rb_define_const(cls_fdb, "OLCKNB", INT2NUM(FDBOLCKNB));
-  rb_define_private_method(cls_fdb, "initialize", fdb_initialize, 0);
-  rb_define_method(cls_fdb, "errmsg", fdb_errmsg, -1);
-  rb_define_method(cls_fdb, "ecode", fdb_ecode, 0);
-  rb_define_method(cls_fdb, "tune", fdb_tune, -1);
-  rb_define_method(cls_fdb, "open", fdb_open, -1);
-  rb_define_method(cls_fdb, "close", fdb_close, 0);
-  rb_define_method(cls_fdb, "put", fdb_put, 2);
-  rb_define_method(cls_fdb, "putkeep", fdb_putkeep, 2);
-  rb_define_method(cls_fdb, "putcat", fdb_putcat, 2);
-  rb_define_method(cls_fdb, "out", fdb_out, 1);
-  rb_define_method(cls_fdb, "get", fdb_get, 1);
-  rb_define_method(cls_fdb, "vsiz", fdb_vsiz, 1);
-  rb_define_method(cls_fdb, "iterinit", fdb_iterinit, 0);
-  rb_define_method(cls_fdb, "iternext", fdb_iternext, 0);
-  rb_define_method(cls_fdb, "range", fdb_range, -1);
-  rb_define_method(cls_fdb, "addint", fdb_addint, 2);
-  rb_define_method(cls_fdb, "adddouble", fdb_adddouble, 2);
-  rb_define_method(cls_fdb, "sync", fdb_sync, 0);
-  rb_define_method(cls_fdb, "optimize", fdb_optimize, -1);
-  rb_define_method(cls_fdb, "vanish", fdb_vanish, 0);
-  rb_define_method(cls_fdb, "copy", fdb_copy, 1);
-  rb_define_method(cls_fdb, "tranbegin", fdb_tranbegin, 0);
-  rb_define_method(cls_fdb, "trancommit", fdb_trancommit, 0);
-  rb_define_method(cls_fdb, "tranabort", fdb_tranabort, 0);
-  rb_define_method(cls_fdb, "path", fdb_path, 0);
-  rb_define_method(cls_fdb, "rnum", fdb_rnum, 0);
-  rb_define_method(cls_fdb, "fsiz", fdb_fsiz, 0);
-  rb_define_method(cls_fdb, "[]", fdb_get, 1);
-  rb_define_method(cls_fdb, "[]=", fdb_put, 2);
-  rb_define_method(cls_fdb, "store", fdb_put, 2);
-  rb_define_method(cls_fdb, "delete", fdb_out, 1);
-  rb_define_method(cls_fdb, "fetch", fdb_fetch, -1);
-  rb_define_method(cls_fdb, "has_key?", fdb_check, 1);
-  rb_define_method(cls_fdb, "key?", fdb_check, 1);
-  rb_define_method(cls_fdb, "include?", fdb_check, 1);
-  rb_define_method(cls_fdb, "member?", fdb_check, 1);
-  rb_define_method(cls_fdb, "has_value?", fdb_check_value, 1);
-  rb_define_method(cls_fdb, "value?", fdb_check_value, 1);
-  rb_define_method(cls_fdb, "key", fdb_get_reverse, 1);
-  rb_define_method(cls_fdb, "clear", fdb_vanish, 0);
-  rb_define_method(cls_fdb, "size", fdb_rnum, 0);
-  rb_define_method(cls_fdb, "length", fdb_rnum, 0);
-  rb_define_method(cls_fdb, "empty?", fdb_empty, 0);
-  rb_define_method(cls_fdb, "each", fdb_each, 0);
-  rb_define_method(cls_fdb, "each_pair", fdb_each, 0);
-  rb_define_method(cls_fdb, "each_key", fdb_each_key, 0);
-  rb_define_method(cls_fdb, "each_value", fdb_each_value, 0);
-  rb_define_method(cls_fdb, "keys", fdb_keys, 0);
-  rb_define_method(cls_fdb, "values", fdb_values, 0);
+  rb_objc_define_method(cls_fdb, "initialize", fdb_initialize, 0);
+  rb_objc_define_method(cls_fdb, "errmsg", fdb_errmsg, -1);
+  rb_objc_define_method(cls_fdb, "ecode", fdb_ecode, 0);
+  rb_objc_define_method(cls_fdb, "tune", fdb_tune, -1);
+  rb_objc_define_method(cls_fdb, "open", fdb_open, -1);
+  rb_objc_define_method(cls_fdb, "close", fdb_close, 0);
+  rb_objc_define_method(cls_fdb, "put", fdb_put, 2);
+  rb_objc_define_method(cls_fdb, "putkeep", fdb_putkeep, 2);
+  rb_objc_define_method(cls_fdb, "putcat", fdb_putcat, 2);
+  rb_objc_define_method(cls_fdb, "out", fdb_out, 1);
+  rb_objc_define_method(cls_fdb, "get", fdb_get, 1);
+  rb_objc_define_method(cls_fdb, "vsiz", fdb_vsiz, 1);
+  rb_objc_define_method(cls_fdb, "iterinit", fdb_iterinit, 0);
+  rb_objc_define_method(cls_fdb, "iternext", fdb_iternext, 0);
+  rb_objc_define_method(cls_fdb, "range", fdb_range, -1);
+  rb_objc_define_method(cls_fdb, "addint", fdb_addint, 2);
+  rb_objc_define_method(cls_fdb, "adddouble", fdb_adddouble, 2);
+  rb_objc_define_method(cls_fdb, "sync", fdb_sync, 0);
+  rb_objc_define_method(cls_fdb, "optimize", fdb_optimize, -1);
+  rb_objc_define_method(cls_fdb, "vanish", fdb_vanish, 0);
+  rb_objc_define_method(cls_fdb, "copy", fdb_copy, 1);
+  rb_objc_define_method(cls_fdb, "tranbegin", fdb_tranbegin, 0);
+  rb_objc_define_method(cls_fdb, "trancommit", fdb_trancommit, 0);
+  rb_objc_define_method(cls_fdb, "tranabort", fdb_tranabort, 0);
+  rb_objc_define_method(cls_fdb, "path", fdb_path, 0);
+  rb_objc_define_method(cls_fdb, "rnum", fdb_rnum, 0);
+  rb_objc_define_method(cls_fdb, "fsiz", fdb_fsiz, 0);
+  rb_objc_define_method(cls_fdb, "[]", fdb_get, 1);
+  rb_objc_define_method(cls_fdb, "[]=", fdb_put, 2);
+  rb_objc_define_method(cls_fdb, "store", fdb_put, 2);
+  rb_objc_define_method(cls_fdb, "delete", fdb_out, 1);
+  rb_objc_define_method(cls_fdb, "fetch", fdb_fetch, -1);
+  rb_objc_define_method(cls_fdb, "has_key?", fdb_check, 1);
+  rb_objc_define_method(cls_fdb, "key?", fdb_check, 1);
+  rb_objc_define_method(cls_fdb, "include?", fdb_check, 1);
+  rb_objc_define_method(cls_fdb, "member?", fdb_check, 1);
+  rb_objc_define_method(cls_fdb, "has_value?", fdb_check_value, 1);
+  rb_objc_define_method(cls_fdb, "value?", fdb_check_value, 1);
+  rb_objc_define_method(cls_fdb, "key", fdb_get_reverse, 1);
+  rb_objc_define_method(cls_fdb, "clear", fdb_vanish, 0);
+  rb_objc_define_method(cls_fdb, "size", fdb_rnum, 0);
+  rb_objc_define_method(cls_fdb, "length", fdb_rnum, 0);
+  rb_objc_define_method(cls_fdb, "empty?", fdb_empty, 0);
+  rb_objc_define_method(cls_fdb, "each", fdb_each, 0);
+  rb_objc_define_method(cls_fdb, "each_pair", fdb_each, 0);
+  rb_objc_define_method(cls_fdb, "each_key", fdb_each_key, 0);
+  rb_objc_define_method(cls_fdb, "each_value", fdb_each_value, 0);
+  rb_objc_define_method(cls_fdb, "keys", fdb_keys, 0);
+  rb_objc_define_method(cls_fdb, "values", fdb_values, 0);
 }
 
 
-static VALUE fdb_initialize(VALUE vself){
+static VALUE fdb_initialize(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   fdb = tcfdbnew();
@@ -2025,7 +2025,7 @@ static VALUE fdb_initialize(VALUE vself){
 }
 
 
-static VALUE fdb_errmsg(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vecode;
   TCFDB *fdb;
   const char *msg;
@@ -2039,7 +2039,7 @@ static VALUE fdb_errmsg(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_ecode(VALUE vself){
+static VALUE fdb_ecode(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2048,7 +2048,7 @@ static VALUE fdb_ecode(VALUE vself){
 }
 
 
-static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vwidth, vlimsiz;
   TCFDB *fdb;
   int width;
@@ -2062,7 +2062,7 @@ static VALUE fdb_tune(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_open(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_open(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vpath, vomode;
   TCFDB *fdb;
   int omode;
@@ -2075,7 +2075,7 @@ static VALUE fdb_open(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_close(VALUE vself){
+static VALUE fdb_close(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2084,7 +2084,7 @@ static VALUE fdb_close(VALUE vself){
 }
 
 
-static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE fdb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2096,7 +2096,7 @@ static VALUE fdb_put(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE fdb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2108,7 +2108,7 @@ static VALUE fdb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE fdb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2120,7 +2120,7 @@ static VALUE fdb_putcat(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE fdb_out(VALUE vself, VALUE vkey){
+static VALUE fdb_out(VALUE vself, SEL sel, VALUE vkey){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2130,7 +2130,7 @@ static VALUE fdb_out(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE fdb_get(VALUE vself, VALUE vkey){
+static VALUE fdb_get(VALUE vself, SEL sel, VALUE vkey){
   VALUE vfdb, vval;
   TCFDB *fdb;
   char *vbuf;
@@ -2145,7 +2145,7 @@ static VALUE fdb_get(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE fdb_vsiz(VALUE vself, VALUE vkey){
+static VALUE fdb_vsiz(VALUE vself, SEL sel, VALUE vkey){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2155,7 +2155,7 @@ static VALUE fdb_vsiz(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE fdb_iterinit(VALUE vself){
+static VALUE fdb_iterinit(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2164,7 +2164,7 @@ static VALUE fdb_iterinit(VALUE vself){
 }
 
 
-static VALUE fdb_iternext(VALUE vself){
+static VALUE fdb_iternext(VALUE vself, SEL sel){
   VALUE vfdb, vval;
   TCFDB *fdb;
   char *vbuf;
@@ -2178,7 +2178,7 @@ static VALUE fdb_iternext(VALUE vself){
 }
 
 
-static VALUE fdb_range(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_range(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vinterval, vmax, vary;
   TCFDB *fdb;
   TCLIST *keys;
@@ -2195,7 +2195,7 @@ static VALUE fdb_range(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE fdb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vfdb;
   TCFDB *fdb;
   int num;
@@ -2207,7 +2207,7 @@ static VALUE fdb_addint(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE fdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE fdb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vfdb;
   TCFDB *fdb;
   double num;
@@ -2219,7 +2219,7 @@ static VALUE fdb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE fdb_sync(VALUE vself){
+static VALUE fdb_sync(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2228,7 +2228,7 @@ static VALUE fdb_sync(VALUE vself){
 }
 
 
-static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vwidth, vlimsiz;
   TCFDB *fdb;
   int width;
@@ -2242,7 +2242,7 @@ static VALUE fdb_optimize(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_vanish(VALUE vself){
+static VALUE fdb_vanish(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2251,7 +2251,7 @@ static VALUE fdb_vanish(VALUE vself){
 }
 
 
-static VALUE fdb_copy(VALUE vself, VALUE vpath){
+static VALUE fdb_copy(VALUE vself, SEL sel, VALUE vpath){
   VALUE vfdb;
   TCFDB *fdb;
   Check_Type(vpath, T_STRING);
@@ -2261,7 +2261,7 @@ static VALUE fdb_copy(VALUE vself, VALUE vpath){
 }
 
 
-static VALUE fdb_tranbegin(VALUE vself){
+static VALUE fdb_tranbegin(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2270,7 +2270,7 @@ static VALUE fdb_tranbegin(VALUE vself){
 }
 
 
-static VALUE fdb_trancommit(VALUE vself){
+static VALUE fdb_trancommit(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2279,7 +2279,7 @@ static VALUE fdb_trancommit(VALUE vself){
 }
 
 
-static VALUE fdb_tranabort(VALUE vself){
+static VALUE fdb_tranabort(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2288,7 +2288,7 @@ static VALUE fdb_tranabort(VALUE vself){
 }
 
 
-static VALUE fdb_path(VALUE vself){
+static VALUE fdb_path(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   const char *path;
@@ -2299,7 +2299,7 @@ static VALUE fdb_path(VALUE vself){
 }
 
 
-static VALUE fdb_rnum(VALUE vself){
+static VALUE fdb_rnum(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2308,7 +2308,7 @@ static VALUE fdb_rnum(VALUE vself){
 }
 
 
-static VALUE fdb_fsiz(VALUE vself){
+static VALUE fdb_fsiz(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2317,7 +2317,7 @@ static VALUE fdb_fsiz(VALUE vself){
 }
 
 
-static VALUE fdb_fetch(int argc, VALUE *argv, VALUE vself){
+static VALUE fdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vfdb, vkey, vdef, vval;
   TCFDB *fdb;
   char *vbuf;
@@ -2336,7 +2336,7 @@ static VALUE fdb_fetch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE fdb_check(VALUE vself, VALUE vkey){
+static VALUE fdb_check(VALUE vself, SEL sel, VALUE vkey){
   VALUE vfdb;
   TCFDB *fdb;
   vkey = StringValueEx(vkey);
@@ -2346,7 +2346,7 @@ static VALUE fdb_check(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE fdb_check_value(VALUE vself, VALUE vval){
+static VALUE fdb_check_value(VALUE vself, SEL sel, VALUE vval){
   VALUE vfdb;
   TCFDB *fdb;
   char *tvbuf;
@@ -2372,7 +2372,7 @@ static VALUE fdb_check_value(VALUE vself, VALUE vval){
 }
 
 
-static VALUE fdb_get_reverse(VALUE vself, VALUE vval){
+static VALUE fdb_get_reverse(VALUE vself, SEL sel, VALUE vval){
   VALUE vfdb, vrv;
   TCFDB *fdb;
   char *tvbuf, kbuf[NUMBUFSIZ];
@@ -2398,7 +2398,7 @@ static VALUE fdb_get_reverse(VALUE vself, VALUE vval){
 }
 
 
-static VALUE fdb_empty(VALUE vself){
+static VALUE fdb_empty(VALUE vself, SEL sel){
   VALUE vfdb;
   TCFDB *fdb;
   vfdb = rb_iv_get(vself, FDBVNDATA);
@@ -2407,7 +2407,7 @@ static VALUE fdb_empty(VALUE vself){
 }
 
 
-static VALUE fdb_each(VALUE vself){
+static VALUE fdb_each(VALUE vself, SEL sel){
   VALUE vfdb, vrv;
   TCFDB *fdb;
   char *vbuf, kbuf[NUMBUFSIZ];
@@ -2430,7 +2430,7 @@ static VALUE fdb_each(VALUE vself){
 }
 
 
-static VALUE fdb_each_key(VALUE vself){
+static VALUE fdb_each_key(VALUE vself, SEL sel){
   VALUE vfdb, vrv;
   TCFDB *fdb;
   char kbuf[NUMBUFSIZ];
@@ -2449,7 +2449,7 @@ static VALUE fdb_each_key(VALUE vself){
 }
 
 
-static VALUE fdb_each_value(VALUE vself){
+static VALUE fdb_each_value(VALUE vself, SEL sel){
   VALUE vfdb, vrv;
   TCFDB *fdb;
   char *vbuf;
@@ -2471,7 +2471,7 @@ static VALUE fdb_each_value(VALUE vself){
 }
 
 
-static VALUE fdb_keys(VALUE vself){
+static VALUE fdb_keys(VALUE vself, SEL sel){
   VALUE vfdb, vary;
   TCFDB *fdb;
   char kbuf[NUMBUFSIZ];
@@ -2489,7 +2489,7 @@ static VALUE fdb_keys(VALUE vself){
 }
 
 
-static VALUE fdb_values(VALUE vself){
+static VALUE fdb_values(VALUE vself, SEL sel){
   VALUE vfdb, vary;
   TCFDB *fdb;
   char *vbuf;
@@ -2554,61 +2554,61 @@ static void tdb_init(void){
   rb_define_const(cls_tdb, "ITQGRAM", INT2NUM(TDBITQGRAM));
   rb_define_const(cls_tdb, "ITVOID", INT2NUM(TDBITVOID));
   rb_define_const(cls_tdb, "ITKEEP", INT2NUM(TDBITKEEP));
-  rb_define_private_method(cls_tdb, "initialize", tdb_initialize, 0);
-  rb_define_method(cls_tdb, "errmsg", tdb_errmsg, -1);
-  rb_define_method(cls_tdb, "ecode", tdb_ecode, 0);
-  rb_define_method(cls_tdb, "tune", tdb_tune, -1);
-  rb_define_method(cls_tdb, "setcache", tdb_setcache, -1);
-  rb_define_method(cls_tdb, "setxmsiz", tdb_setxmsiz, -1);
-  rb_define_method(cls_tdb, "setdfunit", tdb_setdfunit, -1);
-  rb_define_method(cls_tdb, "open", tdb_open, -1);
-  rb_define_method(cls_tdb, "close", tdb_close, 0);
-  rb_define_method(cls_tdb, "put", tdb_put, 2);
-  rb_define_method(cls_tdb, "putkeep", tdb_putkeep, 2);
-  rb_define_method(cls_tdb, "putcat", tdb_putcat, 2);
-  rb_define_method(cls_tdb, "out", tdb_out, 1);
-  rb_define_method(cls_tdb, "get", tdb_get, 1);
-  rb_define_method(cls_tdb, "vsiz", tdb_vsiz, 1);
-  rb_define_method(cls_tdb, "iterinit", tdb_iterinit, 0);
-  rb_define_method(cls_tdb, "iternext", tdb_iternext, 0);
-  rb_define_method(cls_tdb, "fwmkeys", tdb_fwmkeys, -1);
-  rb_define_method(cls_tdb, "addint", tdb_addint, 2);
-  rb_define_method(cls_tdb, "adddouble", tdb_adddouble, 2);
-  rb_define_method(cls_tdb, "sync", tdb_sync, 0);
-  rb_define_method(cls_tdb, "optimize", tdb_optimize, -1);
-  rb_define_method(cls_tdb, "vanish", tdb_vanish, 0);
-  rb_define_method(cls_tdb, "copy", tdb_copy, 1);
-  rb_define_method(cls_tdb, "tranbegin", tdb_tranbegin, 0);
-  rb_define_method(cls_tdb, "trancommit", tdb_trancommit, 0);
-  rb_define_method(cls_tdb, "tranabort", tdb_tranabort, 0);
-  rb_define_method(cls_tdb, "path", tdb_path, 0);
-  rb_define_method(cls_tdb, "rnum", tdb_rnum, 0);
-  rb_define_method(cls_tdb, "fsiz", tdb_fsiz, 0);
-  rb_define_method(cls_tdb, "setindex", tdb_setindex, 2);
-  rb_define_method(cls_tdb, "genuid", tdb_genuid, 0);
-  rb_define_method(cls_tdb, "[]", tdb_get, 1);
-  rb_define_method(cls_tdb, "[]=", tdb_put, 2);
-  rb_define_method(cls_tdb, "store", tdb_put, 2);
-  rb_define_method(cls_tdb, "delete", tdb_out, 1);
-  rb_define_method(cls_tdb, "fetch", tdb_fetch, -1);
-  rb_define_method(cls_tdb, "has_key?", tdb_check, 1);
-  rb_define_method(cls_tdb, "key?", tdb_check, 1);
-  rb_define_method(cls_tdb, "include?", tdb_check, 1);
-  rb_define_method(cls_tdb, "member?", tdb_check, 1);
-  rb_define_method(cls_tdb, "clear", tdb_vanish, 0);
-  rb_define_method(cls_tdb, "size", tdb_rnum, 0);
-  rb_define_method(cls_tdb, "length", tdb_rnum, 0);
-  rb_define_method(cls_tdb, "empty?", tdb_empty, 0);
-  rb_define_method(cls_tdb, "each", tdb_each, 0);
-  rb_define_method(cls_tdb, "each_pair", tdb_each, 0);
-  rb_define_method(cls_tdb, "each_key", tdb_each_key, 0);
-  rb_define_method(cls_tdb, "each_value", tdb_each_value, 0);
-  rb_define_method(cls_tdb, "keys", tdb_keys, 0);
-  rb_define_method(cls_tdb, "values", tdb_values, 0);
+  rb_objc_define_method(cls_tdb, "initialize", tdb_initialize, 0);
+  rb_objc_define_method(cls_tdb, "errmsg", tdb_errmsg, -1);
+  rb_objc_define_method(cls_tdb, "ecode", tdb_ecode, 0);
+  rb_objc_define_method(cls_tdb, "tune", tdb_tune, -1);
+  rb_objc_define_method(cls_tdb, "setcache", tdb_setcache, -1);
+  rb_objc_define_method(cls_tdb, "setxmsiz", tdb_setxmsiz, -1);
+  rb_objc_define_method(cls_tdb, "setdfunit", tdb_setdfunit, -1);
+  rb_objc_define_method(cls_tdb, "open", tdb_open, -1);
+  rb_objc_define_method(cls_tdb, "close", tdb_close, 0);
+  rb_objc_define_method(cls_tdb, "put", tdb_put, 2);
+  rb_objc_define_method(cls_tdb, "putkeep", tdb_putkeep, 2);
+  rb_objc_define_method(cls_tdb, "putcat", tdb_putcat, 2);
+  rb_objc_define_method(cls_tdb, "out", tdb_out, 1);
+  rb_objc_define_method(cls_tdb, "get", tdb_get, 1);
+  rb_objc_define_method(cls_tdb, "vsiz", tdb_vsiz, 1);
+  rb_objc_define_method(cls_tdb, "iterinit", tdb_iterinit, 0);
+  rb_objc_define_method(cls_tdb, "iternext", tdb_iternext, 0);
+  rb_objc_define_method(cls_tdb, "fwmkeys", tdb_fwmkeys, -1);
+  rb_objc_define_method(cls_tdb, "addint", tdb_addint, 2);
+  rb_objc_define_method(cls_tdb, "adddouble", tdb_adddouble, 2);
+  rb_objc_define_method(cls_tdb, "sync", tdb_sync, 0);
+  rb_objc_define_method(cls_tdb, "optimize", tdb_optimize, -1);
+  rb_objc_define_method(cls_tdb, "vanish", tdb_vanish, 0);
+  rb_objc_define_method(cls_tdb, "copy", tdb_copy, 1);
+  rb_objc_define_method(cls_tdb, "tranbegin", tdb_tranbegin, 0);
+  rb_objc_define_method(cls_tdb, "trancommit", tdb_trancommit, 0);
+  rb_objc_define_method(cls_tdb, "tranabort", tdb_tranabort, 0);
+  rb_objc_define_method(cls_tdb, "path", tdb_path, 0);
+  rb_objc_define_method(cls_tdb, "rnum", tdb_rnum, 0);
+  rb_objc_define_method(cls_tdb, "fsiz", tdb_fsiz, 0);
+  rb_objc_define_method(cls_tdb, "setindex", tdb_setindex, 2);
+  rb_objc_define_method(cls_tdb, "genuid", tdb_genuid, 0);
+  rb_objc_define_method(cls_tdb, "[]", tdb_get, 1);
+  rb_objc_define_method(cls_tdb, "[]=", tdb_put, 2);
+  rb_objc_define_method(cls_tdb, "store", tdb_put, 2);
+  rb_objc_define_method(cls_tdb, "delete", tdb_out, 1);
+  rb_objc_define_method(cls_tdb, "fetch", tdb_fetch, -1);
+  rb_objc_define_method(cls_tdb, "has_key?", tdb_check, 1);
+  rb_objc_define_method(cls_tdb, "key?", tdb_check, 1);
+  rb_objc_define_method(cls_tdb, "include?", tdb_check, 1);
+  rb_objc_define_method(cls_tdb, "member?", tdb_check, 1);
+  rb_objc_define_method(cls_tdb, "clear", tdb_vanish, 0);
+  rb_objc_define_method(cls_tdb, "size", tdb_rnum, 0);
+  rb_objc_define_method(cls_tdb, "length", tdb_rnum, 0);
+  rb_objc_define_method(cls_tdb, "empty?", tdb_empty, 0);
+  rb_objc_define_method(cls_tdb, "each", tdb_each, 0);
+  rb_objc_define_method(cls_tdb, "each_pair", tdb_each, 0);
+  rb_objc_define_method(cls_tdb, "each_key", tdb_each_key, 0);
+  rb_objc_define_method(cls_tdb, "each_value", tdb_each_value, 0);
+  rb_objc_define_method(cls_tdb, "keys", tdb_keys, 0);
+  rb_objc_define_method(cls_tdb, "values", tdb_values, 0);
 }
 
 
-static VALUE tdb_initialize(VALUE vself){
+static VALUE tdb_initialize(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   tdb = tctdbnew();
@@ -2619,7 +2619,7 @@ static VALUE tdb_initialize(VALUE vself){
 }
 
 
-static VALUE tdb_errmsg(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_errmsg(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vecode;
   TCTDB *tdb;
   const char *msg;
@@ -2633,7 +2633,7 @@ static VALUE tdb_errmsg(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_ecode(VALUE vself){
+static VALUE tdb_ecode(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2642,7 +2642,7 @@ static VALUE tdb_ecode(VALUE vself){
 }
 
 
-static VALUE tdb_tune(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_tune(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vbnum, vapow, vfpow, vopts;
   TCTDB *tdb;
   int apow, fpow, opts;
@@ -2658,7 +2658,7 @@ static VALUE tdb_tune(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_setcache(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_setcache(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vrcnum, vlcnum, vncnum;
   TCTDB *tdb;
   int rcnum, lcnum, ncnum;
@@ -2672,7 +2672,7 @@ static VALUE tdb_setcache(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_setxmsiz(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vxmsiz;
   TCTDB *tdb;
   int64_t xmsiz;
@@ -2684,7 +2684,7 @@ static VALUE tdb_setxmsiz(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_setdfunit(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_setdfunit(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vdfunit;
   TCTDB *tdb;
   int32_t dfunit;
@@ -2696,7 +2696,7 @@ static VALUE tdb_setdfunit(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_open(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_open(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vpath, vomode;
   TCTDB *tdb;
   int omode;
@@ -2709,7 +2709,7 @@ static VALUE tdb_open(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_close(VALUE vself){
+static VALUE tdb_close(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2718,7 +2718,7 @@ static VALUE tdb_close(VALUE vself){
 }
 
 
-static VALUE tdb_put(VALUE vself, VALUE vpkey, VALUE vcols){
+static VALUE tdb_put(VALUE vself, SEL sel, VALUE vpkey, VALUE vcols){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   TCMAP *cols;
@@ -2733,7 +2733,7 @@ static VALUE tdb_put(VALUE vself, VALUE vpkey, VALUE vcols){
 }
 
 
-static VALUE tdb_putkeep(VALUE vself, VALUE vpkey, VALUE vcols){
+static VALUE tdb_putkeep(VALUE vself, SEL sel, VALUE vpkey, VALUE vcols){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   TCMAP *cols;
@@ -2748,7 +2748,7 @@ static VALUE tdb_putkeep(VALUE vself, VALUE vpkey, VALUE vcols){
 }
 
 
-static VALUE tdb_putcat(VALUE vself, VALUE vpkey, VALUE vcols){
+static VALUE tdb_putcat(VALUE vself, SEL sel, VALUE vpkey, VALUE vcols){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   TCMAP *cols;
@@ -2763,7 +2763,7 @@ static VALUE tdb_putcat(VALUE vself, VALUE vpkey, VALUE vcols){
 }
 
 
-static VALUE tdb_out(VALUE vself, VALUE vpkey){
+static VALUE tdb_out(VALUE vself, SEL sel, VALUE vpkey){
   VALUE vtdb;
   TCTDB *tdb;
   vpkey = StringValueEx(vpkey);
@@ -2773,7 +2773,7 @@ static VALUE tdb_out(VALUE vself, VALUE vpkey){
 }
 
 
-static VALUE tdb_get(VALUE vself, VALUE vpkey){
+static VALUE tdb_get(VALUE vself, SEL sel, VALUE vpkey){
   VALUE vtdb, vcols;
   TCTDB *tdb;
   TCMAP *cols;
@@ -2787,7 +2787,7 @@ static VALUE tdb_get(VALUE vself, VALUE vpkey){
 }
 
 
-static VALUE tdb_vsiz(VALUE vself, VALUE vpkey){
+static VALUE tdb_vsiz(VALUE vself, SEL sel, VALUE vpkey){
   VALUE vtdb;
   TCTDB *tdb;
   vpkey = StringValueEx(vpkey);
@@ -2797,7 +2797,7 @@ static VALUE tdb_vsiz(VALUE vself, VALUE vpkey){
 }
 
 
-static VALUE tdb_iterinit(VALUE vself){
+static VALUE tdb_iterinit(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2806,7 +2806,7 @@ static VALUE tdb_iterinit(VALUE vself){
 }
 
 
-static VALUE tdb_iternext(VALUE vself){
+static VALUE tdb_iternext(VALUE vself, SEL sel){
   VALUE vtdb, vval;
   TCTDB *tdb;
   char *vbuf;
@@ -2820,7 +2820,7 @@ static VALUE tdb_iternext(VALUE vself){
 }
 
 
-static VALUE tdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vprefix, vmax, vary;
   TCTDB *tdb;
   TCLIST *pkeys;
@@ -2837,7 +2837,7 @@ static VALUE tdb_fwmkeys(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_addint(VALUE vself, VALUE vpkey, VALUE vnum){
+static VALUE tdb_addint(VALUE vself, SEL sel, VALUE vpkey, VALUE vnum){
   VALUE vtdb;
   TCTDB *tdb;
   int num;
@@ -2849,7 +2849,7 @@ static VALUE tdb_addint(VALUE vself, VALUE vpkey, VALUE vnum){
 }
 
 
-static VALUE tdb_adddouble(VALUE vself, VALUE vpkey, VALUE vnum){
+static VALUE tdb_adddouble(VALUE vself, SEL sel, VALUE vpkey, VALUE vnum){
   VALUE vtdb;
   TCTDB *tdb;
   double num;
@@ -2861,7 +2861,7 @@ static VALUE tdb_adddouble(VALUE vself, VALUE vpkey, VALUE vnum){
 }
 
 
-static VALUE tdb_sync(VALUE vself){
+static VALUE tdb_sync(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2870,7 +2870,7 @@ static VALUE tdb_sync(VALUE vself){
 }
 
 
-static VALUE tdb_optimize(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vbnum, vapow, vfpow, vopts;
   TCTDB *tdb;
   int apow, fpow, opts;
@@ -2886,7 +2886,7 @@ static VALUE tdb_optimize(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_vanish(VALUE vself){
+static VALUE tdb_vanish(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2895,7 +2895,7 @@ static VALUE tdb_vanish(VALUE vself){
 }
 
 
-static VALUE tdb_copy(VALUE vself, VALUE vpath){
+static VALUE tdb_copy(VALUE vself, SEL sel, VALUE vpath){
   VALUE vtdb;
   TCTDB *tdb;
   Check_Type(vpath, T_STRING);
@@ -2905,7 +2905,7 @@ static VALUE tdb_copy(VALUE vself, VALUE vpath){
 }
 
 
-static VALUE tdb_tranbegin(VALUE vself){
+static VALUE tdb_tranbegin(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2914,7 +2914,7 @@ static VALUE tdb_tranbegin(VALUE vself){
 }
 
 
-static VALUE tdb_trancommit(VALUE vself){
+static VALUE tdb_trancommit(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2923,7 +2923,7 @@ static VALUE tdb_trancommit(VALUE vself){
 }
 
 
-static VALUE tdb_tranabort(VALUE vself){
+static VALUE tdb_tranabort(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2932,7 +2932,7 @@ static VALUE tdb_tranabort(VALUE vself){
 }
 
 
-static VALUE tdb_path(VALUE vself){
+static VALUE tdb_path(VALUE vself, SEL sel){
   VALUE vtdb, vpath;
   TCTDB *tdb;
   const char *path;
@@ -2944,7 +2944,7 @@ static VALUE tdb_path(VALUE vself){
 }
 
 
-static VALUE tdb_rnum(VALUE vself){
+static VALUE tdb_rnum(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2953,7 +2953,7 @@ static VALUE tdb_rnum(VALUE vself){
 }
 
 
-static VALUE tdb_fsiz(VALUE vself){
+static VALUE tdb_fsiz(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2962,7 +2962,7 @@ static VALUE tdb_fsiz(VALUE vself){
 }
 
 
-static VALUE tdb_setindex(VALUE vself, VALUE vname, VALUE vtype){
+static VALUE tdb_setindex(VALUE vself, SEL sel, VALUE vname, VALUE vtype){
   VALUE vtdb;
   TCTDB *tdb;
   Check_Type(vname, T_STRING);
@@ -2972,7 +2972,7 @@ static VALUE tdb_setindex(VALUE vself, VALUE vname, VALUE vtype){
 }
 
 
-static VALUE tdb_genuid(VALUE vself){
+static VALUE tdb_genuid(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -2981,7 +2981,7 @@ static VALUE tdb_genuid(VALUE vself){
 }
 
 
-static VALUE tdb_fetch(int argc, VALUE *argv, VALUE vself){
+static VALUE tdb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vtdb, vpkey, vdef, vcols;
   TCTDB *tdb;
   TCMAP *cols;
@@ -2999,7 +2999,7 @@ static VALUE tdb_fetch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdb_check(VALUE vself, VALUE vpkey){
+static VALUE tdb_check(VALUE vself, SEL sel, VALUE vpkey){
   VALUE vtdb;
   TCTDB *tdb;
   vpkey = StringValueEx(vpkey);
@@ -3009,7 +3009,7 @@ static VALUE tdb_check(VALUE vself, VALUE vpkey){
 }
 
 
-static VALUE tdb_empty(VALUE vself){
+static VALUE tdb_empty(VALUE vself, SEL sel){
   VALUE vtdb;
   TCTDB *tdb;
   vtdb = rb_iv_get(vself, TDBVNDATA);
@@ -3018,7 +3018,7 @@ static VALUE tdb_empty(VALUE vself){
 }
 
 
-static VALUE tdb_each(VALUE vself){
+static VALUE tdb_each(VALUE vself, SEL sel){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   TCMAP *cols;
@@ -3040,7 +3040,7 @@ static VALUE tdb_each(VALUE vself){
 }
 
 
-static VALUE tdb_each_key(VALUE vself){
+static VALUE tdb_each_key(VALUE vself, SEL sel){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   char *kbuf;
@@ -3058,7 +3058,7 @@ static VALUE tdb_each_key(VALUE vself){
 }
 
 
-static VALUE tdb_each_value(VALUE vself){
+static VALUE tdb_each_value(VALUE vself, SEL sel){
   VALUE vtdb, vrv;
   TCTDB *tdb;
   TCMAP *cols;
@@ -3080,7 +3080,7 @@ static VALUE tdb_each_value(VALUE vself){
 }
 
 
-static VALUE tdb_keys(VALUE vself){
+static VALUE tdb_keys(VALUE vself, SEL sel){
   VALUE vtdb, vary;
   TCTDB *tdb;
   char *kbuf;
@@ -3097,7 +3097,7 @@ static VALUE tdb_keys(VALUE vself){
 }
 
 
-static VALUE tdb_values(VALUE vself){
+static VALUE tdb_values(VALUE vself, SEL sel){
   VALUE vtdb, vary;
   TCTDB *tdb;
   TCMAP *cols;
@@ -3157,17 +3157,17 @@ static void tdbqry_init(void){
   rb_define_const(cls_tdbqry, "KWMUBRCT", INT2NUM(TCKWMUBRCT));
   rb_define_const(cls_tdbqry, "KWNOOVER", INT2NUM(TCKWNOOVER));
   rb_define_const(cls_tdbqry, "KWPULEAD", INT2NUM(TCKWPULEAD));
-  rb_define_private_method(cls_tdbqry, "initialize", tdbqry_initialize, 1);
-  rb_define_method(cls_tdbqry, "addcond", tdbqry_addcond, 3);
-  rb_define_method(cls_tdbqry, "setorder", tdbqry_setorder, -1);
-  rb_define_method(cls_tdbqry, "setlimit", tdbqry_setlimit, -1);
-  rb_define_method(cls_tdbqry, "setmax", tdbqry_setlimit, -1);
-  rb_define_method(cls_tdbqry, "search", tdbqry_search, 0);
-  rb_define_method(cls_tdbqry, "searchout", tdbqry_searchout, 0);
-  rb_define_method(cls_tdbqry, "proc", tdbqry_proc, 0);
-  rb_define_method(cls_tdbqry, "hint", tdbqry_hint, 0);
-  rb_define_method(cls_tdbqry, "metasearch", tdbqry_metasearch, -1);
-  rb_define_method(cls_tdbqry, "kwic", tdbqry_kwic, -1);
+  rb_objc_define_method(cls_tdbqry, "initialize", tdbqry_initialize, 1);
+  rb_objc_define_method(cls_tdbqry, "addcond", tdbqry_addcond, 3);
+  rb_objc_define_method(cls_tdbqry, "setorder", tdbqry_setorder, -1);
+  rb_objc_define_method(cls_tdbqry, "setlimit", tdbqry_setlimit, -1);
+  rb_objc_define_method(cls_tdbqry, "setmax", tdbqry_setlimit, -1);
+  rb_objc_define_method(cls_tdbqry, "search", tdbqry_search, 0);
+  rb_objc_define_method(cls_tdbqry, "searchout", tdbqry_searchout, 0);
+  rb_objc_define_method(cls_tdbqry, "proc", tdbqry_proc, 0);
+  rb_objc_define_method(cls_tdbqry, "hint", tdbqry_hint, 0);
+  rb_objc_define_method(cls_tdbqry, "metasearch", tdbqry_metasearch, -1);
+  rb_objc_define_method(cls_tdbqry, "kwic", tdbqry_kwic, -1);
 }
 
 
@@ -3194,7 +3194,7 @@ static int tdbqry_procrec(const void *pkbuf, int pksiz, TCMAP *cols, void *opq){
 }
 
 
-static VALUE tdbqry_initialize(VALUE vself, VALUE vtdb){
+static VALUE tdbqry_initialize(VALUE vself, SEL sel, VALUE vtdb){
   VALUE vqry;
   TCTDB *tdb;
   TDBQRY *qry;
@@ -3209,7 +3209,7 @@ static VALUE tdbqry_initialize(VALUE vself, VALUE vtdb){
 }
 
 
-static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr){
+static VALUE tdbqry_addcond(VALUE vself, SEL sel, VALUE vname, VALUE vop, VALUE vexpr){
   VALUE vqry;
   TDBQRY *qry;
   vname = StringValueEx(vname);
@@ -3221,7 +3221,7 @@ static VALUE tdbqry_addcond(VALUE vself, VALUE vname, VALUE vop, VALUE vexpr){
 }
 
 
-static VALUE tdbqry_setorder(int argc, VALUE *argv, VALUE vself){
+static VALUE tdbqry_setorder(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vqry, vname, vtype;
   TDBQRY *qry;
   int type;
@@ -3235,7 +3235,7 @@ static VALUE tdbqry_setorder(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself){
+static VALUE tdbqry_setlimit(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vqry, vmax, vskip;
   TDBQRY *qry;
   int max, skip;
@@ -3249,7 +3249,7 @@ static VALUE tdbqry_setlimit(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdbqry_search(VALUE vself){
+static VALUE tdbqry_search(VALUE vself, SEL sel){
   VALUE vqry, vary;
   TDBQRY *qry;
   TCLIST *res;
@@ -3262,7 +3262,7 @@ static VALUE tdbqry_search(VALUE vself){
 }
 
 
-static VALUE tdbqry_searchout(VALUE vself){
+static VALUE tdbqry_searchout(VALUE vself, SEL sel){
   VALUE vqry;
   TDBQRY *qry;
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
@@ -3271,7 +3271,7 @@ static VALUE tdbqry_searchout(VALUE vself){
 }
 
 
-static VALUE tdbqry_proc(VALUE vself, VALUE vproc){
+static VALUE tdbqry_proc(VALUE vself, SEL sel, VALUE vproc){
   VALUE vqry;
   TDBQRY *qry;
   if(rb_block_given_p() != Qtrue) rb_raise(rb_eArgError, "no block given");
@@ -3281,7 +3281,7 @@ static VALUE tdbqry_proc(VALUE vself, VALUE vproc){
 }
 
 
-static VALUE tdbqry_hint(VALUE vself){
+static VALUE tdbqry_hint(VALUE vself, SEL sel){
   VALUE vqry;
   TDBQRY *qry;
   vqry = rb_iv_get(vself, TDBQRYVNDATA);
@@ -3290,7 +3290,7 @@ static VALUE tdbqry_hint(VALUE vself){
 }
 
 
-static VALUE tdbqry_metasearch(int argc, VALUE *argv, VALUE vself){
+static VALUE tdbqry_metasearch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vqry, vothers, vtype, voqry, vary;
   TDBQRY *qry, **qrys;
   TCLIST *res;
@@ -3319,7 +3319,7 @@ static VALUE tdbqry_metasearch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE tdbqry_kwic(int argc, VALUE *argv, VALUE vself){
+static VALUE tdbqry_kwic(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vqry, vcols, vname, vwidth, vopts, vval, vary;
   TDBQRY *qry;
   TCMAP *cols;
@@ -3358,56 +3358,56 @@ static void adb_init(void){
   cls_adb = rb_define_class_under(mod_tokyocabinet, "ADB", rb_cObject);
   cls_adb_data = rb_define_class_under(mod_tokyocabinet, "ADB_data", rb_cObject);
   rb_define_private_method(cls_adb, "initialize", adb_initialize, 0);
-  rb_define_method(cls_adb, "open", adb_open, 1);
-  rb_define_method(cls_adb, "close", adb_close, 0);
-  rb_define_method(cls_adb, "put", adb_put, 2);
-  rb_define_method(cls_adb, "putkeep", adb_putkeep, 2);
-  rb_define_method(cls_adb, "putcat", adb_putcat, 2);
-  rb_define_method(cls_adb, "out", adb_out, 1);
-  rb_define_method(cls_adb, "get", adb_get, 1);
-  rb_define_method(cls_adb, "vsiz", adb_vsiz, 1);
-  rb_define_method(cls_adb, "iterinit", adb_iterinit, 0);
-  rb_define_method(cls_adb, "iternext", adb_iternext, 0);
-  rb_define_method(cls_adb, "fwmkeys", adb_fwmkeys, -1);
-  rb_define_method(cls_adb, "addint", adb_addint, 2);
-  rb_define_method(cls_adb, "adddouble", adb_adddouble, 2);
-  rb_define_method(cls_adb, "sync", adb_sync, 0);
-  rb_define_method(cls_adb, "optimize", adb_optimize, -1);
-  rb_define_method(cls_adb, "vanish", adb_vanish, 0);
-  rb_define_method(cls_adb, "copy", adb_copy, 1);
-  rb_define_method(cls_adb, "tranbegin", adb_tranbegin, 0);
-  rb_define_method(cls_adb, "trancommit", adb_trancommit, 0);
-  rb_define_method(cls_adb, "tranabort", adb_tranabort, 0);
-  rb_define_method(cls_adb, "path", adb_path, 0);
-  rb_define_method(cls_adb, "rnum", adb_rnum, 0);
-  rb_define_method(cls_adb, "size", adb_size, 0);
-  rb_define_method(cls_adb, "misc", adb_misc, -1);
-  rb_define_method(cls_adb, "[]", adb_get, 1);
-  rb_define_method(cls_adb, "[]=", adb_put, 2);
-  rb_define_method(cls_adb, "store", adb_put, 2);
-  rb_define_method(cls_adb, "delete", adb_out, 1);
-  rb_define_method(cls_adb, "fetch", adb_fetch, -1);
-  rb_define_method(cls_adb, "has_key?", adb_check, 1);
-  rb_define_method(cls_adb, "key?", adb_check, 1);
-  rb_define_method(cls_adb, "include?", adb_check, 1);
-  rb_define_method(cls_adb, "member?", adb_check, 1);
-  rb_define_method(cls_adb, "has_value?", adb_check_value, 1);
-  rb_define_method(cls_adb, "value?", adb_check_value, 1);
-  rb_define_method(cls_adb, "key", adb_get_reverse, 1);
-  rb_define_method(cls_adb, "clear", adb_vanish, 0);
-  rb_define_method(cls_adb, "size", adb_rnum, 0);
-  rb_define_method(cls_adb, "length", adb_rnum, 0);
-  rb_define_method(cls_adb, "empty?", adb_empty, 0);
-  rb_define_method(cls_adb, "each", adb_each, 0);
-  rb_define_method(cls_adb, "each_pair", adb_each, 0);
-  rb_define_method(cls_adb, "each_key", adb_each_key, 0);
-  rb_define_method(cls_adb, "each_value", adb_each_value, 0);
-  rb_define_method(cls_adb, "keys", adb_keys, 0);
-  rb_define_method(cls_adb, "values", adb_values, 0);
+  rb_objc_define_method(cls_adb, "open", adb_open, 1);
+  rb_objc_define_method(cls_adb, "close", adb_close, 0);
+  rb_objc_define_method(cls_adb, "put", adb_put, 2);
+  rb_objc_define_method(cls_adb, "putkeep", adb_putkeep, 2);
+  rb_objc_define_method(cls_adb, "putcat", adb_putcat, 2);
+  rb_objc_define_method(cls_adb, "out", adb_out, 1);
+  rb_objc_define_method(cls_adb, "get", adb_get, 1);
+  rb_objc_define_method(cls_adb, "vsiz", adb_vsiz, 1);
+  rb_objc_define_method(cls_adb, "iterinit", adb_iterinit, 0);
+  rb_objc_define_method(cls_adb, "iternext", adb_iternext, 0);
+  rb_objc_define_method(cls_adb, "fwmkeys", adb_fwmkeys, -1);
+  rb_objc_define_method(cls_adb, "addint", adb_addint, 2);
+  rb_objc_define_method(cls_adb, "adddouble", adb_adddouble, 2);
+  rb_objc_define_method(cls_adb, "sync", adb_sync, 0);
+  rb_objc_define_method(cls_adb, "optimize", adb_optimize, -1);
+  rb_objc_define_method(cls_adb, "vanish", adb_vanish, 0);
+  rb_objc_define_method(cls_adb, "copy", adb_copy, 1);
+  rb_objc_define_method(cls_adb, "tranbegin", adb_tranbegin, 0);
+  rb_objc_define_method(cls_adb, "trancommit", adb_trancommit, 0);
+  rb_objc_define_method(cls_adb, "tranabort", adb_tranabort, 0);
+  rb_objc_define_method(cls_adb, "path", adb_path, 0);
+  rb_objc_define_method(cls_adb, "rnum", adb_rnum, 0);
+  rb_objc_define_method(cls_adb, "size", adb_size, 0);
+  rb_objc_define_method(cls_adb, "misc", adb_misc, -1);
+  rb_objc_define_method(cls_adb, "[]", adb_get, 1);
+  rb_objc_define_method(cls_adb, "[]=", adb_put, 2);
+  rb_objc_define_method(cls_adb, "store", adb_put, 2);
+  rb_objc_define_method(cls_adb, "delete", adb_out, 1);
+  rb_objc_define_method(cls_adb, "fetch", adb_fetch, -1);
+  rb_objc_define_method(cls_adb, "has_key?", adb_check, 1);
+  rb_objc_define_method(cls_adb, "key?", adb_check, 1);
+  rb_objc_define_method(cls_adb, "include?", adb_check, 1);
+  rb_objc_define_method(cls_adb, "member?", adb_check, 1);
+  rb_objc_define_method(cls_adb, "has_value?", adb_check_value, 1);
+  rb_objc_define_method(cls_adb, "value?", adb_check_value, 1);
+  rb_objc_define_method(cls_adb, "key", adb_get_reverse, 1);
+  rb_objc_define_method(cls_adb, "clear", adb_vanish, 0);
+  rb_objc_define_method(cls_adb, "size", adb_rnum, 0);
+  rb_objc_define_method(cls_adb, "length", adb_rnum, 0);
+  rb_objc_define_method(cls_adb, "empty?", adb_empty, 0);
+  rb_objc_define_method(cls_adb, "each", adb_each, 0);
+  rb_objc_define_method(cls_adb, "each_pair", adb_each, 0);
+  rb_objc_define_method(cls_adb, "each_key", adb_each_key, 0);
+  rb_objc_define_method(cls_adb, "each_value", adb_each_value, 0);
+  rb_objc_define_method(cls_adb, "keys", adb_keys, 0);
+  rb_objc_define_method(cls_adb, "values", adb_values, 0);
 }
 
 
-static VALUE adb_initialize(VALUE vself){
+static VALUE adb_initialize(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   adb = tcadbnew();
@@ -3417,7 +3417,7 @@ static VALUE adb_initialize(VALUE vself){
 }
 
 
-static VALUE adb_open(VALUE vself, VALUE vname){
+static VALUE adb_open(VALUE vself, SEL sel, VALUE vname){
   VALUE vadb;
   TCADB *adb;
   Check_Type(vname, T_STRING);
@@ -3427,7 +3427,7 @@ static VALUE adb_open(VALUE vself, VALUE vname){
 }
 
 
-static VALUE adb_close(VALUE vself){
+static VALUE adb_close(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3436,7 +3436,7 @@ static VALUE adb_close(VALUE vself){
 }
 
 
-static VALUE adb_put(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE adb_put(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3448,7 +3448,7 @@ static VALUE adb_put(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE adb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE adb_putkeep(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3460,7 +3460,7 @@ static VALUE adb_putkeep(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE adb_putcat(VALUE vself, VALUE vkey, VALUE vval){
+static VALUE adb_putcat(VALUE vself, SEL sel, VALUE vkey, VALUE vval){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3472,7 +3472,7 @@ static VALUE adb_putcat(VALUE vself, VALUE vkey, VALUE vval){
 }
 
 
-static VALUE adb_out(VALUE vself, VALUE vkey){
+static VALUE adb_out(VALUE vself, SEL sel, VALUE vkey){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3482,7 +3482,7 @@ static VALUE adb_out(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE adb_get(VALUE vself, VALUE vkey){
+static VALUE adb_get(VALUE vself, SEL sel, VALUE vkey){
   VALUE vadb, vval;
   TCADB *adb;
   char *vbuf;
@@ -3497,7 +3497,7 @@ static VALUE adb_get(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE adb_vsiz(VALUE vself, VALUE vkey){
+static VALUE adb_vsiz(VALUE vself, SEL sel, VALUE vkey){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3507,7 +3507,7 @@ static VALUE adb_vsiz(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE adb_iterinit(VALUE vself){
+static VALUE adb_iterinit(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3516,7 +3516,7 @@ static VALUE adb_iterinit(VALUE vself){
 }
 
 
-static VALUE adb_iternext(VALUE vself){
+static VALUE adb_iternext(VALUE vself, SEL sel){
   VALUE vadb, vval;
   TCADB *adb;
   char *vbuf;
@@ -3530,7 +3530,7 @@ static VALUE adb_iternext(VALUE vself){
 }
 
 
-static VALUE adb_fwmkeys(int argc, VALUE *argv, VALUE vself){
+static VALUE adb_fwmkeys(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vadb, vprefix, vmax, vary;
   TCADB *adb;
   TCLIST *keys;
@@ -3547,7 +3547,7 @@ static VALUE adb_fwmkeys(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE adb_addint(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE adb_addint(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vadb;
   TCADB *adb;
   int num;
@@ -3559,7 +3559,7 @@ static VALUE adb_addint(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE adb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
+static VALUE adb_adddouble(VALUE vself, SEL sel, VALUE vkey, VALUE vnum){
   VALUE vadb;
   TCADB *adb;
   double num;
@@ -3571,7 +3571,7 @@ static VALUE adb_adddouble(VALUE vself, VALUE vkey, VALUE vnum){
 }
 
 
-static VALUE adb_sync(VALUE vself){
+static VALUE adb_sync(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3580,7 +3580,7 @@ static VALUE adb_sync(VALUE vself){
 }
 
 
-static VALUE adb_optimize(int argc, VALUE *argv, VALUE vself){
+static VALUE adb_optimize(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vadb, vparams;
   TCADB *adb;
   const char *params;
@@ -3597,7 +3597,7 @@ static VALUE adb_optimize(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE adb_vanish(VALUE vself){
+static VALUE adb_vanish(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3606,7 +3606,7 @@ static VALUE adb_vanish(VALUE vself){
 }
 
 
-static VALUE adb_copy(VALUE vself, VALUE vpath){
+static VALUE adb_copy(VALUE vself, SEL sel, VALUE vpath){
   VALUE vadb;
   TCADB *adb;
   Check_Type(vpath, T_STRING);
@@ -3616,7 +3616,7 @@ static VALUE adb_copy(VALUE vself, VALUE vpath){
 }
 
 
-static VALUE adb_tranbegin(VALUE vself){
+static VALUE adb_tranbegin(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3625,7 +3625,7 @@ static VALUE adb_tranbegin(VALUE vself){
 }
 
 
-static VALUE adb_trancommit(VALUE vself){
+static VALUE adb_trancommit(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3634,7 +3634,7 @@ static VALUE adb_trancommit(VALUE vself){
 }
 
 
-static VALUE adb_tranabort(VALUE vself){
+static VALUE adb_tranabort(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3643,7 +3643,7 @@ static VALUE adb_tranabort(VALUE vself){
 }
 
 
-static VALUE adb_path(VALUE vself){
+static VALUE adb_path(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   const char *path;
@@ -3654,7 +3654,7 @@ static VALUE adb_path(VALUE vself){
 }
 
 
-static VALUE adb_rnum(VALUE vself){
+static VALUE adb_rnum(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3663,7 +3663,7 @@ static VALUE adb_rnum(VALUE vself){
 }
 
 
-static VALUE adb_size(VALUE vself){
+static VALUE adb_size(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3672,7 +3672,7 @@ static VALUE adb_size(VALUE vself){
 }
 
 
-static VALUE adb_misc(int argc, VALUE *argv, VALUE vself){
+static VALUE adb_misc(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vadb, vname, vargs, vrv;
   TCADB *adb;
   TCLIST *targs, *res;
@@ -3698,7 +3698,7 @@ static VALUE adb_misc(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself){
+static VALUE adb_fetch(VALUE vself, SEL sel, int argc, VALUE *argv){
   VALUE vadb, vkey, vdef, vval;
   TCADB *adb;
   char *vbuf;
@@ -3717,7 +3717,7 @@ static VALUE adb_fetch(int argc, VALUE *argv, VALUE vself){
 }
 
 
-static VALUE adb_check(VALUE vself, VALUE vkey){
+static VALUE adb_check(VALUE vself, SEL sel, VALUE vkey){
   VALUE vadb;
   TCADB *adb;
   vkey = StringValueEx(vkey);
@@ -3727,7 +3727,7 @@ static VALUE adb_check(VALUE vself, VALUE vkey){
 }
 
 
-static VALUE adb_check_value(VALUE vself, VALUE vval){
+static VALUE adb_check_value(VALUE vself, SEL sel, VALUE vval){
   VALUE vadb;
   TCADB *adb;
   char *tkbuf, *tvbuf;
@@ -3754,7 +3754,7 @@ static VALUE adb_check_value(VALUE vself, VALUE vval){
 }
 
 
-static VALUE adb_get_reverse(VALUE vself, VALUE vval){
+static VALUE adb_get_reverse(VALUE vself, SEL sel, VALUE vval){
   VALUE vadb, vrv;
   TCADB *adb;
   char *tkbuf, *tvbuf;
@@ -3780,7 +3780,7 @@ static VALUE adb_get_reverse(VALUE vself, VALUE vval){
 }
 
 
-static VALUE adb_empty(VALUE vself){
+static VALUE adb_empty(VALUE vself, SEL sel){
   VALUE vadb;
   TCADB *adb;
   vadb = rb_iv_get(vself, ADBVNDATA);
@@ -3789,7 +3789,7 @@ static VALUE adb_empty(VALUE vself){
 }
 
 
-static VALUE adb_each(VALUE vself){
+static VALUE adb_each(VALUE vself, SEL sel){
   VALUE vadb, vrv;
   TCADB *adb;
   char *tkbuf, *tvbuf;
@@ -3811,7 +3811,7 @@ static VALUE adb_each(VALUE vself){
 }
 
 
-static VALUE adb_each_key(VALUE vself){
+static VALUE adb_each_key(VALUE vself, SEL sel){
   VALUE vadb, vrv;
   TCADB *adb;
   char *tkbuf;
@@ -3829,7 +3829,7 @@ static VALUE adb_each_key(VALUE vself){
 }
 
 
-static VALUE adb_each_value(VALUE vself){
+static VALUE adb_each_value(VALUE vself, SEL sel){
   VALUE vadb, vrv;
   TCADB *adb;
   char *tkbuf, *tvbuf;
@@ -3851,7 +3851,7 @@ static VALUE adb_each_value(VALUE vself){
 }
 
 
-static VALUE adb_keys(VALUE vself){
+static VALUE adb_keys(VALUE vself, SEL sel){
   VALUE vadb, vary;
   TCADB *adb;
   char *tkbuf;
@@ -3868,7 +3868,7 @@ static VALUE adb_keys(VALUE vself){
 }
 
 
-static VALUE adb_values(VALUE vself){
+static VALUE adb_values(VALUE vself, SEL sel){
   VALUE vadb, vary;
   TCADB *adb;
   char *tkbuf, *tvbuf;

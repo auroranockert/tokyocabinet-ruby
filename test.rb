@@ -1,4 +1,4 @@
-#! /usr/bin/ruby
+#! /usr/local/bin/macruby
 
 require 'rbconfig'
 

@@ -1,4 +1,4 @@
-#! /usr/bin/ruby -w
+#! /usr/local/bin/macruby -w
 
 #-------------------------------------------------------------------------------------------------
 # The test cases of the fixed-length database API
