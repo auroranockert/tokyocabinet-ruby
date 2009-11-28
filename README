@@ -1,5 +1,7 @@
-Tokyo Cabinet bindings for MacRuby
+(Highly experimental) Tokyo Cabinet bindings for MacRuby
 
 Should be compatible with the normal ones, seem to behave a little odd in some cases but the test cases work. Unfortunatly, installing as a gem doesn't, MacRuby's ruby gems is not smart enough to check if the native extensions are in MacRuby format or not. Or at least I don't know how.
 
 So just run `macruby extconf.rb`, `make` and `sudo make install` or copy tokyocabinet.bundle to your applications directory. After that it's just "require 'tokyocabinet'" as normal.
+
+Send bug reports to me (Jens Nockert), my email is on my github account.
